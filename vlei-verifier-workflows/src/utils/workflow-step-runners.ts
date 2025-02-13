@@ -37,5 +37,17 @@ export class RevokeCredentialStepRunner extends StepRunner{
     }
 }
 
-
-
+export class addRootOfTrustStepRunner extends StepRunner{
+    type: string = "add_root_of_trust";
+    public async run(vi: VleiIssuance, stepName: string, step: any, configJson: any): Promise<any> {
+        const result = await vi.addRootOfTrust(configJson);
+        
+        // Check if the response was successful
+        if (!result.ok) {
+            throw new Error(`Failed to add root of trust: ${result.statusText}`);
+        }
+        
+        const response = await result.json();
+        return response;
+    }
+}
