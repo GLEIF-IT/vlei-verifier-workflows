@@ -37,5 +37,19 @@ export class RevokeCredentialStepRunner extends StepRunner{
     }
 }
 
+export class GenerateReportStepRunner extends StepRunner {
+    public async run(vi: any, stepName: string, step: any): Promise<any> {
+      console.log(`Executing custom step: ${stepName}`);
+      // insert logic here
+      return { success: true }; 
+    }
+  }
 
+  export class ApiTestStepRunner extends StepRunner {
+    public async run(vi: any, stepName: string, step: any): Promise<any> {
+      console.log(`Executing custom step: ${stepName}`);
+      // insert logic here
+      return { success: true }; 
+    }
+  }
 

@@ -6,8 +6,7 @@ import {
 } from "../src/utils/test-data";
 import { WorkflowRunner } from "../src/utils/run-workflow";
 import { strict as assert } from "assert";
-import { loadWorkflow } from "../src/utils/test-data"
-
+import { loadWorkflow } from "../src/utils/test-data";
 
 let env: TestEnvironment;
 
@@ -29,10 +28,13 @@ test.only("workflow", async function run() {
   const configFileName = env.configuration;
   let dirPath = "../src/config/"
   const configFilePath = path.join(__dirname, dirPath) + configFileName
+  //console.log("path: ", configFilePath);
   const configJson = await getConfig(configFilePath);
+  console.log(configJson);
   if (workflow && configJson) {
     const wr = new WorkflowRunner(workflow, configJson);    
     await wr.prepareClients();
+
     const workflowRunResult = await wr.runWorkflow();
     assert.equal(workflowRunResult, true);
   }

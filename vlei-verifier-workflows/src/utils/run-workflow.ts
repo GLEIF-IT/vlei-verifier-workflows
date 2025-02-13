@@ -1,6 +1,6 @@
 import { VleiIssuance } from "../vlei-issuance";
 
-import { IssueCredentialStepRunner, RevokeCredentialStepRunner, StepRunner } from "./workflow-step-runners";
+import { IssueCredentialStepRunner, RevokeCredentialStepRunner, StepRunner, GenerateReportStepRunner, ApiTestStepRunner } from "./workflow-step-runners";
 
 const fs = require("fs");
 const yaml = require("js-yaml");
@@ -23,6 +23,8 @@ export class WorkflowRunner{
   private registerPredefinedRunners(){
     this.registerRunner("issue_credential", new IssueCredentialStepRunner());
     this.registerRunner("revoke_credential", new RevokeCredentialStepRunner());
+    this.registerRunner("generate_report", new GenerateReportStepRunner());
+    this.registerRunner("api_test", new ApiTestStepRunner());
   }
 
   public async prepareClients() {
