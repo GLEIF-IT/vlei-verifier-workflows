@@ -7,7 +7,7 @@ import {
 import { WorkflowRunner } from "../src/utils/run-workflow";
 import { strict as assert } from "assert";
 import { loadWorkflow } from "../src/utils/test-data";
-import { GenerateReportStepRunner, ApiTestStepRunner } from '../src/utils/workflow-step-runners';
+//import { GenerateReportStepRunner, ApiTestStepRunner } from '../src/utils/workflow-step-runners';
 
 let env: TestEnvironment;
 
@@ -35,8 +35,9 @@ test.only("workflow", async function run() {
     await wr.prepareClients();
 
     // Register the custom step runner
-    wr.registerRunner('generate_report', new GenerateReportStepRunner());
-    wr.registerRunner('api_test', new ApiTestStepRunner());
+    //wr.registerRunner('generate_report', new GenerateReportStepRunner());
+    //wr.registerRunner('api_test', new ApiTestStepRunner());
+    //did this in run-workflows.ts
 
     const workflowRunResult = await wr.runWorkflow();
     assert.equal(workflowRunResult, true);
