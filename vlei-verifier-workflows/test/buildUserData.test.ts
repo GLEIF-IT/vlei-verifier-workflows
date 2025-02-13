@@ -20,6 +20,75 @@ beforeAll((done) => {
 });
 
 describe('buildUserData', () => {
+    it('should handle configuration-singlesig-single-user-light.json', async ()=> {
+        const configFileName = env.configuration;
+        let dirPath = "../src/config/"
+        const configFilePath = path.join(__dirname, dirPath) + configFileName
+        //console.log("path: ", configFilePath);
+        const configJson = await getConfig(configFilePath);
+        console.log(configJson);
+
+        const result = await buildUserData(configJson);
+    
+        expect(result).toEqual([
+            {
+                "type": "GLEIF",
+                "alias": "gleif-user-1",
+                "identifiers": [
+                    {
+                        "name": "gleif-aid-1",
+                        "agent": {
+                            "name": "gleif-agent-1",
+                            "secret": "D_PbQb01zuzQgK-kDWjq5"
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "QVI",
+                "alias": "qvi-user-1",
+                "identifiers": [
+                    {
+                        "name": "qvi-aid-1",
+                        "delegator": "gleif-aid-1",
+                        "agent": {
+                            "name": "qvi-agent-1",
+                            "secret": "BTaqgh1eeOjXO5iQJp6m5"
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "LE",
+                "alias": "le-user-1",
+                "identifiers": [
+                    {
+                        "name": "le-aid-1",
+                        "agent": {
+                            "name": "le-agent-1",
+                            "secret": "Akv4TFoiYeHNqzj3N8gE5"
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "ECR",
+                "alias": "ecr-user-1",
+                "identifiers": [
+                    {
+                        "name": "ecr-aid-1",
+                        "agent": {
+                            "name": "ecr-agent-1",
+                            "secret": "nf98hUHUy8Vt5tvdyaYV5"
+                        }
+                    }
+                ]
+            }
+        ]);
+    });
+});
+
+describe('buildUserData', () => {
   it('should correctly transform jsonConfig into an array of User objects', async () => {
     console.log("buildUserData test for transforming jsonConfig into 1 user object");
     // Arrange: Mock input JSON configuration
@@ -160,74 +229,4 @@ describe('buildUserData', () => {
       },
     ]);
   });
-});
-
-
-describe('buildUserData', () => {
-    it('should handle configuration-singlesig-single-user-light.json', async ()=> {
-        const configFileName = env.configuration;
-        let dirPath = "../src/config/"
-        const configFilePath = path.join(__dirname, dirPath) + configFileName
-        //console.log("path: ", configFilePath);
-        const configJson = await getConfig(configFilePath);
-        console.log(configJson);
-
-        const result = await buildUserData(configJson);
-    
-        expect(result).toEqual([
-            {
-                "type": "GLEIF",
-                "alias": "gleif-user-1",
-                "identifiers": [
-                    {
-                        "name": "gleif-aid-1",
-                        "agent": {
-                            "name": "gleif-agent-1",
-                            "secret": "D_PbQb01zuzQgK-kDWjq5"
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "QVI",
-                "alias": "qvi-user-1",
-                "identifiers": [
-                    {
-                        "name": "qvi-aid-1",
-                        "delegator": "gleif-aid-1",
-                        "agent": {
-                            "name": "qvi-agent-1",
-                            "secret": "BTaqgh1eeOjXO5iQJp6m5"
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "LE",
-                "alias": "le-user-1",
-                "identifiers": [
-                    {
-                        "name": "le-aid-1",
-                        "agent": {
-                            "name": "le-agent-1",
-                            "secret": "Akv4TFoiYeHNqzj3N8gE5"
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "ECR",
-                "alias": "ecr-user-1",
-                "identifiers": [
-                    {
-                        "name": "ecr-aid-1",
-                        "agent": {
-                            "name": "ecr-agent-1",
-                            "secret": "nf98hUHUy8Vt5tvdyaYV5"
-                        }
-                    }
-                ]
-            }
-        ]);
-    });
 });
