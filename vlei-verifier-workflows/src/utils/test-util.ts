@@ -626,3 +626,108 @@ export async function sendAdmitMessage(
 
   await markAndRemoveNotification(senderClient, grantNotification);
 }
+
+export async function addRootOfTrustMultisig(configJson: any): Promise<Response> {
+  const rootOfTrustMultisigIdentifierName = configJson.users
+    .filter(
+      (usr: any) => usr.type == "GLEIF" || usr.type == "GLEIF_EXTERNAL",
+    )[0]
+    .identifiers.filter((identifier: string) =>
+      identifier.includes("multisig"),
+    )![0];
+
+  const rootOfTrustIdentifierName = configJson.users
+    .filter(
+      (usr: any) => usr.type == "GLEIF" || usr.type == "GLEIF_EXTERNAL",
+    )[0]
+    .identifiers.filter(
+      (identifier: string) => !identifier.includes("multisig"),
+    )![0];
+
+  const rootOfTrustIdentifierAgent =
+    configJson.agents[
+      configJson.identifiers[rootOfTrustIdentifierName].agent
+    ];
+  const rootOfTrustIdentifierSecret =
+    configJson.secrets[rootOfTrustIdentifierAgent.secret];
+  const clients = await getOrCreateClients(
+    1,
+    [rootOfTrustIdentifierSecret],
+    true,
+  );
+  const client = clients[clients.length - 1];
+  const rootOfTrustAid = await client
+    .identifiers()
+    .get(rootOfTrustMultisigIdentifierName);
+
+  const oobi = await client
+    .oobis()
+    .get(rootOfTrustMultisigIdentifierName, "agent");
+  let oobiUrl = oobi.oobis[0];
+  const url = new URL(oobiUrl);
+  if (url.hostname === "keria")
+    oobiUrl = oobiUrl.replace("keria", "localhost");
+  console.log(`Root of trust OOBI: ${oobiUrl}`);
+  const oobiResp = await fetch(oobiUrl);
+  const oobiRespBody = await oobiResp.text();
+  const heads = new Headers();
+  heads.set("Content-Type", "application/json");
+  let lbody = {
+    vlei: oobiRespBody,
+    aid: rootOfTrustAid.prefix,
+    oobi: oobiUrl,
+  };
+  let lreq = {
+    headers: heads,
+    method: "POST",
+    body: JSON.stringify(lbody),
+  };
+  const lurl = `${this.apiBaseUrl}/add_root_of_trust`;
+  const lresp = await fetch(lurl, lreq);
+  return lresp;
+}
+
+export async function addRootOfTrustSinglesig(configJson: any): Promise<Response> {
+  const rootOfTrustIdentifierName = configJson.users.filter(
+    (usr: any) => usr.type == "GLEIF",
+  )[0].identifiers[0];
+  const rootOfTrustIdentifierAgent =
+    configJson.agents[
+      configJson.identifiers[rootOfTrustIdentifierName].agent
+    ];
+  const rootOfTrustIdentifierSecret =
+    configJson.secrets[rootOfTrustIdentifierAgent.secret];
+  const clients = await getOrCreateClients(
+    1,
+    [rootOfTrustIdentifierSecret],
+    true,
+  );
+  const client = clients[clients.length - 1];
+  const rootOfTrustAid = await client
+    .identifiers()
+    .get(rootOfTrustIdentifierName);
+
+  const oobi = await client.oobis().get(rootOfTrustIdentifierName);
+  let oobiUrl = oobi.oobis[0];
+  console.log(`Root of trust OOBI: ${oobiUrl}`);
+  const url = new URL(oobiUrl);
+  if (url.hostname === "keria")
+    oobiUrl = oobiUrl.replace("keria", "localhost");
+  const oobiResp = await fetch(oobiUrl);
+  const oobiRespBody = await oobiResp.text();
+  const heads = new Headers();
+  heads.set("Content-Type", "application/json");
+  let lbody = {
+    vlei: oobiRespBody,
+    aid: rootOfTrustAid.prefix,
+    oobi: oobiUrl,
+  };
+  let lreq = {
+    headers: heads,
+    method: "POST",
+    body: JSON.stringify(lbody),
+  };
+  const lurl = `${this.apiBaseUrl}/add_root_of_trust`;
+  const lresp = await fetch(lurl, lreq);
+  return lresp;
+}
