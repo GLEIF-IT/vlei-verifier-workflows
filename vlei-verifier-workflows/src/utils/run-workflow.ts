@@ -1,6 +1,9 @@
 import { VleiIssuance } from "../vlei-issuance";
-
-import { IssueCredentialStepRunner, RevokeCredentialStepRunner, StepRunner, GenerateReportStepRunner, ApiTestStepRunner } from "./workflow-step-runners";
+import { IssueCredentialStepRunner, 
+         RevokeCredentialStepRunner, 
+         StepRunner, 
+         GenerateReportStepRunner, 
+         ApiTestStepRunner } from "./workflow-step-runners";
 
 const fs = require("fs");
 const yaml = require("js-yaml");
