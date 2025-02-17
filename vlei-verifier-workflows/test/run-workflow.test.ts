@@ -1,15 +1,10 @@
 import { VleiIssuance } from "../src/vlei-issuance";
 import path from "path";
 import { resolveEnvironment, TestEnvironment } from "../src/utils/resolve-env";
-import {
-  getConfig,
-} from "../src/utils/test-data";
+import { getConfig } from "../src/utils/test-data";
 import { WorkflowRunner } from "../src/utils/run-workflow";
 import { strict as assert } from "assert";
-import { loadWorkflow } from "../src/utils/test-data"
-import { getRootOfTrust } from "../src/utils/get-root-of-trust";
-import { VleiVerifierAdapter } from "../src/vlei-verifier-adapter";
-
+import { loadWorkflow } from "../src/utils/test-data";
 
 let env: TestEnvironment;
 
@@ -21,7 +16,6 @@ beforeAll((done) => {
   env = resolveEnvironment();
 });
 
-
 test.only("workflow", async function run() {
   const workflowsDir = "../src/workflows/";
   const workflowFile = env.workflow;
@@ -29,16 +23,16 @@ test.only("workflow", async function run() {
     path.join(__dirname, `${workflowsDir}${workflowFile}`),
   );
   const configFileName = env.configuration;
-  let dirPath = "../src/config/"
-  const configFilePath = path.join(__dirname, dirPath) + configFileName
+  let dirPath = "../src/config/";
+  const configFilePath = path.join(__dirname, dirPath) + configFileName;
   const configJson = await getConfig(configFilePath);
   if (workflow && configJson) {
     const wr = new WorkflowRunner(workflow, configJson);
     await wr.prepareClients();
     // Hardcoded part to add root of trust. Will be removed when the "Add Root Of Trust" workflow step is ready
-    const rootOfTrustData = await getRootOfTrust(configJson);
-    const va = new VleiVerifierAdapter(env.verifierBaseUrl);
-    await va.addRootOfTrust(rootOfTrustData.aid, rootOfTrustData.vlei, rootOfTrustData.oobi)
+    // const rootOfTrustData = await getRootOfTrust(configJson);
+    // const va = new VleiVerifierAdapter(env.verifierBaseUrl);
+    // await va.addRootOfTrust(rootOfTrustData.aid, rootOfTrustData.vlei, rootOfTrustData.oobi)
     const workflowRunResult = await wr.runWorkflow();
     assert.equal(workflowRunResult, true);
   }

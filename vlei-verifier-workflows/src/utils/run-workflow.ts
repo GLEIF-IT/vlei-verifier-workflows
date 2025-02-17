@@ -1,30 +1,44 @@
+import { add } from "libsodium-wrappers-sumo";
 import { VleiIssuance } from "../vlei-issuance";
 
-import { IssueCredentialStepRunner, NotifyCredentialIssueeStepRunner, RevokeCredentialStepRunner, StepRunner, CredentialVerificationStepRunner } from "./workflow-step-runners";
+import {
+  IssueCredentialStepRunner,
+  NotifyCredentialIssueeStepRunner,
+  RevokeCredentialStepRunner,
+  StepRunner,
+  CredentialVerificationStepRunner,
+  AddRootOfTrustStepRunner,
+} from "./workflow-step-runners";
 
 const fs = require("fs");
 const yaml = require("js-yaml");
 
-
-export class WorkflowRunner{
+export class WorkflowRunner {
   stepRunners: Map<string, StepRunner> = new Map<string, StepRunner>();
   configJson: any;
   workflow: any;
   vi: VleiIssuance;
-  executedSteps = new Set(); 
+  executedSteps = new Set();
 
   constructor(workflow: any, configJson: any) {
     this.configJson = configJson;
     this.workflow = workflow;
-    this.vi = new VleiIssuance(this.configJson);    
+    this.vi = new VleiIssuance(this.configJson);
     this.registerPredefinedRunners();
   }
 
-  private registerPredefinedRunners(){
+  private registerPredefinedRunners() {
     this.registerRunner("issue_credential", new IssueCredentialStepRunner());
     this.registerRunner("revoke_credential", new RevokeCredentialStepRunner());
-    this.registerRunner("notify_credential_issuee", new NotifyCredentialIssueeStepRunner());
-    this.registerRunner("credential_verification", new CredentialVerificationStepRunner());
+    this.registerRunner("add_root_of_trust", new AddRootOfTrustStepRunner());
+    this.registerRunner(
+      "notify_credential_issuee",
+      new NotifyCredentialIssueeStepRunner(),
+    );
+    this.registerRunner(
+      "credential_verification",
+      new CredentialVerificationStepRunner(),
+    );
   }
 
   public async prepareClients() {
@@ -32,15 +46,17 @@ export class WorkflowRunner{
     await this.vi.createRegistries();
   }
 
-  public registerRunner(name: string, runner: StepRunner){
+  public registerRunner(name: string, runner: StepRunner) {
     this.stepRunners.set(name, runner);
   }
 
-  public async runWorkflow() {  
-    for (const [stepName, step] of Object.entries(this.workflow.workflow.steps) as any[]) {
+  public async runWorkflow() {
+    for (const [stepName, step] of Object.entries(
+      this.workflow.workflow.steps,
+    ) as any[]) {
       console.log(`Executing: ${step.description}`);
       const runner = this.stepRunners.get(step.type);
-      if (!runner){
+      if (!runner) {
         console.log(`No step runner was registered for step '${step.type}'`);
         return false;
       }
@@ -50,7 +66,4 @@ export class WorkflowRunner{
     console.log(`Workflow steps execution finished successfully`);
     return true;
   }
-
 }
-
-

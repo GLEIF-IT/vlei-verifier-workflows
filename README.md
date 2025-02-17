@@ -34,6 +34,7 @@ The **vLEI Workflows Running Tool** is designed to manage workflows involving vL
 - **Predefined Step Runners**: Includes built-in support for:
   - `issue_credential`: Issues a new vLEI credential.
   - `revoke_credential`: Revokes an existing vLEI credential.
+  - `add_root_of_trust`: Adds a new root of trust for testing.
 
 - **Custom Step Runners**: Allows you to define and register custom step types for any other workflow requirements.
 
@@ -57,7 +58,7 @@ npm install vlei-verifier-workflows
 
 #### Predefined Step Types
 
-To use predefined step types like `issue_credential` or `revoke_credential`, simply include them in your workflow configuration. These step types are automatically registered and ready to use.
+To use predefined step types, simply include them in your workflow configuration. These step types are automatically registered and ready to use.
 
 Example workflow :
 
@@ -78,6 +79,10 @@ workflow:
       type: "revoke_credential"
       attributes:
         credentialId: "abc123"
+    add_root_of_trust:
+      id: "add_root_of_trust"
+      type: "add_root_of_trust"
+      description: "Adding Root of Trust"
 ```
 
 

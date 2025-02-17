@@ -30,17 +30,21 @@ workflow:
       description: "LE issues ECR vLEI credential"
       credential: "le_to_ecr_vlei_cred"
       credential_source: "le_cred"
+    add_root_of_trust:
+      id: "add_root_of_trust"
+      type: "add_root_of_trust"
+      description: "Adding Root of Trust"
     credential_verification_valid_verified:
       id: "credential_verification_valid"
       type: "credential_verification"
       presenter_aid: "ecr-aid-1"
-      description: "Running Credential Verification for ecr-aid-1"      
+      description: "Running Credential Verification for ecr-aid-1"
       credential: "ecr_cred"
       actions:
-        present: 
+        present:
           type: "presentation"
           expected_status: "cred_crypt_valid"
-        authorize: 
+        authorize:
           type: "authorization"
           expected_status: "cred_verified"
     ecr_cred_revoke:
@@ -54,15 +58,15 @@ workflow:
       id: "credential_verification_revoked_valid_verified"
       type: "credential_verification"
       presenter_aid: "ecr-aid-1"
-      description: "Running Credential Verification for ecr-aid-1"      
+      description: "Running Credential Verification for ecr-aid-1"
       credential: "ecr_cred"
       actions:
-        present: 
+        present:
           type: "presentation"
           expected_status: "cred_crypt_valid"
-        authorize: 
+        authorize:
           type: "authorization"
-          expected_status: "cred_verified"    
+          expected_status: "cred_verified"
     notify_ecr_credential_issuee:
       id: "notify_ecr_credential_issuee"
       type: "notify_credential_issuee"
@@ -74,12 +78,12 @@ workflow:
       id: "credential_verification_revoked_valid_not_verified"
       type: "credential_verification"
       presenter_aid: "ecr-aid-1"
-      description: "Running Credential Verification for ecr-aid-1"      
+      description: "Running Credential Verification for ecr-aid-1"
       credential: "ecr_cred"
       actions:
-        present: 
+        present:
           type: "presentation"
           expected_status: "cred_crypt_valid"
-        authorize: 
+        authorize:
           type: "authorization"
-          expected_status: "cred_revoked"   
+          expected_status: "cred_revoked"
