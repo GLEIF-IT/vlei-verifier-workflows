@@ -30,6 +30,19 @@ workflow:
       description: "LE issues ECR vLEI credential"
       credential: "le_to_ecr_vlei_cred"
       credential_source: "le_cred"
+    credential_verification_valid_verified:
+      id: "credential_verification_valid_verified"
+      type: "credential_verification"
+      presenter_aid: "ecr-aid-1"
+      description: "Running Credential Verification for ecr-aid-1"      
+      credential: "ecr_cred"
+      actions:
+        present: 
+          type: "presentation"
+          expected_status: "cred_crypt_valid"
+        authorize: 
+          type: "authorization"
+          expected_status: "cred_verified"
     ecr_auth_cred:
       id: "ecr_auth_cred"
       type: "issue_credential"
@@ -53,6 +66,19 @@ workflow:
       description: "QVI issues ECR credential from ECR Auth"
       credential: "qvi_to_ecr_vlei_cred_from_le_to_qvi_ecr_auth_cred"
       credential_source: "ecr_auth_cred"
+    credential_verification_valid_verified_2:
+      id: "credential_verification_valid_verified_2"
+      type: "credential_verification"
+      presenter_aid: "ecr-aid-1"
+      description: "Running Credential Verification for ecr-aid-1"      
+      credential: "ecr_cred_from_ecr_auth"
+      actions:
+        present: 
+          type: "presentation"
+          expected_status: "cred_crypt_valid"
+        authorize: 
+          type: "authorization"
+          expected_status: "cred_verified"
     oor_auth_cred:
       id: "oor_auth_cred"
       type: "issue_credential"
@@ -76,3 +102,17 @@ workflow:
       description: "QVI issues OOR credential from OOR Auth"
       credential: "qvi_to_ecr_vlei_oor_cred_from_le_to_qvi_oor_auth_cred"
       credential_source: "oor_auth_cred"
+    credential_verification_oor_auth_valid_not_verified:
+      id: "credential_verification_oor_auth_valid_not_verified"
+      type: "credential_verification"
+      presenter_aid: "ecr-aid-1"
+      description: "Running Credential Verification for ecr-aid-1"      
+      credential: "ecr_cred_from_oor_auth"
+      actions:
+        present: 
+          type: "presentation"
+          expected_status: "cred_crypt_valid"
+        authorize: 
+          type: "authorization"
+          expected_status: "cred_invalid_schema"
+    

@@ -185,3 +185,15 @@ services:
         condition: service_healthy
       witness-demo:
         condition: service_healthy
+  verify:
+    image: alpine
+    command: ["echo", "Dependencies running"]
+    depends_on:
+      vlei-server:
+        condition: service_healthy
+      keria:
+        condition: service_healthy
+      witness-demo:
+        condition: service_healthy
+      vlei-verifier:
+        condition: service_healthy

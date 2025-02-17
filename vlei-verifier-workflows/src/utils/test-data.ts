@@ -80,6 +80,11 @@ export const CREDENTIAL_REVOKED: CredentialAuthorizationStatus = {
   description: "Credential is revoked",
   status: "fail"
 }
+export const CREDENTIAL_INVALID_SCHEMA: CredentialAuthorizationStatus = {
+  name: "cred_invalid_schema",
+  description: "Credential with invalid schema",
+  status: "fail"
+}
 export const CREDENTIAL_NON_DELEGATED_QVI: CredentialAuthorizationStatus = {
   name: "cred_non_delegated_qvi",
   description: "The QVI AID of the credential is not delegated",
@@ -104,6 +109,7 @@ export const credPresentationStatusMapping: Map<string, CredentialPresentationSt
 export const credAuthorizationStatusMapping: Map<string, CredentialAuthorizationStatus> = new Map([
   ["cred_verified", CREDENTIAL_VERIFIED],
   ["cred_revoked", CREDENTIAL_REVOKED],
+  ["cred_invalid_schema", CREDENTIAL_INVALID_SCHEMA],
   ["cred_non_delegated_qvi", CREDENTIAL_NON_DELEGATED_QVI],
   ["cred_not_rot_delegated_qvi", CREDENTIAL_NOT_ROT_DELEGATED_QVI],
   ["cred_not_valid_root_of_trust", CREDENTIAL_NOT_VALID_ROOT_OF_TRUST]

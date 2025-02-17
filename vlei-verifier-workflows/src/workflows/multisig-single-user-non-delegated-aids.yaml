@@ -30,3 +30,16 @@ workflow:
       description: "LE issues ECR vLEI credential"
       credential: "le_to_ecr_vlei_cred"
       credential_source: "le_cred"
+    credential_verification_no_delegation_valid_not_verified:
+      id: "credential_verification_no_delegation_valid_not_verified"
+      type: "credential_verification"
+      presenter_aid: "ecr-aid-1"
+      description: "Running Credential Verification for ecr-aid-1"      
+      credential: "ecr_cred"
+      actions:
+        present: 
+          type: "presentation"
+          expected_status: "cred_crypt_valid"
+        authorize: 
+          type: "authorization"
+          expected_status: "cred_non_delegated_qvi"   

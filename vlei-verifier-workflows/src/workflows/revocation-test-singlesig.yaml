@@ -35,7 +35,7 @@ workflow:
       type: "add_root_of_trust"
       description: "Adding Root of Trust"
     credential_verification_valid_verified:
-      id: "credential_verification_valid"
+      id: "credential_verification_valid_verified"
       type: "credential_verification"
       presenter_aid: "ecr-aid-1"
       description: "Running Credential Verification for ecr-aid-1"
