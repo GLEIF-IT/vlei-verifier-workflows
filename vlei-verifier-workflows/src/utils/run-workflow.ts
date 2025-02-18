@@ -1,4 +1,3 @@
-import { add } from "libsodium-wrappers-sumo";
 import { VleiIssuance } from "../vlei-issuance";
 
 import {
