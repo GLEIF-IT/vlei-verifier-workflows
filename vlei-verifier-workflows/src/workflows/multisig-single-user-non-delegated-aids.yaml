@@ -170,9 +170,9 @@ workflow:
       type: "issue_credential"
       attributes:
         LEI: "254900OPPU84GM83MG36"
-      issuer_aid: "gleif-external-multisig-1"
+      issuer_aid: "gleif-multisig-1"
       issuee_aid: "qvi-multisig-1"
-      description: "GLEIF External issues QVI vLEI credential"
+      description: "GLEIF issues QVI vLEI credential"
       credential: "gleif_to_qvi_vlei_cred"
     le_cred:
       id: "le_cred"
