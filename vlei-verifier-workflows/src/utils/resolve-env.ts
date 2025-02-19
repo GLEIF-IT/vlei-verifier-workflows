@@ -49,10 +49,10 @@ export function resolveEnvironment(
             : process.env.WITNESS_IDS?.split(",") || [WAN, WIL, WES],
         vleiServerUrl: process.env.VLEI_SERVER || "http://vlei-server:7723",
         verifierBaseUrl: process.env.VLEI_VERIFIER || "http://localhost:7676",
-        workflow: process.env.WORKFLOW || "revocation-test-singlesig.yaml",
+        workflow: process.env.WORKFLOW || "multisig-single-user-non-delegated-aids.yaml",
         configuration:
           process.env.CONFIGURATION ||
-          "configuration-revocation-test-singlesig.json",
+          "configuration-multisig-single-user-non-delegated-aids.json",
       };
       break;
     case "local":
@@ -137,7 +137,7 @@ export function resolveEnvironment(
           process.env.CONFIGURATION ||
           "configuration-singlesig-single-user.json",
       };
-      break;    
+      break;
     default:
       throw new Error(`Unknown test environment preset '${preset}'`);
   }

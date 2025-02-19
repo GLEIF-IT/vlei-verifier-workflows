@@ -4,7 +4,6 @@ import path = require("path");
 const fs = require("fs");
 const yaml = require("js-yaml");
 
-
 // Function to load and parse YAML file
 export function loadWorkflow(workflowFilePath: string) {
   try {
@@ -16,11 +15,8 @@ export function loadWorkflow(workflowFilePath: string) {
   }
 }
 
-
 export async function getConfig(configFilePath: string) {
-  const configJson = JSON.parse(
-    fs.readFileSync(configFilePath, "utf-8"),
-  );
+  const configJson = JSON.parse(fs.readFileSync(configFilePath, "utf-8"));
   return configJson;
 }
 
@@ -45,7 +41,6 @@ export interface VleiUser {
   idAlias: string;
 }
 
-
 export interface CredentialPresentationStatus {
   name: string;
   description: any;
@@ -58,60 +53,65 @@ export interface CredentialAuthorizationStatus {
   status: "success" | "fail";
 }
 
-
-
 export const CREDENTIAL_CRYPT_VALID: CredentialPresentationStatus = {
   name: "cred_crypt_valid",
   description: "Credential is cryptographically valid",
-  status: "valid"
-}
+  status: "valid",
+};
 export const CREDENTIAL_CRYPT_INVALID: CredentialPresentationStatus = {
   name: "cred_crypt_invalid",
   description: "Credential is not cryptographically valid",
-  status: "invalid"
-}
+  status: "invalid",
+};
 export const CREDENTIAL_VERIFIED: CredentialAuthorizationStatus = {
   name: "cred_verified",
   description: "Credential is verified and has a valid login account",
-  status: "success"
-}
+  status: "success",
+};
 export const CREDENTIAL_REVOKED: CredentialAuthorizationStatus = {
   name: "cred_revoked",
   description: "Credential is revoked",
-  status: "fail"
-}
+  status: "fail",
+};
 export const CREDENTIAL_INVALID_SCHEMA: CredentialAuthorizationStatus = {
   name: "cred_invalid_schema",
   description: "Credential with invalid schema",
-  status: "fail"
-}
+  status: "fail",
+};
 export const CREDENTIAL_NON_DELEGATED_QVI: CredentialAuthorizationStatus = {
   name: "cred_non_delegated_qvi",
   description: "The QVI AID of the credential is not delegated",
-  status: "fail"
-}
+  status: "fail",
+};
 export const CREDENTIAL_NOT_ROT_DELEGATED_QVI: CredentialAuthorizationStatus = {
   name: "cred_not_rot_delegated_qvi",
-  description: "The QVI AID of the credential is not delegated by the root of trust",
-  status: "fail"
-}
-export const CREDENTIAL_NOT_VALID_ROOT_OF_TRUST: CredentialAuthorizationStatus = {
-  name: "cred_not_valid_root_of_trust",
-  description: "Credential is not chained to the valid root of trust",
-  status: "fail"
-}
+  description:
+    "The QVI AID of the credential is not delegated by the root of trust",
+  status: "fail",
+};
+export const CREDENTIAL_NOT_VALID_ROOT_OF_TRUST: CredentialAuthorizationStatus =
+  {
+    name: "cred_not_valid_root_of_trust",
+    description: "Credential is not chained to the valid root of trust",
+    status: "fail",
+  };
 
-export const credPresentationStatusMapping: Map<string, CredentialPresentationStatus> = new Map([
+export const credPresentationStatusMapping: Map<
+  string,
+  CredentialPresentationStatus
+> = new Map([
   ["cred_crypt_valid", CREDENTIAL_CRYPT_VALID],
-  ["cred_crypt_invalid", CREDENTIAL_CRYPT_INVALID]
+  ["cred_crypt_invalid", CREDENTIAL_CRYPT_INVALID],
 ]);
 
-export const credAuthorizationStatusMapping: Map<string, CredentialAuthorizationStatus> = new Map([
+export const credAuthorizationStatusMapping: Map<
+  string,
+  CredentialAuthorizationStatus
+> = new Map([
   ["cred_verified", CREDENTIAL_VERIFIED],
   ["cred_revoked", CREDENTIAL_REVOKED],
   ["cred_invalid_schema", CREDENTIAL_INVALID_SCHEMA],
   ["cred_non_delegated_qvi", CREDENTIAL_NON_DELEGATED_QVI],
   ["cred_not_rot_delegated_qvi", CREDENTIAL_NOT_ROT_DELEGATED_QVI],
-  ["cred_not_valid_root_of_trust", CREDENTIAL_NOT_VALID_ROOT_OF_TRUST]
+  ["cred_not_valid_root_of_trust", CREDENTIAL_NOT_VALID_ROOT_OF_TRUST],
 ]);
-

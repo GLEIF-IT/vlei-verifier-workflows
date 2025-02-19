@@ -6,29 +6,81 @@ import {
   credPresentationStatusMapping,
   credAuthorizationStatusMapping,
 } from "./test-data";
-import { VleiVerifierAdapter } from "../vlei-verifier-adapter";
-import { getRootOfTrust } from "./test-util";
+import {
+  getAgentSecret,
+  getIdentifierData,
+  IdentifierData,
+  MultisigIdentifierData,
+  SinglesigIdentifierData,
+} from "./handle-json-config";
+import { WorkflowState } from "../workflow-state";
 import { resolveEnvironment } from "./resolve-env";
+import { getRootOfTrust } from "./test-util";
+import { VleiVerifierAdapter } from "../vlei-verifier-adapter";
 
 export abstract class StepRunner {
   type: string = "";
   public abstract run(
-    vi: VleiIssuance,
     stepName: string,
     step: any,
     configJson: any,
   ): Promise<any>;
 }
 
-export class IssueCredentialStepRunner extends StepRunner {
-  type: string = "issue_credential";
+export class CreateClientStepRunner extends StepRunner {
+  type: string = "create_client";
   public async run(
-    vi: VleiIssuance,
     stepName: string,
     step: any,
     configJson: any = null,
   ): Promise<any> {
-    const result = await vi.getOrIssueCredential(
+    const agentName = step.agent_name;
+    const secret = getAgentSecret(configJson, agentName);
+    const result = await VleiIssuance.createClient(secret, agentName);
+    return result;
+  }
+}
+
+export class CreateAidStepRunner extends StepRunner {
+  type: string = "create_aid";
+  public async run(
+    stepName: string,
+    step: any,
+    configJson: any = null,
+  ): Promise<any> {
+    const identifierData: IdentifierData = getIdentifierData(
+      configJson,
+      step.aid,
+    );
+    const result = await VleiIssuance.createAid(identifierData);
+    return result;
+  }
+}
+
+export class CreateRegistryStepRunner extends StepRunner {
+  type: string = "create_registry";
+  public async run(
+    stepName: string,
+    step: any,
+    configJson: any = null,
+  ): Promise<any> {
+    const identifierData: IdentifierData = getIdentifierData(
+      configJson,
+      step.aid,
+    );
+    const result = await VleiIssuance.createRegistry(identifierData);
+    return result;
+  }
+}
+
+export class IssueCredentialStepRunner extends StepRunner {
+  type: string = "issue_credential";
+  public async run(
+    stepName: string,
+    step: any,
+    configJson: any = null,
+  ): Promise<any> {
+    const result = await VleiIssuance.getOrIssueCredential(
       stepName,
       step.credential,
       step.attributes,
@@ -45,12 +97,11 @@ export class IssueCredentialStepRunner extends StepRunner {
 export class RevokeCredentialStepRunner extends StepRunner {
   type: string = "revoke_credential";
   public async run(
-    vi: VleiIssuance,
     stepName: string,
     step: any,
     configJson: any = null,
   ): Promise<any> {
-    const result = await vi.revokeCredential(
+    const result = await VleiIssuance.revokeCredential(
       step.credential,
       step.issuer_aid,
       step.issuee_aid,
@@ -64,12 +115,11 @@ export class RevokeCredentialStepRunner extends StepRunner {
 export class NotifyCredentialIssueeStepRunner extends StepRunner {
   type: string = "notify_credential_issuee";
   public async run(
-    vi: VleiIssuance,
     stepName: string,
     step: any,
     configJson: any = null,
   ): Promise<any> {
-    const result = await vi.notifyCredentialIssuee(
+    const result = await VleiIssuance.notifyCredentialIssuee(
       step.credential,
       step.issuer_aid,
       step.issuee_aid,
@@ -81,19 +131,30 @@ export class NotifyCredentialIssueeStepRunner extends StepRunner {
 export class CredentialVerificationStepRunner extends StepRunner {
   type: string = "credential_verification";
   public async run(
-    vi: VleiIssuance,
     stepName: string,
     step: any,
     configJson: any = null,
   ): Promise<any> {
+    const workflow_state = WorkflowState.getInstance();
     const credVerification = new CredentialVerification();
     const presenterAid = step.presenter_aid;
-    const aid = vi.aids.get(presenterAid)![0];
-    const aidInfo = vi.aidsInfo.get(presenterAid)!;
-    const client = vi.clients.get(aidInfo.agent.name)![0];
+    const aid = workflow_state.aids.get(presenterAid);
+    const aidInfo = workflow_state.aidsInfo.get(presenterAid)!;
+    let client;
+    if (aidInfo.type == "multisig") {
+      const multisigIdentifierData = aidInfo as MultisigIdentifierData;
+      const multisigMemberAidInfo = workflow_state.aidsInfo.get(
+        multisigIdentifierData.identifiers![0],
+      )! as SinglesigIdentifierData;
+      client = workflow_state.clients.get(multisigMemberAidInfo.agent!.name);
+    } else {
+      const singlesigIdentifierData = aidInfo as SinglesigIdentifierData;
+      client = workflow_state.clients.get(singlesigIdentifierData.agent!.name);
+    }
+
     const credId = step.credential;
-    const cred = vi.credentials.get(credId);
-    const credCesr = await client.credentials().get(cred.sad.d, true);
+    const cred = workflow_state.credentials.get(credId);
+    const credCesr = await client!.credentials().get(cred.sad.d, true);
     const vleiUser: VleiUser = {
       roleClient: client,
       ecrAid: aid,
@@ -128,12 +189,7 @@ export class CredentialVerificationStepRunner extends StepRunner {
 export class AddRootOfTrustStepRunner extends StepRunner {
   type: string = "add_root_of_trust";
 
-  public async run(
-    vi: VleiIssuance,
-    stepName: string,
-    step: any,
-    configJson: any,
-  ): Promise<any> {
+  public async run(stepName: string, step: any, configJson: any): Promise<any> {
     const env = resolveEnvironment();
 
     const rootOfTrustData = await getRootOfTrust(configJson);

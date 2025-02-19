@@ -1,34 +1,33 @@
-export async function buildUserData(jsonConfig: any): Promise<Array<User>> {
-  let users: Array<User> = new Array<User>();
-  const identifiers = structuredClone(jsonConfig.identifiers);
-  for (const key of Object.keys(identifiers)) {
-    if (identifiers[key]["agent"]) {
-      identifiers[key].agent = {
-        name: identifiers[key]["agent"],
-        secret:
-          jsonConfig.secrets[
-            jsonConfig.agents[identifiers[key]["agent"]]["secret"]
-          ],
-      };
-    }
+export function getIdentifierData(
+  jsonConfig: any,
+  aidName: string,
+): IdentifierData {
+  const identifier = jsonConfig.identifiers[aidName];
+  if (identifier.identifiers) {
+    return {
+      type: "multisig",
+      ...identifier,
+    } as MultisigIdentifierData;
   }
-  for (const user of jsonConfig.users) {
-    let curUser: User = {
-      LE: user.LE,
-      identifiers: user.identifiers.map((key: any) => ({
-        ...identifiers[key],
-      })),
-      alias: user.alias,
-      type: user.type,
-    };
-    users.push(curUser);
-  }
-  return users;
+  const agent = jsonConfig.agents[identifier["agent"]];
+  const secret = jsonConfig.secrets[agent["secret"]];
+  return {
+    type: "singlesig",
+    ...identifier,
+    agent: {
+      name: identifier.agent,
+      secret: secret,
+    },
+  } as SinglesigIdentifierData;
 }
 
-export async function buildCredentials(
-  jsonConfig: any,
-): Promise<Map<string, CredentialInfo>> {
+export function getAgentSecret(jsonConfig: any, agentName: string): string {
+  const agent = jsonConfig.agents[agentName];
+  const secret = jsonConfig.secrets[agent["secret"]];
+  return secret;
+}
+
+export function buildCredentials(jsonConfig: any): Map<string, CredentialInfo> {
   let credentials: Map<string, CredentialInfo> = new Map<
     string,
     CredentialInfo
@@ -63,6 +62,22 @@ export async function buildAidData(jsonConfig: any): Promise<any> {
     }
   }
   return identifiers;
+}
+
+export interface IdentifierData {
+  type: "singlesig" | "multisig";
+  name: string;
+  delegator?: string;
+}
+
+export interface SinglesigIdentifierData extends IdentifierData {
+  agent: { name: string; secret: string };
+}
+
+export interface MultisigIdentifierData extends IdentifierData {
+  identifiers: any;
+  isith: string;
+  nsith: string;
 }
 
 export interface User {
