@@ -1,11 +1,14 @@
-export function getIdentifierData(jsonConfig: any, aidName: string): IdentifierData {
+export function getIdentifierData(
+  jsonConfig: any,
+  aidName: string,
+): IdentifierData {
   const identifier = jsonConfig.identifiers[aidName];
-  if (identifier.identifiers){
+  if (identifier.identifiers) {
     return {
       type: "multisig",
-      ...identifier
-    } as MultisigIdentifierData
-  }  
+      ...identifier,
+    } as MultisigIdentifierData;
+  }
   const agent = jsonConfig.agents[identifier["agent"]];
   const secret = jsonConfig.secrets[agent["secret"]];
   return {
@@ -13,17 +16,18 @@ export function getIdentifierData(jsonConfig: any, aidName: string): IdentifierD
     ...identifier,
     agent: {
       name: identifier.agent,
-      secret: secret
+      secret: secret,
     },
-    
-  } as SinglesigIdentifierData
+  } as SinglesigIdentifierData;
 }
 
+export function getAgentSecret(jsonConfig: any, agentName: string): string {
+  const agent = jsonConfig.agents[agentName];
+  const secret = jsonConfig.secrets[agent["secret"]];
+  return secret;
+}
 
-
-export function buildCredentials(
-  jsonConfig: any,
-): Map<string, CredentialInfo> {
+export function buildCredentials(jsonConfig: any): Map<string, CredentialInfo> {
   let credentials: Map<string, CredentialInfo> = new Map<
     string,
     CredentialInfo
@@ -62,12 +66,12 @@ export async function buildAidData(jsonConfig: any): Promise<any> {
 
 export interface IdentifierData {
   type: "singlesig" | "multisig";
-  name: string;  
+  name: string;
   delegator?: string;
 }
 
 export interface SinglesigIdentifierData extends IdentifierData {
-  agent: {name: string, secret: string};  
+  agent: { name: string; secret: string };
 }
 
 export interface MultisigIdentifierData extends IdentifierData {
@@ -75,7 +79,6 @@ export interface MultisigIdentifierData extends IdentifierData {
   isith: string;
   nsith: string;
 }
-
 
 export interface User {
   type: string;

@@ -63,29 +63,19 @@ import { VleiUser } from "./utils/test-data";
 import { WorkflowState } from "./workflow-state";
 
 export class VleiIssuance {
-  constructor() {
-
-  }
+  constructor() {}
 
   // Create client for given AID
-  public static async createClient(identifierData: IdentifierData) {
+  public static async createClient(secret: string, agentName: string) {
     const workflow_state = WorkflowState.getInstance();
-    console.log(`Creating client for aid: ${identifierData.name}`);
-    if (identifierData.type === "multisig") {
-      console.log(`Can't create client for multisig aid: ${identifierData.name}`);
-      return;
-    }
-    const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
-    const client = await getOrCreateClients(
-      1,
-      [singlesigIdentifierData.agent.secret],
-      false,
-    );
-    workflow_state.clients.set(singlesigIdentifierData.agent.name, client![0]);
+    console.log(`Creating client for secret: ${secret}`);
+
+    const client = await getOrCreateClients(1, [secret], false);
+    workflow_state.clients.set(agentName, client![0]);
     return true;
   }
 
-  // Create AID 
+  // Create AID
   public static async createAid(identifierData: IdentifierData) {
     console.log("Creating AID");
     const workflow_state = WorkflowState.getInstance();
@@ -97,15 +87,13 @@ export class VleiIssuance {
       await this.createContacts(identifierData);
       await this.resolveOobi(identifierData);
       workflow_state.aids.set(identifierData.name, aid);
-    }
-    else {
+    } else {
       workflow_state.aidsInfo.set(identifierData.name, identifierData);
       aid = await this.createAidMultisig(identifierData);
       await this.fetchOobi(identifierData);
       workflow_state.aids.set(identifierData.name, aid);
     }
   }
-
 
   // Fetch OOBIs for each client!
   public static async fetchOobis() {
@@ -131,13 +119,11 @@ export class VleiIssuance {
       const multisigIdentifierData = identifierData as MultisigIdentifierData;
       let oobis = [];
       for (const identifierName of multisigIdentifierData.identifiers) {
-        const identifier = workflow_state.aidsInfo.get(multisigIdentifierData.identifiers[0]) as SinglesigIdentifierData;
-        client = workflow_state.clients.get(
-          identifier.agent.name,
-        );
-        oobi = await client!
-          .oobis()
-          .get(identifier.name, "agent");
+        const identifier = workflow_state.aidsInfo.get(
+          multisigIdentifierData.identifiers[0],
+        ) as SinglesigIdentifierData;
+        client = workflow_state.clients.get(identifier.agent.name);
+        oobi = await client!.oobis().get(identifier.name, "agent");
         oobis.push(oobi);
       }
       if (oobi) {
@@ -151,24 +137,35 @@ export class VleiIssuance {
     console.log("Creating Contacts");
     const workflow_state = WorkflowState.getInstance();
     for (const [nameA, contactIdentifierData] of workflow_state.aidsInfo) {
-      if (contactIdentifierData.type === "multisig" || identifierData.type === "multisig") continue;
+      if (
+        contactIdentifierData.type === "multisig" ||
+        identifierData.type === "multisig"
+      )
+        continue;
       if (identifierData.name != contactIdentifierData.name) {
         await this.createContact(identifierData, contactIdentifierData);
       }
     }
   }
 
-
-
-  public static async createContact(aidInfoA: IdentifierData, aidInfoB: IdentifierData) {
+  public static async createContact(
+    aidInfoA: IdentifierData,
+    aidInfoB: IdentifierData,
+  ) {
     const workflow_state = WorkflowState.getInstance();
     if (aidInfoA.type == "singlesig") {
       const singlesigIdentifierDataA = aidInfoA as SinglesigIdentifierData;
       const singlesigIdentifierDataB = aidInfoB as SinglesigIdentifierData;
-      const clientA = workflow_state.clients.get(singlesigIdentifierDataA.agent.name);
-      const clientB = workflow_state.clients.get(singlesigIdentifierDataB.agent.name);
-      const oobiA = workflow_state.oobis.get(singlesigIdentifierDataA.name)?.[0].oobis[0];
-      const oobiB = workflow_state.oobis.get(singlesigIdentifierDataB.name)?.[0].oobis[0];
+      const clientA = workflow_state.clients.get(
+        singlesigIdentifierDataA.agent.name,
+      );
+      const clientB = workflow_state.clients.get(
+        singlesigIdentifierDataB.agent.name,
+      );
+      const oobiA = workflow_state.oobis.get(singlesigIdentifierDataA.name)?.[0]
+        .oobis[0];
+      const oobiB = workflow_state.oobis.get(singlesigIdentifierDataB.name)?.[0]
+        .oobis[0];
       await getOrCreateContact(clientA!, singlesigIdentifierDataB.name, oobiB);
       await getOrCreateContact(clientB!, singlesigIdentifierDataA.name, oobiA);
     }
@@ -182,8 +179,8 @@ export class VleiIssuance {
       ECR_AUTH_SCHEMA_URL,
       ECR_SCHEMA_URL,
       OOR_AUTH_SCHEMA_URL,
-      OOR_SCHEMA_URL
-    ]
+      OOR_SCHEMA_URL,
+    ];
     console.log("Resolving OOBIs");
     const workflow_state = WorkflowState.getInstance();
     for (const [role, client] of workflow_state.clients) {
@@ -200,13 +197,15 @@ export class VleiIssuance {
       ECR_AUTH_SCHEMA_URL,
       ECR_SCHEMA_URL,
       OOR_AUTH_SCHEMA_URL,
-      OOR_SCHEMA_URL
-    ]
+      OOR_SCHEMA_URL,
+    ];
     if (identifierData.type === "singlesig") {
       console.log("Resolving OOBIs for client");
       const workflow_state = WorkflowState.getInstance();
       const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
-      const client = workflow_state.clients.get(singlesigIdentifierData.agent.name);
+      const client = workflow_state.clients.get(
+        singlesigIdentifierData.agent.name,
+      );
       schemaUrls.forEach(async (schemaUrl) => {
         await resolveOobi(client!, schemaUrl);
       });
@@ -218,12 +217,12 @@ export class VleiIssuance {
     const workflow_state = WorkflowState.getInstance();
     let registry;
     if (identifierData.type == "multisig") {
-      registry = await this.createRegistryMultisig(
-        identifierData,
-      );
+      registry = await this.createRegistryMultisig(identifierData);
     } else {
       const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
-      const client = workflow_state.clients.get(singlesigIdentifierData.agent.name);
+      const client = workflow_state.clients.get(
+        singlesigIdentifierData.agent.name,
+      );
       registry = await getOrCreateRegistry(
         client!,
         workflow_state.aids.get(identifierData.name),
@@ -232,9 +231,7 @@ export class VleiIssuance {
     }
 
     workflow_state.registries.set(identifierData.name, registry);
-
   }
-
 
   public static async createAidSinglesig(identifierData: IdentifierData) {
     const workflow_state = WorkflowState.getInstance();
@@ -244,19 +241,22 @@ export class VleiIssuance {
       wits: workflow_state.kargsAID.wits,
     };
     const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
-    const client = workflow_state.clients.get(singlesigIdentifierData.agent.name);
+    const client = workflow_state.clients.get(
+      singlesigIdentifierData.agent.name,
+    );
 
     if (delegator != null) {
       try {
         const aid = await client!.identifiers().get(identifierData.name);
         return aid;
-      }
-      catch {
-        console.log(`Creating delegated AID for: ${identifierData.name}`)
+      } catch {
+        console.log(`Creating delegated AID for: ${identifierData.name}`);
       }
 
       kargsSinglesigAID.delpre = workflow_state.aids.get(delegator).prefix;
-      const delegatorIdentifierData = workflow_state.aidsInfo.get(delegator) as SinglesigIdentifierData;
+      const delegatorIdentifierData = workflow_state.aidsInfo.get(
+        delegator,
+      ) as SinglesigIdentifierData;
       const delegatorclient = workflow_state.clients.get(
         delegatorIdentifierData.agent.name,
       );
@@ -311,7 +311,11 @@ export class VleiIssuance {
       await waitOperation(client!, await rpyResult2.op());
       return aid2;
     } else {
-      const aid = await getOrCreateAID(client!, identifierData.name, kargsSinglesigAID);
+      const aid = await getOrCreateAID(
+        client!,
+        identifierData.name,
+        kargsSinglesigAID,
+      );
       return aid;
     }
   }
@@ -320,16 +324,19 @@ export class VleiIssuance {
     const workflow_state = WorkflowState.getInstance();
     const multisigIdentifierData = identifierData as MultisigIdentifierData;
     let multisigAids: HabState[] = [];
-    const aidIdentifierNames: Array<string> = multisigIdentifierData.identifiers;
+    const aidIdentifierNames: Array<string> =
+      multisigIdentifierData.identifiers;
 
     let issuerAids =
-      aidIdentifierNames.map(
-        (aidIdentifierName) => workflow_state.aids.get(aidIdentifierName),
+      aidIdentifierNames.map((aidIdentifierName) =>
+        workflow_state.aids.get(aidIdentifierName),
       ) || [];
 
     try {
       for (const aidIdentifierName of aidIdentifierNames) {
-        const singlesigIdentifierData = workflow_state.aidsInfo.get(aidIdentifierName) as SinglesigIdentifierData;
+        const singlesigIdentifierData = workflow_state.aidsInfo.get(
+          aidIdentifierName,
+        ) as SinglesigIdentifierData;
         const client = workflow_state.clients.get(
           singlesigIdentifierData.agent.name,
         );
@@ -355,12 +362,16 @@ export class VleiIssuance {
         rstates: rstates,
       };
       if (identifierData.delegator != null) {
-        kargsMultisigAID.delpre = workflow_state.aids.get(multisigIdentifierData.delegator!).prefix;
+        kargsMultisigAID.delpre = workflow_state.aids.get(
+          multisigIdentifierData.delegator!,
+        ).prefix;
       }
       let multisigOps: any[] = [];
       for (let index = 0; index < issuerAids.length; index++) {
         const aid = issuerAids[index];
-        const singlesigIdentifierData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+        const singlesigIdentifierData = workflow_state.aidsInfo.get(
+          aid.name,
+        ) as SinglesigIdentifierData;
         const kargsMultisigAIDClone = { ...kargsMultisigAID, mhab: aid };
         const otherAids = issuerAids.filter((aidTmp) => aid !== aidTmp);
         const client = workflow_state.clients.get(
@@ -380,12 +391,14 @@ export class VleiIssuance {
       }
       if (multisigIdentifierData.delegator) {
         // Approve delegation
-        const delegatoridentifierData = workflow_state.aidsInfo.get(multisigIdentifierData.delegator) as MultisigIdentifierData;
+        const delegatoridentifierData = workflow_state.aidsInfo.get(
+          multisigIdentifierData.delegator,
+        ) as MultisigIdentifierData;
         const delegatorAidIdentifierNames: Array<string> =
           delegatoridentifierData.identifiers;
         let delegatorAids =
-          delegatorAidIdentifierNames.map(
-            (aidIdentifierName) => workflow_state.aids.get(aidIdentifierName),
+          delegatorAidIdentifierNames.map((aidIdentifierName) =>
+            workflow_state.aids.get(aidIdentifierName),
           ) || [];
         const teepre = multisigOps[0][1].name.split(".")[1];
         const anchor = {
@@ -394,7 +407,9 @@ export class VleiIssuance {
           d: teepre,
         };
         let delegatorClientInitiator;
-        const delegatorMultisigAid = workflow_state.aids.get(delegatoridentifierData.name);
+        const delegatorMultisigAid = workflow_state.aids.get(
+          delegatoridentifierData.name,
+        );
         let delegateOps = [];
         for (
           let index = 0;
@@ -402,12 +417,16 @@ export class VleiIssuance {
           index++
         ) {
           const curAidName = delegatoridentifierData.identifiers[index];
-          const curidentifierData = workflow_state.aidsInfo.get(curAidName) as SinglesigIdentifierData;
+          const curidentifierData = workflow_state.aidsInfo.get(
+            curAidName,
+          ) as SinglesigIdentifierData;
           const aid = workflow_state.aids.get(curAidName);
           const otherAids = delegatorAids.filter(
             (aidTmp: any) => aid.prefix !== aidTmp.prefix,
           );
-          const delegatorclient = workflow_state.clients.get(curidentifierData.agent.name);
+          const delegatorclient = workflow_state.clients.get(
+            curidentifierData.agent.name,
+          );
 
           const delApprOp = await delegateMultisig(
             delegatorclient!,
@@ -431,8 +450,12 @@ export class VleiIssuance {
           await waitOperation(client!, op);
         }
         for (const identifier of delegatoridentifierData.identifiers) {
-          const curidentifierData = workflow_state.aidsInfo.get(identifier) as SinglesigIdentifierData;
-          const delegatorclient = workflow_state.clients.get(curidentifierData.agent.name);
+          const curidentifierData = workflow_state.aidsInfo.get(
+            identifier,
+          ) as SinglesigIdentifierData;
+          const delegatorclient = workflow_state.clients.get(
+            curidentifierData.agent.name,
+          );
           const queryOp1 = await delegatorclient!
             .keyStates()
             .query(delegatorMultisigAid.prefix, "1");
@@ -440,8 +463,12 @@ export class VleiIssuance {
         }
 
         for (const identifier of multisigIdentifierData.identifiers) {
-          const curidentifierData = workflow_state.aidsInfo.get(identifier) as SinglesigIdentifierData;
-          const delegateeclient = workflow_state.clients.get(curidentifierData.agent.name);
+          const curidentifierData = workflow_state.aidsInfo.get(
+            identifier,
+          ) as SinglesigIdentifierData;
+          const delegateeclient = workflow_state.clients.get(
+            curidentifierData.agent.name,
+          );
           const ksteetor1 = await delegateeclient!
             .keyStates()
             .query(delegatorMultisigAid.prefix, "1");
@@ -455,7 +482,9 @@ export class VleiIssuance {
       }
 
       // Wait for multisig inception notifications for all clients
-      const tmpAidData = workflow_state.aidsInfo.get(issuerAids[0].name) as SinglesigIdentifierData;
+      const tmpAidData = workflow_state.aidsInfo.get(
+        issuerAids[0].name,
+      ) as SinglesigIdentifierData;
       await waitAndMarkNotification(
         workflow_state.clients.get(tmpAidData.agent.name)!,
         "/multisig/icp",
@@ -463,10 +492,10 @@ export class VleiIssuance {
       // Retrieve the newly created AIDs for all clients
       multisigAids = await Promise.all(
         issuerAids.map(async (aid) => {
-          const tmpAidData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-          const client = workflow_state.clients.get(
-            tmpAidData.agent.name,
-          );
+          const tmpAidData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
+          const client = workflow_state.clients.get(tmpAidData.agent.name);
           return await client!.identifiers().get(identifierData.name);
         }),
       );
@@ -480,10 +509,10 @@ export class VleiIssuance {
       // Skip if they have already been authorized.
       let oobis: Array<any> = await Promise.all(
         issuerAids.map(async (aid) => {
-          const tmpAidData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-          const client = workflow_state.clients.get(
-            tmpAidData.agent.name,
-          );
+          const tmpAidData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
+          const client = workflow_state.clients.get(tmpAidData.agent.name);
           return await client!.oobis().get(multisigAid.name, "agent");
         }),
       );
@@ -495,10 +524,10 @@ export class VleiIssuance {
         const roleOps = await Promise.all(
           issuerAids.map(async (aid, index) => {
             const otherAids = issuerAids.filter((_, i) => i !== index);
-            const tmpAidData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-            const client = workflow_state.clients.get(
-              tmpAidData.agent.name,
-            );
+            const tmpAidData = workflow_state.aidsInfo.get(
+              aid.name,
+            ) as SinglesigIdentifierData;
+            const client = workflow_state.clients.get(tmpAidData.agent.name);
             return await addEndRoleMultisig(
               client!,
               multisigAid.name,
@@ -514,10 +543,10 @@ export class VleiIssuance {
         // Wait for all role operations to complete for each client!
         for (let i = 0; i < roleOps.length; i++) {
           for (let j = 0; j < roleOps[i].length; j++) {
-            const tmpAidData = workflow_state.aidsInfo.get(issuerAids[i].name) as SinglesigIdentifierData;
-            const client = workflow_state.clients.get(
-              tmpAidData.agent.name,
-            );
+            const tmpAidData = workflow_state.aidsInfo.get(
+              issuerAids[i].name,
+            ) as SinglesigIdentifierData;
+            const client = workflow_state.clients.get(tmpAidData.agent.name);
             await waitOperation(client!, roleOps[i][j]);
           }
         }
@@ -526,10 +555,10 @@ export class VleiIssuance {
         // await waitAndMarkNotification(workflow_state.clients.get(workflow_state.aidsInfo.get(issuerAids[0].name).agent.name), "/multisig/rpy");
         await Promise.all(
           issuerAids.map((aid) => {
-            const tmpAidData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-            const client = workflow_state.clients.get(
-              tmpAidData.agent.name,
-            );
+            const tmpAidData = workflow_state.aidsInfo.get(
+              aid.name,
+            ) as SinglesigIdentifierData;
+            const client = workflow_state.clients.get(tmpAidData.agent.name);
             return waitAndMarkNotification(client!, "/multisig/rpy");
           }),
         );
@@ -537,10 +566,10 @@ export class VleiIssuance {
         // Retrieve the OOBI again after the operation for all clients
         oobis = await Promise.all(
           issuerAids.map(async (aid) => {
-            const tmpAidData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-            const client = workflow_state.clients.get(
-              tmpAidData.agent.name,
-            );
+            const tmpAidData = workflow_state.aidsInfo.get(
+              aid.name,
+            ) as SinglesigIdentifierData;
+            const client = workflow_state.clients.get(tmpAidData.agent.name);
             return await client!.oobis().get(multisigAid.name, "agent");
           }),
         );
@@ -569,15 +598,18 @@ export class VleiIssuance {
     const workflow_state = WorkflowState.getInstance();
     const multisigAid: HabState = workflow_state.aids.get(identifierData.name);
     const registryIdentifierName = `${identifierData.name}Registry`;
-    const aidIdentifierNames: Array<string> = multisigIdentifierData.identifiers;
+    const aidIdentifierNames: Array<string> =
+      multisigIdentifierData.identifiers;
     let registries: Array<any> = new Array<any>();
     let issuerAids =
-      aidIdentifierNames.map(
-        (aidIdentifierName) => workflow_state.aids.get(aidIdentifierName),
+      aidIdentifierNames.map((aidIdentifierName) =>
+        workflow_state.aids.get(aidIdentifierName),
       ) || [];
     // Check if the registries already exist
     for (const aidIdentifierName of aidIdentifierNames) {
-      const singlesigIdentifierData = workflow_state.aidsInfo.get(aidIdentifierName) as SinglesigIdentifierData;
+      const singlesigIdentifierData = workflow_state.aidsInfo.get(
+        aidIdentifierName,
+      ) as SinglesigIdentifierData;
       const client = workflow_state.clients.get(
         singlesigIdentifierData.agent.name,
       );
@@ -594,11 +626,11 @@ export class VleiIssuance {
     if (allEmpty) {
       const nonce = randomNonce();
       const registryOps = issuerAids!.map((aid, index) => {
-        const tmpAidData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+        const tmpAidData = workflow_state.aidsInfo.get(
+          aid.name,
+        ) as SinglesigIdentifierData;
         const otherAids = issuerAids!.filter((_, i) => i !== index);
-        const client = workflow_state.clients.get(
-          tmpAidData.agent.name,
-        );
+        const client = workflow_state.clients.get(tmpAidData.agent.name);
         return createRegistryMultisig(
           client!,
           aid,
@@ -616,16 +648,18 @@ export class VleiIssuance {
       // Wait for all operations to complete across multiple clients
       await Promise.all(
         createdOps.map(async (op, index) => {
-          const tmpAidData = workflow_state.aidsInfo.get(issuerAids![index].name) as SinglesigIdentifierData;
-          const client = workflow_state.clients.get(
-            tmpAidData.agent.name,
-          );
+          const tmpAidData = workflow_state.aidsInfo.get(
+            issuerAids![index].name,
+          ) as SinglesigIdentifierData;
+          const client = workflow_state.clients.get(tmpAidData.agent.name);
           return await waitOperation(client!, op);
         }),
       );
 
       // Wait for multisig inception notification for each client!
-      const tmpAidData = workflow_state.aidsInfo.get(issuerAids[0].name) as SinglesigIdentifierData;
+      const tmpAidData = workflow_state.aidsInfo.get(
+        issuerAids[0].name,
+      ) as SinglesigIdentifierData;
       await waitAndMarkNotification(
         workflow_state.clients.get(tmpAidData.agent.name)!,
         "/multisig/vcp",
@@ -634,10 +668,10 @@ export class VleiIssuance {
       // Recheck the registries for each client!
       const updatedRegistries = await Promise.all(
         issuerAids.map((aid) => {
-          const tmpAidData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-          const client = workflow_state.clients.get(
-            tmpAidData.agent.name,
-          );
+          const tmpAidData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
+          const client = workflow_state.clients.get(tmpAidData.agent.name);
           return client!.registries().list(multisigAid.name);
         }),
       );
@@ -737,13 +771,20 @@ export class VleiIssuance {
     testName: string = "default_test",
   ): Promise<any> {
     const workflow_state = WorkflowState.getInstance();
-    const credInfo: CredentialInfo = workflow_state.credentialsInfo.get(credName)!;
+    const credInfo: CredentialInfo =
+      workflow_state.credentialsInfo.get(credName)!;
     const issuerAID = workflow_state.aids.get(issuerAidKey);
     const recipientAID = workflow_state.aids.get(issueeAidKey);
-    const issuerAIDInfo = workflow_state.aidsInfo.get(issuerAidKey)! as SinglesigIdentifierData;
-    const recipientAIDInfo = workflow_state.aidsInfo.get(issueeAidKey)! as SinglesigIdentifierData;
+    const issuerAIDInfo = workflow_state.aidsInfo.get(
+      issuerAidKey,
+    )! as SinglesigIdentifierData;
+    const recipientAIDInfo = workflow_state.aidsInfo.get(
+      issueeAidKey,
+    )! as SinglesigIdentifierData;
     const issuerclient = workflow_state.clients.get(issuerAIDInfo.agent.name);
-    const recipientclient = workflow_state.clients.get(recipientAIDInfo.agent.name);
+    const recipientclient = workflow_state.clients.get(
+      recipientAIDInfo.agent.name,
+    );
 
     const issuerRegistry = workflow_state.registries.get(issuerAIDInfo.name)!;
     const schema = workflow_state.schemas[credInfo.schema];
@@ -823,8 +864,11 @@ export class VleiIssuance {
     testName: string = "default_test",
   ) {
     const workflow_state = WorkflowState.getInstance();
-    const credInfo: CredentialInfo = workflow_state.credentialsInfo.get(credName)!;
-    const issuerAidInfo = workflow_state.aidsInfo.get(issuerAidKey)! as MultisigIdentifierData;
+    const credInfo: CredentialInfo =
+      workflow_state.credentialsInfo.get(credName)!;
+    const issuerAidInfo = workflow_state.aidsInfo.get(
+      issuerAidKey,
+    )! as MultisigIdentifierData;
     const recipientAidInfo = workflow_state.aidsInfo.get(issueeAidKey)!;
     const issuerAidIdentifierName = issuerAidInfo.name;
     const recipientAidIdentifierName = recipientAidInfo.name;
@@ -837,16 +881,16 @@ export class VleiIssuance {
     const registryName = issuerAidInfo.name;
     let issuerRegistry = workflow_state.registries.get(registryName)!;
     const issuerAids =
-      issuerAidInfo.identifiers.map(
-        (identifier: any) => workflow_state.aids.get(identifier),
+      issuerAidInfo.identifiers.map((identifier: any) =>
+        workflow_state.aids.get(identifier),
       ) || [];
     let recepientAids = [];
 
     if (recipientAidInfo.type === "multisig") {
       const multisigIdentifierData = recipientAidInfo as MultisigIdentifierData;
       recepientAids =
-        multisigIdentifierData.identifiers.map(
-          (identifier: any) => workflow_state.aids.get(identifier),
+        multisigIdentifierData.identifiers.map((identifier: any) =>
+          workflow_state.aids.get(identifier),
         ) || [];
     } else {
       recepientAids = [workflow_state.aids.get(recipientAidInfo.name)];
@@ -869,8 +913,13 @@ export class VleiIssuance {
         const singlesigData = identifierData as SinglesigIdentifierData;
         const client = workflow_state.clients.get(singlesigData.agent.name);
 
-        return getIssuedCredential(client!, issuerAIDMultisig, recipientAID, schema);
-      })
+        return getIssuedCredential(
+          client!,
+          issuerAIDMultisig,
+          recipientAID,
+          schema,
+        );
+      }),
     );
 
     if (creds.every((cred) => !cred)) {
@@ -910,32 +959,33 @@ export class VleiIssuance {
             kargsIss,
             index === 0,
           );
-        })
+        }),
       );
 
       await Promise.all(
         issuerAids.map((aid: any, index: any) => {
-          const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-          const client = workflow_state.clients.get(
-            singlesigData.agent.name,
-          );
+          const singlesigData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
+          const client = workflow_state.clients.get(singlesigData.agent.name);
           return waitOperation(client!, IssOps[index]);
         }),
       );
 
-      let tmpAidData = workflow_state.aidsInfo.get(issuerAids[0].name) as SinglesigIdentifierData;
+      let tmpAidData = workflow_state.aidsInfo.get(
+        issuerAids[0].name,
+      ) as SinglesigIdentifierData;
       await waitAndMarkNotification(
         workflow_state.clients.get(tmpAidData.agent.name)!,
         "/multisig/iss",
       );
 
-
       creds = await Promise.all(
         issuerAids.map((aid: any, index: any) => {
-          const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-          const client = workflow_state.clients.get(
-            singlesigData.agent.name,
-          );
+          const singlesigData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
+          const client = workflow_state.clients.get(singlesigData.agent.name);
           return getIssuedCredential(
             client!,
             issuerAIDMultisig,
@@ -948,10 +998,10 @@ export class VleiIssuance {
       const grantTime = createTimestamp();
       await Promise.all(
         creds.map((cred, index) => {
-          const singlesigData = workflow_state.aidsInfo.get(issuerAids[index].name) as SinglesigIdentifierData;
-          const client = workflow_state.clients.get(
-            singlesigData.agent.name,
-          );
+          const singlesigData = workflow_state.aidsInfo.get(
+            issuerAids[index].name,
+          ) as SinglesigIdentifierData;
+          const client = workflow_state.clients.get(singlesigData.agent.name);
           return grantMultisig(
             client!,
             issuerAids[index],
@@ -965,7 +1015,9 @@ export class VleiIssuance {
         }),
       );
       sleep(1000);
-      tmpAidData = workflow_state.aidsInfo.get(issuerAids[0].name) as SinglesigIdentifierData;
+      tmpAidData = workflow_state.aidsInfo.get(
+        issuerAids[0].name,
+      ) as SinglesigIdentifierData;
       await waitAndMarkNotification(
         workflow_state.clients.get(tmpAidData.agent.name)!,
         "/multisig/exn",
@@ -978,10 +1030,10 @@ export class VleiIssuance {
     if (recipientAidInfo.type === "multisig") {
       let credsReceived = await Promise.all(
         recepientAids.map((aid: any) => {
-          const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-          const client = workflow_state.clients.get(
-            singlesigData.agent.name,
-          );
+          const singlesigData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
+          const client = workflow_state.clients.get(singlesigData.agent.name);
           return getReceivedCredential(client!, cred.sad.d);
         }),
       );
@@ -991,10 +1043,10 @@ export class VleiIssuance {
 
         await Promise.all(
           recepientAids.map((aid: any, index: any) => {
-            const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-            const client = workflow_state.clients.get(
-              singlesigData.agent.name,
-            );
+            const singlesigData = workflow_state.aidsInfo.get(
+              aid.name,
+            ) as SinglesigIdentifierData;
+            const client = workflow_state.clients.get(singlesigData.agent.name);
             return admitMultisig(
               client!,
               aid,
@@ -1007,21 +1059,27 @@ export class VleiIssuance {
         );
         sleep(2000);
         for (const aid of issuerAids) {
-          const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+          const singlesigData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
           await waitAndMarkNotification(
             workflow_state.clients.get(singlesigData.agent.name)!,
             "/exn/ipex/admit",
           );
         }
         for (const aid of recepientAids) {
-          const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+          const singlesigData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
           await waitAndMarkNotification(
             workflow_state.clients.get(singlesigData.agent.name)!,
             "/multisig/exn",
           );
         }
         for (const aid of recepientAids) {
-          const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+          const singlesigData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
           await waitAndMarkNotification(
             workflow_state.clients.get(singlesigData.agent.name)!,
             "/exn/ipex/admit",
@@ -1030,10 +1088,10 @@ export class VleiIssuance {
         sleep(1000);
         credsReceived = await Promise.all(
           recepientAids.map((aid: any) => {
-            const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
-            const client = workflow_state.clients.get(
-              singlesigData.agent.name,
-            );
+            const singlesigData = workflow_state.aidsInfo.get(
+              aid.name,
+            ) as SinglesigIdentifierData;
+            const client = workflow_state.clients.get(singlesigData.agent.name);
             return waitForCredential(client!, cred.sad.d);
           }),
         );
@@ -1044,24 +1102,24 @@ export class VleiIssuance {
         }
       }
     } else {
-      const singlesigData = workflow_state.aidsInfo.get(recepientAids[0]!.name) as SinglesigIdentifierData;
+      const singlesigData = workflow_state.aidsInfo.get(
+        recepientAids[0]!.name,
+      ) as SinglesigIdentifierData;
       let credReceived = await getReceivedCredential(
-        workflow_state.clients.get(
-          singlesigData.agent.name,
-        )!,
+        workflow_state.clients.get(singlesigData.agent.name)!,
         cred.sad.d,
       );
       if (!credReceived) {
         await admitSinglesig(
-          workflow_state.clients.get(
-            singlesigData.agent.name,
-          )!,
+          workflow_state.clients.get(singlesigData.agent.name)!,
           workflow_state.aids.get(recepientAids[0]!.name).name,
           issuerAIDMultisig,
         );
         sleep(2000);
         for (const aid of issuerAids) {
-          const singlesigData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+          const singlesigData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
           await waitAndMarkNotification(
             workflow_state.clients.get(singlesigData.agent.name)!,
             "/exn/ipex/admit",
@@ -1069,9 +1127,7 @@ export class VleiIssuance {
         }
 
         credReceived = await waitForCredential(
-          workflow_state.clients.get(
-            singlesigData.agent.name,
-          )!,
+          workflow_state.clients.get(singlesigData.agent.name)!,
           cred.sad.d,
         );
       }
@@ -1096,12 +1152,22 @@ export class VleiIssuance {
     const cred: any = workflow_state.credentials.get(credId)!;
     const issuerAID = workflow_state.aids.get(issuerAidKey);
     const recipientAID = workflow_state.aids.get(issueeAidKey);
-    const issuerAIDInfo = workflow_state.aidsInfo.get(issuerAidKey)! as SinglesigIdentifierData;
-    const recipientAIDInfo = workflow_state.aidsInfo.get(issueeAidKey)! as SinglesigIdentifierData;
-    const recipientclient = workflow_state.clients.get(recipientAIDInfo.agent.name);
+    const issuerAIDInfo = workflow_state.aidsInfo.get(
+      issuerAidKey,
+    )! as SinglesigIdentifierData;
+    const recipientAIDInfo = workflow_state.aidsInfo.get(
+      issueeAidKey,
+    )! as SinglesigIdentifierData;
+    const recipientclient = workflow_state.clients.get(
+      recipientAIDInfo.agent.name,
+    );
     const issuerclient = workflow_state.clients.get(issuerAIDInfo.agent.name);
 
-    const revCred = await revokeCredential(issuerclient!, issuerAID, cred.sad.d);
+    const revCred = await revokeCredential(
+      issuerclient!,
+      issuerAID,
+      cred.sad.d,
+    );
     workflow_state.credentials.set(credId, revCred);
     const credCesr = await issuerclient!.credentials().get(revCred.sad.d, true);
     if (generateTestData) {
@@ -1135,11 +1201,13 @@ export class VleiIssuance {
     const workflow_state = WorkflowState.getInstance();
     const recipientAID = workflow_state.aids.get(issueeAidKey);
     const cred: any = workflow_state.credentials.get(credId)!;
-    const issuerAidInfo = workflow_state.aidsInfo.get(issuerAidKey)! as MultisigIdentifierData;
+    const issuerAidInfo = workflow_state.aidsInfo.get(
+      issuerAidKey,
+    )! as MultisigIdentifierData;
     const issuerAIDMultisig = workflow_state.aids.get(issuerAidKey);
     const issuerAids =
-      issuerAidInfo.identifiers.map(
-        (identifier: any) => workflow_state.aids.get(identifier),
+      issuerAidInfo.identifiers.map((identifier: any) =>
+        workflow_state.aids.get(identifier),
       ) || [];
     let revCred: any;
     let issuerclient!: any;
@@ -1147,7 +1215,9 @@ export class VleiIssuance {
     let i = 0;
     const REVTIME = new Date().toISOString().replace("Z", "000+00:00");
     for (const issuerAid of issuerAids) {
-      const aidInfo = workflow_state.aidsInfo.get(issuerAid.name)! as SinglesigIdentifierData;
+      const aidInfo = workflow_state.aidsInfo.get(
+        issuerAid.name,
+      )! as SinglesigIdentifierData;
       issuerclient = workflow_state.clients.get(aidInfo.agent.name);
       if (i != 0) {
         const msgSaid = await waitAndMarkNotification(
@@ -1198,47 +1268,49 @@ export class VleiIssuance {
   public static async notifyCredentialIssuee(
     credId: string,
     issuerAidKey: string,
-    issueeAidKey: string
+    issueeAidKey: string,
   ) {
     const workflow_state = WorkflowState.getInstance();
     const cred: any = workflow_state.credentials.get(credId)!;
 
     if (!cred) {
-      console.log(`notifyCredential: credential with credId=${credId} was not found`);
-      throw new Error(`notifyCredential: credential with credId=${credId} was not found`);
+      console.log(
+        `notifyCredential: credential with credId=${credId} was not found`,
+      );
+      throw new Error(
+        `notifyCredential: credential with credId=${credId} was not found`,
+      );
     }
     const issuerAID = workflow_state.aids.get(issuerAidKey);
     const recipientAID = workflow_state.aids.get(issueeAidKey);
     const issuerAIDInfo = workflow_state.aidsInfo.get(issuerAidKey)!;
     const recipientAIDInfo = workflow_state.aidsInfo.get(issueeAidKey)!;
 
-
     if (issuerAIDInfo.type === "multisig") {
       const multisigIdentifierData = issuerAIDInfo as MultisigIdentifierData;
       const schema = workflow_state.schemas[cred.schema];
       const issuerAids =
-        multisigIdentifierData.identifiers.map(
-          (identifier: any) => workflow_state.aids.get(identifier),
+        multisigIdentifierData.identifiers.map((identifier: any) =>
+          workflow_state.aids.get(identifier),
         ) || [];
       const creds = await Promise.all(
         issuerAids.map((aid: any, index: any) => {
-          const singlesigIdentifierData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+          const singlesigIdentifierData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
           const client = workflow_state.clients.get(
             singlesigIdentifierData.agent.name,
           );
-          return getIssuedCredential(
-            client!,
-            issuerAID,
-            recipientAID,
-            schema,
-          );
+          return getIssuedCredential(client!, issuerAID, recipientAID, schema);
         }),
       );
       sleep(1000);
       const grantTime = createTimestamp();
       await Promise.all(
         creds.map((cred, index) => {
-          const singlesigIdentifierData = workflow_state.aidsInfo.get(issuerAids[index].name) as SinglesigIdentifierData;
+          const singlesigIdentifierData = workflow_state.aidsInfo.get(
+            issuerAids[index].name,
+          ) as SinglesigIdentifierData;
           const client = workflow_state.clients.get(
             singlesigIdentifierData.agent.name,
           );
@@ -1254,28 +1326,33 @@ export class VleiIssuance {
           );
         }),
       );
-    }
-    else {
+    } else {
       const singlesigIdentifierData = issuerAIDInfo as SinglesigIdentifierData;
-      const issuerclient = workflow_state.clients.get(singlesigIdentifierData.agent.name);
+      const issuerclient = workflow_state.clients.get(
+        singlesigIdentifierData.agent.name,
+      );
       await sendGrantMessage(issuerclient!, issuerAID, recipientAID, cred);
     }
 
     if (recipientAIDInfo.type === "multisig") {
-      const multisigRecipientIdentifierData = recipientAIDInfo as MultisigIdentifierData;
-      const multisigIssuerIdentifierData = issuerAIDInfo as MultisigIdentifierData;
+      const multisigRecipientIdentifierData =
+        recipientAIDInfo as MultisigIdentifierData;
+      const multisigIssuerIdentifierData =
+        issuerAIDInfo as MultisigIdentifierData;
       const admitTime = createTimestamp();
       const issuerAids =
-        multisigIssuerIdentifierData.identifiers.map(
-          (identifier: any) => workflow_state.aids.get(identifier),
+        multisigIssuerIdentifierData.identifiers.map((identifier: any) =>
+          workflow_state.aids.get(identifier),
         ) || [];
       const recepientAids =
-        multisigRecipientIdentifierData.identifiers.map(
-          (identifier: any) => workflow_state.aids.get(identifier),
+        multisigRecipientIdentifierData.identifiers.map((identifier: any) =>
+          workflow_state.aids.get(identifier),
         ) || [];
       await Promise.all(
         recepientAids.map((aid: any, index: any) => {
-          const singlesigIdentifierData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+          const singlesigIdentifierData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
           const client = workflow_state.clients.get(
             singlesigIdentifierData.agent.name,
           );
@@ -1291,21 +1368,27 @@ export class VleiIssuance {
       );
       sleep(2000);
       for (const aid of issuerAids) {
-        const singlesigIdentifierData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+        const singlesigIdentifierData = workflow_state.aidsInfo.get(
+          aid.name,
+        ) as SinglesigIdentifierData;
         await waitAndMarkNotification(
           workflow_state.clients.get(singlesigIdentifierData.agent.name)!,
           "/exn/ipex/admit",
         );
       }
       for (const aid of recepientAids) {
-        const singlesigIdentifierData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+        const singlesigIdentifierData = workflow_state.aidsInfo.get(
+          aid.name,
+        ) as SinglesigIdentifierData;
         await waitAndMarkNotification(
           workflow_state.clients.get(singlesigIdentifierData.agent.name)!,
           "/multisig/exn",
         );
       }
       for (const aid of recepientAids) {
-        const singlesigIdentifierData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+        const singlesigIdentifierData = workflow_state.aidsInfo.get(
+          aid.name,
+        ) as SinglesigIdentifierData;
         await waitAndMarkNotification(
           workflow_state.clients.get(singlesigIdentifierData.agent.name)!,
           "/exn/ipex/admit",
@@ -1314,17 +1397,21 @@ export class VleiIssuance {
       sleep(1000);
       const credsReceived = await Promise.all(
         recepientAids.map((aid: any) => {
-          const singlesigIdentifierData = workflow_state.aidsInfo.get(aid.name) as SinglesigIdentifierData;
+          const singlesigIdentifierData = workflow_state.aidsInfo.get(
+            aid.name,
+          ) as SinglesigIdentifierData;
           const client = workflow_state.clients.get(
             singlesigIdentifierData.agent.name,
           );
           return waitForCredential(client!, cred.sad.d);
         }),
       );
-    }
-    else {
-      const singlesigIdentifierData = recipientAIDInfo as SinglesigIdentifierData;
-      const recipientclient = workflow_state.clients.get(singlesigIdentifierData.agent.name);
+    } else {
+      const singlesigIdentifierData =
+        recipientAIDInfo as SinglesigIdentifierData;
+      const recipientclient = workflow_state.clients.get(
+        singlesigIdentifierData.agent.name,
+      );
       await sendAdmitMessage(recipientclient!, recipientAID, issuerAID);
     }
   }

@@ -3,23 +3,23 @@ workflow:
     gleif_client:
       id: "gleif_client"
       type: "create_client"
-      aid: "gleif-aid-1"
-      description: "Creating client for gleif-aid-1"
+      agent_name: "gleif-agent-1"
+      description: "Creating client for gleif-agent-1"
     qvi_client:
       id: "qvi_client"
       type: "create_client"
-      aid: "qvi-aid-1"
-      description: "Creating client for qvi-aid-1"
+      agent_name: "qvi-agent-1"
+      description: "Creating client for qvi-agent-1"
     le_client:
       id: "le_client"
       type: "create_client"
-      aid: "le-aid-1"
-      description: "Creating client for le-aid-1"
+      agent_name: "le-agent-1"
+      description: "Creating client for le-agent-1"
     ecr_client:
       id: "ecr_client"
       type: "create_client"
-      aid: "ecr-aid-1"
-      description: "Creating client for ecr-aid-1"
+      agent_name: "ecr-agent-1"
+      description: "Creating client for ecr-agent-1"
     gleif_aid:
       id: "gleif_aid"
       type: "create_aid"
@@ -60,10 +60,6 @@ workflow:
       type: "create_registry"
       aid: "ecr-aid-1"
       description: "Creating registry for ecr-aid-1"
-    contacts:
-      id: "contacts"
-      type: "create_contacts"
-      description: "Creating contacts"
     qvi_cred:
       id: "qvi_cred"
       type: "issue_credential"
@@ -94,16 +90,20 @@ workflow:
       description: "LE issues ECR vLEI credential"
       credential: "le_to_ecr_vlei_cred"
       credential_source: "le_cred"
+    add_root_of_trust:
+      id: "add_root_of_trust"
+      type: "add_root_of_trust"
+      description: "Adding Root of Trust"
     credential_verification_valid_verified:
       id: "credential_verification_valid_verified"
       type: "credential_verification"
       presenter_aid: "ecr-aid-1"
-      description: "Running Credential Verification for ecr-aid-1"      
+      description: "Running Credential Verification for ecr-aid-1"
       credential: "ecr_cred"
       actions:
-        present: 
+        present:
           type: "presentation"
           expected_status: "cred_crypt_valid"
-        authorize: 
+        authorize:
           type: "authorization"
           expected_status: "cred_verified"

@@ -137,7 +137,7 @@ export function resolveEnvironment(
           process.env.CONFIGURATION ||
           "configuration-singlesig-single-user.json",
       };
-      break;    
+      break;
     default:
       throw new Error(`Unknown test environment preset '${preset}'`);
   }
