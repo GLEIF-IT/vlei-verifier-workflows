@@ -30,19 +30,20 @@ workflow:
       description: "LE issues ECR vLEI credential"
       credential: "le_to_ecr_vlei_cred"
       credential_source: "le_cred"
-    gen_report_ecr1:
-      id: "gen_report_ecr1"
-      type: "generate_report"
-      aid: "ecr-aid-1"
-      description: "Generating reports for ecr-aid-1 user"
-    api_test_ecr1:
-      id: "api_test_ecr1"
-      type: "api_test"
-      test_case: "api_test"
-      aids: ["ecr-aid-1"]
-      description: "Running API test for ecr-aid-1 user"
-    vlei_verification_test_1:
-      id: "vlei_verification_1"
-      type: "vlei_verification_test"
-      aids: ["ecr-aid-1"]
-      description: "Running Vlei Verification test for ecr-aid-1 user"
+    add_root_of_trust:
+      id: "add_root_of_trust"
+      type: "add_root_of_trust"
+      description: "Adding Root of Trust"
+    credential_verification_valid_verified:
+      id: "credential_verification_valid_verified"
+      type: "credential_verification"
+      presenter_aid: "ecr-aid-1"
+      description: "Running Credential Verification for ecr-aid-1"      
+      credential: "ecr_cred"
+      actions:
+        present: 
+          type: "presentation"
+          expected_status: "cred_crypt_valid"
+        authorize: 
+          type: "authorization"
+          expected_status: "cred_verified"

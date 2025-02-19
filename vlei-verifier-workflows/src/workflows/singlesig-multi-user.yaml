@@ -62,29 +62,3 @@ workflow:
       description: "LE issues ECR vLEI credential"
       credential: "le_to_ecr_vlei_cred"
       credential_source: "le_cred2"
-    gen_report_ecr1:
-      id: "gen_report_ecr1"
-      type: "generate_report"
-      aid: "ecr-aid-1"
-      description: "Generating reports for ecr-aid-1 user"
-    gen_report_ecr2:
-      id: "gen_report_ecr2"
-      type: "generate_report"
-      aid: "ecr-aid-2"
-      description: "Generating reports for ecr-aid-2 user"
-    gen_report_ecr3:
-      id: "gen_report_ecr3"
-      type: "generate_report"
-      aid: "ecr-aid-3"
-      description: "Generating reports for ecr-aid-3 user"
-    api_test_ecr1:
-      id: "api_test_ecr1"
-      type: "api_test"
-      test_case: "api_test"
-      aids: ["ecr-aid-1", "ecr-aid-2", "ecr-aid-3"]
-      description: "Running API test for [ecr-aid-1, ecr-aid-2, ecr-aid-2] users"
-    vlei_verification_test_1:
-      id: "vlei_verification_1"
-      type: "vlei_verification_test"
-      aids: ["ecr-aid-1", "ecr-aid-2", "ecr-aid-3"]
-      description: "Running Vlei Verification test for [ecr-aid-1, ecr-aid-2, ecr-aid-2] users"

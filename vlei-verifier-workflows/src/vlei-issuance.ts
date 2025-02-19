@@ -66,7 +66,7 @@ import {
 const fs = require("fs");
 const path = require("path");
 import { buildTestData, EcrTestData } from "./utils/generate-test-data";
-import { ApiUser } from "./utils/test-data";
+import { VleiUser } from "./utils/test-data";
 
 export class VleiIssuance {
   configPath: string = "config/";
@@ -316,14 +316,14 @@ export class VleiIssuance {
     const client = this.clients.get(aidInfo.agent.name)![0];
 
     if (delegator != null) {
-      try{
+      try {
         const aid = await client.identifiers().get(aidInfo.name);
         return aid;
       }
-      catch{
+      catch {
         console.log(`Creating delegated AID for: ${aidInfo.name}`)
       }
-            
+
       kargsSinglesigAID.delpre = this.aids.get(delegator)![0].prefix;
       const delegatorClient = this.clients.get(
         this.aidsInfo.get(delegator).agent.name,
@@ -1090,12 +1090,10 @@ export class VleiIssuance {
       };
       await buildTestData(testData, testName, issueeAidKey);
     }
-    const response: ApiUser = {
+    const response: VleiUser = {
       roleClient: recipientClient,
       ecrAid: recipientAID,
-      creds: [{ cred: cred, credCesr: credCesr }],
-      lei: credData.LEI,
-      uploadDig: "",
+      creds: { [credId]: { cred: cred, credCesr: credCesr } },
       idAlias: issueeAidKey,
     };
     return [response, credData.engagementContextRole];
@@ -1354,6 +1352,127 @@ export class VleiIssuance {
     return [cred, null];
   }
 
+  public async notifyCredentialIssuee(
+    credId: string,
+    issuerAidKey: string,
+    issueeAidKey: string
+  ) {
+    const cred: any = this.credentials.get(credId)!;
+
+    if (!cred) {
+      console.log(`notifyCredential: credential with credId=${credId} was not found`);
+      throw new Error(`notifyCredential: credential with credId=${credId} was not found`);
+    }
+    const issuerAID = this.aids.get(issuerAidKey)![0];
+    const recipientAID = this.aids.get(issueeAidKey)![0];
+    const issuerAIDInfo = this.aidsInfo.get(issuerAidKey)!;
+    const recipientAIDInfo = this.aidsInfo.get(issueeAidKey)!;
+
+
+    if (issuerAIDInfo.identifiers) {
+      const schema = this.schemas[cred.schema];
+      const issuerAids =
+        issuerAIDInfo.identifiers.map(
+          (identifier: any) => this.aids.get(identifier)![0],
+        ) || [];
+      const creds = await Promise.all(
+        issuerAids.map((aid: any, index: any) => {
+          const client = this.clients.get(
+            this.aidsInfo.get(aid.name).agent.name,
+          )![0];
+          return getIssuedCredential(
+            client,
+            issuerAID,
+            recipientAID,
+            schema,
+          );
+        }),
+      );
+      sleep(1000);
+      const grantTime = createTimestamp();
+      await Promise.all(
+        creds.map((cred, index) => {
+          const client = this.clients.get(
+            this.aidsInfo.get(issuerAids[index].name).agent.name,
+          )![0];
+          return grantMultisig(
+            client,
+            issuerAids[index],
+            issuerAids.filter((_: any, i: any) => i !== index),
+            issuerAID,
+            recipientAID,
+            cred,
+            grantTime,
+            index === 0,
+          );
+        }),
+      );
+    }
+    else {
+      const issuerClient = this.clients.get(issuerAIDInfo.agent.name)![0];
+      await sendGrantMessage(issuerClient, issuerAID, recipientAID, cred);
+    }
+
+    if (recipientAIDInfo.identifiers) {
+      const admitTime = createTimestamp();
+      const issuerAids =
+        issuerAIDInfo.identifiers.map(
+          (identifier: any) => this.aids.get(identifier)![0],
+        ) || [];
+      const recepientAids =
+      issuerAIDInfo.identifiers.map(
+          (identifier: any) => this.aids.get(identifier)![0],
+        ) || [];
+      await Promise.all(
+        recepientAids.map((aid: any, index: any) => {
+          const client = this.clients.get(
+            this.aidsInfo.get(aid.name).agent.name,
+          )![0];
+          return admitMultisig(
+            client,
+            aid,
+            recepientAids.filter((_: any, i: any) => i !== index),
+            recipientAID,
+            issuerAID,
+            admitTime,
+          );
+        }),
+      );
+      sleep(2000);
+      for (const aid of issuerAids) {
+        await waitAndMarkNotification(
+          this.clients.get(this.aidsInfo.get(aid.name).agent.name)![0],
+          "/exn/ipex/admit",
+        );
+      }
+      for (const aid of recepientAids) {
+        await waitAndMarkNotification(
+          this.clients.get(this.aidsInfo.get(aid.name).agent.name)![0],
+          "/multisig/exn",
+        );
+      }
+      for (const aid of recepientAids) {
+        await waitAndMarkNotification(
+          this.clients.get(this.aidsInfo.get(aid.name).agent.name)![0],
+          "/exn/ipex/admit",
+        );
+      }
+      sleep(1000);
+      const credsReceived = await Promise.all(
+        recepientAids.map((aid: any) => {
+          const client = this.clients.get(
+            this.aidsInfo.get(aid.name).agent.name,
+          )![0];
+          return waitForCredential(client, cred.sad.d);
+        }),
+      );
+    }
+    else {
+      const recipientClient = this.clients.get(recipientAIDInfo.agent.name)![0];
+      await sendAdmitMessage(recipientClient, recipientAID, issuerAID);
+    }
+  }
+
   public async revokeCredentialSingleSig(
     credId: string,
     issuerAidKey: string,
@@ -1384,12 +1503,10 @@ export class VleiIssuance {
       await buildTestData(testData, testName, issueeAidKey, "revoked_");
     }
 
-    const response: ApiUser = {
+    const response: VleiUser = {
       roleClient: recipientClient,
       ecrAid: recipientAID,
-      creds: [{ cred: revCred, credCesr: credCesr }],
-      lei: revCred.sad.a.LEI,
-      uploadDig: "",
+      creds: { credId: { cred: cred, credCesr: credCesr } },
       idAlias: issueeAidKey,
     };
     return [response, revCred.sad.a.engagementContextRole];

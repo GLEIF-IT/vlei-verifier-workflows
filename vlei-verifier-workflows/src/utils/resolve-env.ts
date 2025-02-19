@@ -15,8 +15,6 @@ export interface TestEnvironment {
   vleiServerUrl: string;
   witnessUrls: string[];
   witnessIds: string[];
-  apiBaseUrl: string;
-  proxyBaseUrl: string;
   verifierBaseUrl: string;
   workflow: string;
   configuration: string;
@@ -50,13 +48,11 @@ export function resolveEnvironment(
             ? []
             : process.env.WITNESS_IDS?.split(",") || [WAN, WIL, WES],
         vleiServerUrl: process.env.VLEI_SERVER || "http://vlei-server:7723",
-        apiBaseUrl: process.env.REG_PILOT_API || "http://127.0.0.1:8000",
-        proxyBaseUrl: process.env.REG_PILOT_PROXY || "http://127.0.0.1:3434",
-        verifierBaseUrl: process.env.VLEI_VERIFIER || "http://127.0.0.1:7676",
-        workflow: process.env.WORKFLOW || "singlesig-single-user-light.yaml",
+        verifierBaseUrl: process.env.VLEI_VERIFIER || "http://localhost:7676",
+        workflow: process.env.WORKFLOW || "revocation-test-singlesig.yaml",
         configuration:
           process.env.CONFIGURATION ||
-          "configuration-singlesig-single-user-light.json",
+          "configuration-revocation-test-singlesig.json",
       };
       break;
     case "local":
@@ -77,8 +73,6 @@ export function resolveEnvironment(
           process.env.WITNESS_IDS === ""
             ? []
             : process.env.WITNESS_IDS?.split(",") || [WAN, WIL, WES],
-        apiBaseUrl: process.env.REG_PILOT_API || "http://localhost:8000",
-        proxyBaseUrl: process.env.REG_PILOT_PROXY || "http://localhost:3434",
         verifierBaseUrl: process.env.VLEI_VERIFIER || "http://localhost:7676",
         workflow: process.env.WORKFLOW || "singlesig-single-user.yaml",
         configuration:
@@ -105,9 +99,6 @@ export function resolveEnvironment(
             : process.env.WITNESS_IDS?.split(",") || [WAN, WIL, WES],
         vleiServerUrl:
           process.env.VLEI_SERVER || "http://schemas.rootsid.cloud",
-        apiBaseUrl:
-          process.env.REG_PILOT_API || "https://reg-api-dev.rootsid.cloud",
-        proxyBaseUrl: process.env.REG_PILOT_PROXY || "No RootsID dev proxy set",
         verifierBaseUrl:
           process.env.VLEI_VERIFIER || "RootsID dev verifier not set",
         workflow: process.env.WORKFLOW || "singlesig-single-user-light.yaml",
@@ -139,10 +130,6 @@ export function resolveEnvironment(
               ],
         vleiServerUrl:
           process.env.VLEI_SERVER || "http://schemas.rootsid.cloud",
-        apiBaseUrl:
-          process.env.REG_PILOT_API || "https://reg-api-test.rootsid.cloud",
-        proxyBaseUrl:
-          process.env.REG_PILOT_PROXY || "No RootsID test proxy set",
         verifierBaseUrl:
           process.env.VLEI_VERIFIER || "RootsID demo verifier not set",
         workflow: process.env.WORKFLOW || "singlesig-single-user.yaml",
