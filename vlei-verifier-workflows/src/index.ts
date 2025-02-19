@@ -1,7 +1,6 @@
 export { generateFileDigest } from "./utils/generate-digest";
 export { buildTestData, EcrTestData } from "./utils/generate-test-data";
 export {
-  buildUserData,
   buildCredentials,
   buildAidData,
   User,
