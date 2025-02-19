@@ -49,10 +49,10 @@ export function resolveEnvironment(
             : process.env.WITNESS_IDS?.split(",") || [WAN, WIL, WES],
         vleiServerUrl: process.env.VLEI_SERVER || "http://vlei-server:7723",
         verifierBaseUrl: process.env.VLEI_VERIFIER || "http://localhost:7676",
-        workflow: process.env.WORKFLOW || "revocation-test-singlesig.yaml",
+        workflow: process.env.WORKFLOW || "multisig-single-user.yaml",
         configuration:
           process.env.CONFIGURATION ||
-          "configuration-revocation-test-singlesig.json",
+          "configuration-multisig-single-user.json",
       };
       break;
     case "local":
