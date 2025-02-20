@@ -34,7 +34,8 @@
     "mathjs": "^12.4.0",
     "axios": "^1.7.8",
     "signify-ts": "github:weboftrust/signify-ts#main",
-    "structured-headers": "^0.5.0"
+    "structured-headers": "^0.5.0",
+    "vlei-verifier-client": "0.0.1"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^10.6.1",

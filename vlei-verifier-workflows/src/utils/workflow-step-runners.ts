@@ -16,7 +16,7 @@ import {
 import { WorkflowState } from "../workflow-state";
 import { resolveEnvironment } from "./resolve-env";
 import { getRootOfTrust } from "./test-util";
-import { VleiVerifierAdapter } from "../vlei-verifier-adapter";
+import { VerifierClient } from "vlei-verifier-client";
 
 export abstract class StepRunner {
   type: string = "";
@@ -193,8 +193,8 @@ export class AddRootOfTrustStepRunner extends StepRunner {
     const env = resolveEnvironment();
 
     const rootOfTrustData = await getRootOfTrust(configJson);
-    const va = new VleiVerifierAdapter(env.verifierBaseUrl);
-    const response = await va.addRootOfTrust(
+    const verifierClient = new VerifierClient(env.verifierBaseUrl);
+    const response = await verifierClient.addRootOfTrust(
       rootOfTrustData.aid,
       rootOfTrustData.vlei,
       rootOfTrustData.oobi,

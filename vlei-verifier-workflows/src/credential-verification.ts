@@ -6,15 +6,15 @@ import {
   CredentialAuthorizationStatus,
   VleiUser,
 } from "./utils/test-data";
-import { VleiVerifierAdapter } from "./vlei-verifier-adapter";
 import { strict as assert } from "assert";
+import { VerifierClient } from "vlei-verifier-client";
 
 export class CredentialVerification {
   private env: any;
-  private verifierAdapter: VleiVerifierAdapter;
+  private verifierClient: VerifierClient;
   constructor() {
     this.env = resolveEnvironment();
-    this.verifierAdapter = new VleiVerifierAdapter(this.env.verifierBaseUrl);
+    this.verifierClient = new VerifierClient(this.env.verifierBaseUrl);
   }
 
   public async credentialPresentation(
@@ -50,19 +50,18 @@ export class CredentialVerification {
     credCesr: any,
     expected_status_code: number,
   ) {
-    const verifierResponse = await this.verifierAdapter.presentCredential(
-      credCesr,
+    const verifierResponse = await this.verifierClient.login(
       cred.sad.d,
+      credCesr,
     );
-    assert.equal(verifierResponse.status, expected_status_code);
+    assert.equal(verifierResponse.code, expected_status_code);
   }
 
   private async checkAidAuthStatus(
     aidPrefix: string,
     expected_status_code: number,
   ) {
-    const verifierResponse =
-      await this.verifierAdapter.checkAidAuthStatus(aidPrefix);
-    assert.equal(verifierResponse.status, expected_status_code);
+    const verifierResponse = await this.verifierClient.checkLogin(aidPrefix);
+    assert.equal(verifierResponse.code, expected_status_code);
   }
 }
