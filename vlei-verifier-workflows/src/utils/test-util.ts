@@ -13,6 +13,7 @@ import signify, {
 import { RetryOptions, retry } from "./retry";
 import assert = require("assert");
 import { resolveEnvironment } from "./resolve-env";
+import { TestKeria } from "./test-keria";
 
 export interface Aid {
   name: string;
@@ -182,11 +183,11 @@ export async function getOrCreateClient(
   bran: string | undefined = undefined,
   getOnly: boolean = false,
 ): Promise<SignifyClient> {
-  const env = resolveEnvironment();
+  const testKeria = TestKeria.getInstance();
   await ready();
   bran ??= randomPasscode();
   bran = bran.padEnd(21, "_");
-  const client = new SignifyClient(env.url, bran, Tier.low, env.bootUrl);
+  const client = new SignifyClient(testKeria.keriaAdminUrl.toString(), bran, Tier.low, testKeria.keriaBootUrl.toString());
   try {
     await client.connect();
   } catch (e: any) {

@@ -5,7 +5,7 @@ configs:
             "dt": "2023-12-01T10:05:25.062609+00:00",
             "keria": {
               "dt": "2023-12-01T10:05:25.062609+00:00",
-              "curls": ["http://keria:3902/"]
+              "curls": ["http://localhost:3902/"]
             },
             "iurls": [
               "http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
@@ -23,7 +23,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wan": {
             "dt": "2022-01-20T12:57:59.823350+00:00",
-            "curls": ["tcp://witness-demo:5632/", "http://witness-demo:5642/"]
+            "curls": ["tcp://localhost:5632/", "http://localhost:5642/"]
           },
       }
 
@@ -33,7 +33,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wil": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5643/"]
+              "curls": ["http://localhost:5643/"]
           }
       }
   wes.json:
@@ -42,7 +42,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wes": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5644/"]
+              "curls": ["http://localhost:5644/"]
           }
       }
 
@@ -52,7 +52,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wit": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5645/"]
+              "curls": ["http://localhost:5645/"]
           }
       }
 
@@ -62,7 +62,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wub": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5646/"]
+              "curls": ["http://localhost:5646/"]
           }
       }
 
@@ -72,7 +72,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wyx": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5647/"]
+              "curls": ["http://localhost:5647/"]
           }
       }
 
