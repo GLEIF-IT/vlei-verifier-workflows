@@ -18,16 +18,16 @@ jobs:
     # env:
     #   KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
     steps:
-      - name: Checkout repo
+      - name: checkout repo
         uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
       - name: install deps
         run: |
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
           npm ci
-      - name: Run prettier
+      - name: run prettier
         run: npm run pretty:check
