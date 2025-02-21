@@ -13,6 +13,8 @@ import signify, {
 import { RetryOptions, retry } from "./retry";
 import assert = require("assert");
 import { resolveEnvironment } from "./resolve-env";
+import { WorkflowState } from "../workflow-state";
+import { getIdentifierData, SinglesigIdentifierData } from "./handle-json-config";
 
 export interface Aid {
   name: string;
@@ -627,83 +629,29 @@ export async function sendAdmitMessage(
   await markAndRemoveNotification(senderClient, grantNotification);
 }
 
-export async function getRootOfTrust(configJson: any): Promise<any> {
-  if (hasGLEIFWithMultisig(configJson)) {
-    return await getRootOfTrustMultisig(configJson);
+export async function getRootOfTrust(configJson: any, rot_aid: string, rot_member_aid?: string): Promise<any> {
+  const workflow_state = WorkflowState.getInstance(configJson);
+  const rotAID = workflow_state.aids.get(rot_aid);
+  let client;
+
+  const rootOfTrustIdentifierName = configJson.users.find(
+    (usr: any) => usr.type === "GLEIF"
+  )?.identifiers[0];
+
+  if (rot_member_aid) {
+    const identifierData = getIdentifierData(
+      configJson,
+      rot_member_aid,
+    ) as SinglesigIdentifierData;
+    client = workflow_state.clients.get(identifierData.agent.secret);
   } else {
-    return await getRootOfTrustSinglesig(configJson);
+    const identifierData = getIdentifierData(
+      configJson,
+      rot_aid,
+    ) as SinglesigIdentifierData;
+    client = workflow_state.clients.get(identifierData.agent.secret);
   }
-}
 
-function hasGLEIFWithMultisig(data: any): boolean {
-  return data.users.some(
-    (user: any) =>
-      (user.type === "GLEIF" || user.type === "GLEIF_EXTERNAL") &&
-      user.identifiers.some((id: any) => data.identifiers[id]?.identifiers),
-  );
-}
-
-async function getRootOfTrustMultisig(configJson: any): Promise<any> {
-  const rootOfTrustMultisigIdentifierName = configJson.users
-    .filter(
-      (usr: any) => usr.type == "GLEIF" || usr.type == "GLEIF_EXTERNAL",
-    )[0]
-    .identifiers.filter((identifier: string) =>
-      identifier.includes("multisig"),
-    )![0];
-
-  const rootOfTrustIdentifierName = configJson.users
-    .filter(
-      (usr: any) => usr.type == "GLEIF" || usr.type == "GLEIF_EXTERNAL",
-    )[0]
-    .identifiers.filter(
-      (identifier: string) => !identifier.includes("multisig"),
-    )![0];
-
-  const rootOfTrustIdentifierAgent =
-    configJson.agents[configJson.identifiers[rootOfTrustIdentifierName].agent];
-  const rootOfTrustIdentifierSecret =
-    configJson.secrets[rootOfTrustIdentifierAgent.secret];
-  const clients = await getOrCreateClients(
-    1,
-    [rootOfTrustIdentifierSecret],
-    true,
-  );
-  const client = clients[clients.length - 1];
-  const rootOfTrustAid = await client
-    .identifiers()
-    .get(rootOfTrustMultisigIdentifierName);
-
-  const oobi = await client
-    .oobis()
-    .get(rootOfTrustMultisigIdentifierName, "agent");
-  let oobiUrl = oobi.oobis[0];
-  const url = new URL(oobiUrl);
-  if (url.hostname === "keria") oobiUrl = oobiUrl.replace("keria", "localhost");
-  console.log(`Root of trust OOBI: ${oobiUrl}`);
-  const oobiResp = await fetch(oobiUrl);
-  const oobiRespBody = await oobiResp.text();
-  return {
-    vlei: oobiRespBody,
-    aid: rootOfTrustAid.prefix,
-    oobi: oobiUrl,
-  };
-}
-
-async function getRootOfTrustSinglesig(configJson: any): Promise<any> {
-  const rootOfTrustIdentifierName = configJson.users.filter(
-    (usr: any) => usr.type == "GLEIF",
-  )[0].identifiers[0];
-  const rootOfTrustIdentifierAgent =
-    configJson.agents[configJson.identifiers[rootOfTrustIdentifierName].agent];
-  const rootOfTrustIdentifierSecret =
-    configJson.secrets[rootOfTrustIdentifierAgent.secret];
-  const clients = await getOrCreateClients(
-    1,
-    [rootOfTrustIdentifierSecret],
-    true,
-  );
-  const client = clients[clients.length - 1];
   const rootOfTrustAid = await client
     .identifiers()
     .get(rootOfTrustIdentifierName);

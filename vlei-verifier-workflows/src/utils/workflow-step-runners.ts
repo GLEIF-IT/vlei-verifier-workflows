@@ -187,19 +187,19 @@ export class CredentialVerificationStepRunner extends StepRunner {
 }
 
 export class AddRootOfTrustStepRunner extends StepRunner {
-  type: string = "add_root_of_trust";
-
-  public async run(stepName: string, step: any, configJson: any): Promise<any> {
-    const env = resolveEnvironment();
-
-    const rootOfTrustData = await getRootOfTrust(configJson);
-    const verifierClient = new VerifierClient(env.verifierBaseUrl);
-    const response = await verifierClient.addRootOfTrust(
-      rootOfTrustData.aid,
-      rootOfTrustData.vlei,
-      rootOfTrustData.oobi,
-    );
-
-    return response;
+    type: string = "add_root_of_trust";
+  
+    public async run(stepName: string, step: any, configJson: any): Promise<any> {
+      const env = resolveEnvironment();
+      const rot_aid = step.root_of_trust_aid;
+      const rootOfTrustData = await getRootOfTrust(configJson, rot_aid);
+      const verifierClient = new VerifierClient(env.verifierBaseUrl);
+      const response = await verifierClient.addRootOfTrust(
+        rootOfTrustData.aid,
+        rootOfTrustData.vlei,
+        rootOfTrustData.oobi,
+      );
+  
+      return response;
+    }
   }
-}
