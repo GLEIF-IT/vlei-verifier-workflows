@@ -107,35 +107,19 @@ workflow:
         authorize:
           type: "authorization"
           expected_status: "cred_verified"
-    ecr_auth_cred:
-      id: "ecr_auth_cred"
-      type: "issue_credential"
-      attributes:
-        personLegalName: "John Doe"
-        LEI: "875500ELOZEL05BVXV37"
-        AID: "ecr-aid-1"
+    ecr_cred_revoke:
+      id: "ecr_cred_revoke"
+      type: "revoke_credential"
       issuer_aid: "le-aid-1"
-      issuee_aid: "qvi-aid-1"
-      description: "LE issues ECR Auth credential to QVI"
-      credential: "le_to_qvi_ecr_auth_cred"
-      credential_source: "le_cred"
-    ecr_cred_from_ecr_auth:
-      id: "ecr_cred_from_ecr_auth"
-      type: "issue_credential"
-      attributes:
-        personLegalName: "John Doe"
-        LEI: "875500ELOZEL05BVXV37"
-      issuer_aid: "qvi-aid-1"
       issuee_aid: "ecr-aid-1"
-      description: "QVI issues ECR credential from ECR Auth"
-      credential: "qvi_to_ecr_vlei_cred_from_le_to_qvi_ecr_auth_cred"
-      credential_source: "ecr_auth_cred"
-    credential_verification_valid_verified_2:
-      id: "credential_verification_valid_verified_2"
+      description: "LE revokes ECR vLEI credential"
+      credential: "ecr_cred"
+    credential_verification_revoked_valid_verified:
+      id: "credential_verification_revoked_valid_verified"
       type: "credential_verification"
       presenter_aid: "ecr-aid-1"
       description: "Running Credential Verification for ecr-aid-1"
-      credential: "ecr_cred_from_ecr_auth"
+      credential: "ecr_cred"
       actions:
         present:
           type: "presentation"
@@ -143,39 +127,23 @@ workflow:
         authorize:
           type: "authorization"
           expected_status: "cred_verified"
-    oor_auth_cred:
-      id: "oor_auth_cred"
-      type: "issue_credential"
-      attributes:
-        personLegalName: "John Doe"
-        LEI: "875500ELOZEL05BVXV37"
-        AID: "ecr-aid-1"
+    notify_ecr_credential_issuee:
+      id: "notify_ecr_credential_issuee"
+      type: "notify_credential_issuee"
       issuer_aid: "le-aid-1"
-      issuee_aid: "qvi-aid-1"
-      description: "LE issues OOR Auth credential to QVI"
-      credential: "le_to_qvi_oor_auth_cred"
-      credential_source: "le_cred"
-    ecr_cred_from_oor_auth:
-      id: "ecr_cred_from_oor_auth"
-      type: "issue_credential"
-      attributes:
-        personLegalName: "John Doe"
-        LEI: "875500ELOZEL05BVXV37"
-      issuer_aid: "qvi-aid-1"
       issuee_aid: "ecr-aid-1"
-      description: "QVI issues OOR credential from OOR Auth"
-      credential: "qvi_to_ecr_vlei_oor_cred_from_le_to_qvi_oor_auth_cred"
-      credential_source: "oor_auth_cred"
-    credential_verification_oor_auth_valid_not_verified:
-      id: "credential_verification_oor_auth_valid_not_verified"
+      description: "LE notifies ECR vLEI credential about revocation"
+      credential: "ecr_cred"
+    credential_verification_revoked_valid_not_verified:
+      id: "credential_verification_revoked_valid_not_verified"
       type: "credential_verification"
       presenter_aid: "ecr-aid-1"
       description: "Running Credential Verification for ecr-aid-1"
-      credential: "ecr_cred_from_oor_auth"
+      credential: "ecr_cred"
       actions:
         present:
           type: "presentation"
           expected_status: "cred_crypt_valid"
         authorize:
           type: "authorization"
-          expected_status: "cred_invalid_schema"
+          expected_status: "cred_revoked"

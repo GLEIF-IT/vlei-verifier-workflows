@@ -1,5 +1,170 @@
 workflow:
   steps:
+    gleif_client_1:
+      id: "gleif_client_1"
+      type: "create_client"
+      agent_name: "gleif-agent-1"
+      description: "Creating client for gleif-agent-1"
+    gleif_client_2:
+      id: "gleif_client_2"
+      type: "create_client"
+      agent_name: "gleif-agent-2"
+      description: "Creating client for gleif-agent-2"
+    qvi_client_1:
+      id: "qvi_client_1"
+      type: "create_client"
+      agent_name: "qvi-agent-1"
+      description: "Creating client for qvi-agent-1"
+    qvi_client_2:
+      id: "qvi_client_2"
+      type: "create_client"
+      agent_name: "qvi-agent-2"
+      description: "Creating client for qvi-agent-2"
+    qvi_client_3:
+      id: "qvi_client_3"
+      type: "create_client"
+      agent_name: "qvi-agent-3"
+      description: "Creating client for qvi-agent-3"
+    le_client_1:
+      id: "le_client_1"
+      type: "create_client"
+      agent_name: "le-agent-1"
+      description: "Creating client for le-agent-1"
+    le_client_2:
+      id: "le_client_2"
+      type: "create_client"
+      agent_name: "le-agent-2"
+      description: "Creating client for le-agent-2"
+    le_client_3:
+      id: "le_client_3"
+      type: "create_client"
+      agent_name: "le-agent-3"
+      description: "Creating client for le-agent-3"
+    ecr_client:
+      id: "ecr_client"
+      type: "create_client"
+      agent_name: "ecr-agent-1"
+      description: "Creating client for ecr-agent-1"
+    gleif_aid_1:
+      id: "gleif_aid_1"
+      type: "create_aid"
+      aid: "gleif-aid-1"
+      description: "Creating AID: gleif-aid-1"
+    gleif_aid_2:
+      id: "gleif_aid_2"
+      type: "create_aid"
+      aid: "gleif-aid-2"
+      description: "Creating AID: gleif-aid-2"
+    gleif_aid_multisig_1:
+      id: "gleif_aid_multisig_1"
+      type: "create_aid"
+      aid: "gleif-multisig-1"
+      description: "Creating AID: gleif-multisig-1"
+    qvi_aid_1:
+      id: "qvi_aid_1"
+      type: "create_aid"
+      aid: "qvi-aid-1"
+      description: "Creating AID: qvi-aid-1"
+    qvi_aid_2:
+      id: "qvi_aid_2"
+      type: "create_aid"
+      aid: "qvi-aid-2"
+      description: "Creating AID: qvi-aid-2"
+    qvi_aid_3:
+      id: "qvi_aid_3"
+      type: "create_aid"
+      aid: "qvi-aid-3"
+      description: "Creating AID: qvi-aid-3"
+    qvi_aid_multisig_1:
+      id: "qvi_aid_multisig_1"
+      type: "create_aid"
+      aid: "qvi-multisig-1"
+      description: "Creating AID: qvi-multisig-1"
+    le_aid_1:
+      id: "le_aid_1"
+      type: "create_aid"
+      aid: "le-aid-1"
+      description: "Creating AID: le-aid-1"
+    le_aid_2:
+      id: "le_aid_2"
+      type: "create_aid"
+      aid: "le-aid-2"
+      description: "Creating AID: le-aid-2"
+    le_aid_3:
+      id: "le_aid_3"
+      type: "create_aid"
+      aid: "le-aid-3"
+      description: "Creating AID: le-aid-3"
+    le_aid_multisig_1:
+      id: "le_aid_multisig_1"
+      type: "create_aid"
+      aid: "le-multisig-1"
+      description: "Creating AID: le-multisig-1"
+    ecr_aid:
+      id: "ecr_aid"
+      type: "create_aid"
+      aid: "ecr-aid-1"
+      description: "Creating AID: ecr-aid-1"
+    gleif_registry_1:
+      id: "gleif_registry_1"
+      type: "create_registry"
+      aid: "gleif-aid-1"
+      description: "Creating registry for gleif-aid-1"
+    gleif_registry_2:
+      id: "gleif_registry_2"
+      type: "create_registry"
+      aid: "gleif-aid-2"
+      description: "Creating registry for gleif-aid-2"
+    gleif_registry_multisig_1:
+      id: "gleif_registry_multisig_1"
+      type: "create_registry"
+      aid: "gleif-multisig-1"
+      description: "Creating registry for gleif-multisig-1"
+    qvi_registry_1:
+      id: "qvi_registry_1"
+      type: "create_registry"
+      aid: "qvi-aid-1"
+      description: "Creating registry for qvi-aid-1"
+    qvi_registry_2:
+      id: "qvi_registry_2"
+      type: "create_registry"
+      aid: "qvi-aid-2"
+      description: "Creating registry for qvi-aid-2"
+    qvi_registry_3:
+      id: "qvi_registry_3"
+      type: "create_registry"
+      aid: "qvi-aid-3"
+      description: "Creating registry for qvi-aid-3"
+    qvi_registry_multisig_1:
+      id: "qvi_registry_multisig_1"
+      type: "create_registry"
+      aid: "qvi-multisig-1"
+      description: "Creating registry for qvi-multisig-1"
+    le_registry_1:
+      id: "le_registry_1"
+      type: "create_registry"
+      aid: "le-aid-1"
+      description: "Creating registry for le-aid-1"
+    le_registry_2:
+      id: "le_registry_2"
+      type: "create_registry"
+      aid: "le-aid-2"
+      description: "Creating registry for le-aid-2"
+    le_registry_3:
+      id: "le_registry_3"
+      type: "create_registry"
+      aid: "le-aid-3"
+      description: "Creating registry for le-aid-3"
+    le_registry_multisig_1:
+      id: "le_registry_multisig_1"
+      type: "create_registry"
+      aid: "le-multisig-1"
+      description: "Creating registry for le-multisig-1"
+    ecr_registry:
+      id: "ecr_registry"
+      type: "create_registry"
+      aid: "ecr-aid-1"
+      description: "Creating registry for ecr-aid-1"
     qvi_cred:
       id: "qvi_cred"
       type: "issue_credential"
@@ -30,19 +195,20 @@ workflow:
       description: "LE issues ECR vLEI credential"
       credential: "le_to_ecr_vlei_cred"
       credential_source: "le_cred"
-    gen_report_ecr1:
-      id: "gen_report_ecr1"
-      type: "generate_report"
-      aid: "ecr-aid-1"
-      description: "Generating reports for ecr-aid-1 user"
-    api_test_ecr1:
-      id: "api_test_ecr1"
-      type: "api_test"
-      test_case: "api_test"
-      aids: ["ecr-aid-1"]
-      description: "Running API test for ecr-aid-1 user"
-    vlei_verification_test_1:
-      id: "vlei_verification_1"
-      type: "vlei_verification_test"
-      aids: ["ecr-aid-1"]
-      description: "Running Vlei Verification test for ecr-aid-1 user"
+    add_root_of_trust:
+      id: "add_root_of_trust"
+      type: "add_root_of_trust"
+      description: "Adding Root of Trust"
+    credential_verification_valid_verified:
+      id: "credential_verification_valid_verified"
+      type: "credential_verification"
+      presenter_aid: "ecr-aid-1"
+      description: "Running Credential Verification for ecr-aid-1"
+      credential: "ecr_cred"
+      actions:
+        present:
+          type: "presentation"
+          expected_status: "cred_crypt_valid"
+        authorize:
+          type: "authorization"
+          expected_status: "cred_verified"

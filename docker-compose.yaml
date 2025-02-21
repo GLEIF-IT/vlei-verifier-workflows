@@ -126,7 +126,7 @@ services:
       timeout: 3s
       retries: 5
       start_period: 2s
-    
+
     ports:
       - 3901:3901
       - 3902:3902
@@ -184,4 +184,16 @@ services:
       keria:
         condition: service_healthy
       witness-demo:
+        condition: service_healthy
+  verify:
+    image: alpine
+    command: ["echo", "Dependencies running"]
+    depends_on:
+      vlei-server:
+        condition: service_healthy
+      keria:
+        condition: service_healthy
+      witness-demo:
+        condition: service_healthy
+      vlei-verifier:
         condition: service_healthy
