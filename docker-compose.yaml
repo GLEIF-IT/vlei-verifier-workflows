@@ -119,9 +119,9 @@ services:
     configs:
       - source: keria.json
         target: /usr/local/var/keri/cf/keria.json
-    entrypoint: ["keria", "start", "--config-file", "keria", "--name", "agent"]
+    entrypoint: ['keria', 'start', '--config-file', 'keria', '--name', 'agent']
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://keria:3902/spec.yaml"]
+      test: ['CMD', 'wget', '--spider', 'http://keria:3902/spec.yaml']
       interval: 2s
       timeout: 3s
       retries: 5
@@ -138,7 +138,7 @@ services:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5642/oobi"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:5642/oobi']
       interval: 2s
       timeout: 3s
       retries: 5
@@ -169,7 +169,7 @@ services:
     ports:
       - 7676:7676
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://vlei-verifier:7676/health"]
+      test: ['CMD', 'wget', '--spider', 'http://vlei-verifier:7676/health']
       interval: 2s
       timeout: 3s
       retries: 5
@@ -177,7 +177,7 @@ services:
 
   deps:
     image: alpine
-    command: ["echo", "Dependencies running"]
+    command: ['echo', 'Dependencies running']
     depends_on:
       vlei-server:
         condition: service_healthy
@@ -187,7 +187,7 @@ services:
         condition: service_healthy
   verify:
     image: alpine
-    command: ["echo", "Dependencies running"]
+    command: ['echo', 'Dependencies running']
     depends_on:
       vlei-server:
         condition: service_healthy

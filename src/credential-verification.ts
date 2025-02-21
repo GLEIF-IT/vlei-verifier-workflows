@@ -1,13 +1,13 @@
-import { resolveEnvironment } from "./utils/resolve-env";
+import { resolveEnvironment } from './utils/resolve-env';
 import {
   CREDENTIAL_CRYPT_VALID,
   CREDENTIAL_VERIFIED,
   CredentialPresentationStatus,
   CredentialAuthorizationStatus,
   VleiUser,
-} from "./utils/test-data";
-import { strict as assert } from "assert";
-import { VerifierClient } from "vlei-verifier-client";
+} from './utils/test-data';
+import { strict as assert } from 'assert';
+import { VerifierClient } from 'vlei-verifier-client';
 
 export class CredentialVerification {
   private env: any;
@@ -20,7 +20,7 @@ export class CredentialVerification {
   public async credentialPresentation(
     vleiUser: VleiUser,
     credId: string,
-    expectedStatus: CredentialPresentationStatus = CREDENTIAL_CRYPT_VALID,
+    expectedStatus: CredentialPresentationStatus = CREDENTIAL_CRYPT_VALID
   ) {
     const credential = JSON.parse(JSON.stringify(vleiUser.creds[credId]));
 
@@ -29,37 +29,37 @@ export class CredentialVerification {
     await this.presentCredential(
       credential.cred,
       credential.credCesr,
-      presentationExpectedStatusCode,
+      presentationExpectedStatusCode
     );
   }
 
   public async credentialAuthorization(
     vleiUser: VleiUser,
-    expectedStatus: CredentialAuthorizationStatus = CREDENTIAL_VERIFIED,
+    expectedStatus: CredentialAuthorizationStatus = CREDENTIAL_VERIFIED
   ) {
     const checkAidAuthExpectedStatus =
       expectedStatus.status == CREDENTIAL_VERIFIED.status ? 200 : 401;
     await this.checkAidAuthStatus(
       vleiUser.ecrAid.prefix,
-      checkAidAuthExpectedStatus,
+      checkAidAuthExpectedStatus
     );
   }
 
   private async presentCredential(
     cred: any,
     credCesr: any,
-    expected_status_code: number,
+    expected_status_code: number
   ) {
     const verifierResponse = await this.verifierClient.login(
       cred.sad.d,
-      credCesr,
+      credCesr
     );
     assert.equal(verifierResponse.code, expected_status_code);
   }
 
   private async checkAidAuthStatus(
     aidPrefix: string,
-    expected_status_code: number,
+    expected_status_code: number
   ) {
     const verifierResponse = await this.verifierClient.checkLogin(aidPrefix);
     assert.equal(verifierResponse.code, expected_status_code);

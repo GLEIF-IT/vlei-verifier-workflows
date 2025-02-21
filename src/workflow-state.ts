@@ -1,10 +1,10 @@
-import { SignifyClient } from "signify-ts";
+import { SignifyClient } from 'signify-ts';
 import {
   buildCredentials,
   CredentialInfo,
   IdentifierData,
-} from "./utils/handle-json-config";
-import { RULES, SCHEMAS, witnessIds } from "./constants";
+} from './utils/handle-json-config';
+import { RULES, SCHEMAS, witnessIds } from './constants';
 
 export class WorkflowState {
   private static instance: WorkflowState;
@@ -27,7 +27,7 @@ export class WorkflowState {
   static getInstance(configJson: any = null): WorkflowState {
     if (!WorkflowState.instance) {
       if (!configJson)
-        throw "WorkflowState.getInstance: no configJson was provided";
+        throw 'WorkflowState.getInstance: no configJson was provided';
       WorkflowState.instance = new WorkflowState(configJson);
     }
     return WorkflowState.instance;

@@ -8,9 +8,9 @@ import signify, {
   SignifyClient,
   d,
   messagize,
-} from "signify-ts";
-import { getStates, waitForNotifications, waitOperation } from "./test-util";
-import assert = require("assert");
+} from 'signify-ts';
+import { getStates, waitForNotifications, waitOperation } from './test-util';
+import assert = require('assert');
 
 export interface AcceptMultisigInceptArgs {
   groupName: string;
@@ -31,7 +31,7 @@ export interface StartMultisigInceptArgs {
 
 export async function acceptMultisigIncept(
   client2: SignifyClient,
-  { groupName, localMemberName, msgSaid }: AcceptMultisigInceptArgs,
+  { groupName, localMemberName, msgSaid }: AcceptMultisigInceptArgs
 ) {
   const memberHab = await client2.identifiers().get(localMemberName);
 
@@ -73,10 +73,10 @@ export async function acceptMultisigIncept(
       localMemberName,
       groupName,
       memberHab,
-      "/multisig/icp",
+      '/multisig/icp',
       { gid: serder.pre, smids: smids, rmids: smids },
       embeds,
-      recipients,
+      recipients
     );
 
   return op2;
@@ -89,19 +89,19 @@ export async function addEndRoleMultisig(
   otherMembersAIDs: HabState[],
   multisigAID: HabState,
   timestamp: string,
-  isInitiator: boolean = false,
+  isInitiator: boolean = false
 ) {
-  if (!isInitiator) await waitAndMarkNotification(client, "/multisig/rpy");
+  if (!isInitiator) await waitAndMarkNotification(client, '/multisig/rpy');
 
   const opList: any[] = [];
   const members = await client.identifiers().members(multisigAID.name);
-  const signings = members["signing"];
+  const signings = members['signing'];
 
   for (const signing of signings) {
     const eid = Object.keys(signing.ends.agent)[0];
     const endRoleResult = await client
       .identifiers()
-      .addEndRole(multisigAID.name, "agent", eid, timestamp);
+      .addEndRole(multisigAID.name, 'agent', eid, timestamp);
     const op = await endRoleResult.op();
     opList.push(op);
 
@@ -109,16 +109,16 @@ export async function addEndRoleMultisig(
     const sigs = endRoleResult.sigs;
     const ghabState1 = multisigAID.state;
     const seal = [
-      "SealEvent",
+      'SealEvent',
       {
         i: multisigAID.prefix,
-        s: ghabState1["ee"]["s"],
-        d: ghabState1["ee"]["d"],
+        s: ghabState1['ee']['s'],
+        d: ghabState1['ee']['d'],
       },
     ];
     const sigers = sigs.map((sig: string) => new signify.Siger({ qb64: sig }));
     const roleims = signify.d(
-      signify.messagize(rpy, sigers, seal, undefined, undefined, false),
+      signify.messagize(rpy, sigers, seal, undefined, undefined, false)
     );
     const atc = roleims.substring(rpy.size);
     const roleembeds = {
@@ -131,10 +131,10 @@ export async function addEndRoleMultisig(
         aid.name,
         groupName,
         aid,
-        "/multisig/rpy",
+        '/multisig/rpy',
         { gid: multisigAID.prefix },
         roleembeds,
-        recp,
+        recp
       );
   }
 
@@ -147,14 +147,14 @@ export async function admitMultisig(
   otherMembersAIDs: HabState[],
   multisigAID: HabState,
   recipientAID: HabState,
-  timestamp: string,
+  timestamp: string
   // numGrantMsgs: number
 ) {
-  const grantMsgSaid = await waitAndMarkNotification(client, "/exn/ipex/grant");
+  const grantMsgSaid = await waitAndMarkNotification(client, '/exn/ipex/grant');
 
   const [admit, sigs, end] = await client.ipex().admit({
     senderName: multisigAID.name,
-    message: "",
+    message: '',
     grantSaid: grantMsgSaid,
     recipient: recipientAID.prefix,
     datetime: timestamp,
@@ -166,8 +166,8 @@ export async function admitMultisig(
 
   const mstate = multisigAID.state;
   const seal = [
-    "SealEvent",
-    { i: multisigAID.prefix, s: mstate["ee"]["s"], d: mstate["ee"]["d"] },
+    'SealEvent',
+    { i: multisigAID.prefix, s: mstate['ee']['s'], d: mstate['ee']['d'] },
   ];
   const sigers = sigs.map((sig: string) => new signify.Siger({ qb64: sig }));
   const ims = signify.d(signify.messagize(admit, sigers, seal));
@@ -182,12 +182,12 @@ export async function admitMultisig(
     .exchanges()
     .send(
       aid.name,
-      "multisig",
+      'multisig',
       aid,
-      "/multisig/exn",
+      '/multisig/exn',
       { gid: multisigAID.prefix },
       gembeds,
-      recp,
+      recp
     );
 }
 
@@ -197,9 +197,9 @@ export async function createAIDMultisig(
   otherMembersAIDs: HabState[],
   groupName: string,
   kargs: CreateIdentiferArgs,
-  isInitiator: boolean = false,
+  isInitiator: boolean = false
 ) {
-  if (!isInitiator) await waitAndMarkNotification(client, "/multisig/icp");
+  if (!isInitiator) await waitAndMarkNotification(client, '/multisig/icp');
 
   const icpResult = await client.identifiers().create(groupName, kargs);
   const op = await icpResult.op();
@@ -212,19 +212,19 @@ export async function createAIDMultisig(
   const embeds = {
     icp: [serder, atc],
   };
-  const smids = kargs.states?.map((state) => state["i"]);
+  const smids = kargs.states?.map((state) => state['i']);
   const recp = otherMembersAIDs.map((aid) => aid.prefix);
 
   await client
     .exchanges()
     .send(
       aid.name,
-      "multisig",
+      'multisig',
       aid,
-      "/multisig/icp",
+      '/multisig/icp',
       { gid: serder.pre, smids: smids, rmids: smids },
       embeds,
-      recp,
+      recp
     );
 
   return op;
@@ -237,9 +237,9 @@ export async function createRegistryMultisig(
   multisigAID: HabState,
   registryName: string,
   nonce: string,
-  isInitiator: boolean = false,
+  isInitiator: boolean = false
 ) {
-  if (!isInitiator) await waitAndMarkNotification(client, "/multisig/vcp");
+  if (!isInitiator) await waitAndMarkNotification(client, '/multisig/vcp');
 
   const vcpResult = await client.registries().create({
     name: multisigAID.name,
@@ -255,7 +255,7 @@ export async function createRegistryMultisig(
   const ims = signify.d(signify.messagize(anc, sigers));
   const atc = ims.substring(anc.size);
   const regbeds = {
-    vcp: [serder, ""],
+    vcp: [serder, ''],
     anc: [anc, atc],
   };
   const recp = otherMembersAIDs.map((aid) => aid.prefix);
@@ -264,12 +264,12 @@ export async function createRegistryMultisig(
     .exchanges()
     .send(
       aid.name,
-      "registry",
+      'registry',
       aid,
-      "/multisig/vcp",
+      '/multisig/vcp',
       { gid: multisigAID.prefix },
       regbeds,
-      recp,
+      recp
     );
 
   return op;
@@ -281,12 +281,12 @@ export async function delegateMultisig(
   otherMembersAIDs: HabState[],
   multisigAID: HabState,
   anchor: { i: string; s: string; d: string },
-  isInitiator: boolean = false,
+  isInitiator: boolean = false
 ) {
   if (!isInitiator) {
-    const msgSaid = await waitAndMarkNotification(client, "/multisig/ixn");
+    const msgSaid = await waitAndMarkNotification(client, '/multisig/ixn');
     console.log(
-      `${aid.name}(${aid.prefix}) received exchange message to join the interaction event`,
+      `${aid.name}(${aid.prefix}) received exchange message to join the interaction event`
     );
     const res = await client.groups().getRequest(msgSaid);
     const exn = res[0].exn;
@@ -302,12 +302,12 @@ export async function delegateMultisig(
   console.log(
     `Delegator ${aid.name}(${aid.prefix}) approved delegation for ${
       multisigAID.name
-    } with anchor ${JSON.stringify(anchor)}`,
+    } with anchor ${JSON.stringify(anchor)}`
   );
 
   assert.equal(
     JSON.stringify(delResult.serder.ked.a[0]),
-    JSON.stringify(anchor),
+    JSON.stringify(anchor)
   );
 
   const serder = delResult.serder;
@@ -327,15 +327,15 @@ export async function delegateMultisig(
       aid.name,
       multisigAID.name,
       aid,
-      "/multisig/ixn",
+      '/multisig/ixn',
       { gid: serder.pre, smids: smids, rmids: smids },
       xembeds,
-      recp,
+      recp
     );
 
   if (isInitiator) {
     console.log(
-      `${aid.name}(${aid.prefix}) initiates delegation interaction event, waiting for others to join...`,
+      `${aid.name}(${aid.prefix}) initiates delegation interaction event, waiting for others to join...`
     );
   } else {
     console.log(`${aid.name}(${aid.prefix}) joins interaction event`);
@@ -352,9 +352,9 @@ export async function grantMultisig(
   recipientAID: HabState,
   credential: any,
   timestamp: string,
-  isInitiator: boolean = false,
+  isInitiator: boolean = false
 ) {
-  if (!isInitiator) await waitAndMarkNotification(client, "/multisig/exn");
+  if (!isInitiator) await waitAndMarkNotification(client, '/multisig/exn');
 
   const [grant, sigs, end] = await client.ipex().grant({
     senderName: multisigAID.name,
@@ -371,8 +371,8 @@ export async function grantMultisig(
 
   const mstate = multisigAID.state;
   const seal = [
-    "SealEvent",
-    { i: multisigAID.prefix, s: mstate["ee"]["s"], d: mstate["ee"]["d"] },
+    'SealEvent',
+    { i: multisigAID.prefix, s: mstate['ee']['s'], d: mstate['ee']['d'] },
   ];
   const sigers = sigs.map((sig) => new signify.Siger({ qb64: sig }));
   const gims = signify.d(signify.messagize(grant, sigers, seal));
@@ -387,12 +387,12 @@ export async function grantMultisig(
     .exchanges()
     .send(
       aid.name,
-      "multisig",
+      'multisig',
       aid,
-      "/multisig/exn",
+      '/multisig/exn',
       { gid: multisigAID.prefix },
       gembeds,
-      recp,
+      recp
     );
 }
 
@@ -402,9 +402,9 @@ export async function issueCredentialMultisig(
   otherMembersAIDs: HabState[],
   multisigAIDName: string,
   kargsIss: CredentialData,
-  isInitiator: boolean = false,
+  isInitiator: boolean = false
 ) {
-  if (!isInitiator) await waitAndMarkNotification(client, "/multisig/iss");
+  if (!isInitiator) await waitAndMarkNotification(client, '/multisig/iss');
 
   const credResult = await client
     .credentials()
@@ -418,8 +418,8 @@ export async function issueCredentialMultisig(
   const ims = signify.d(signify.messagize(credResult.anc, sigers));
   const atc = ims.substring(credResult.anc.size);
   const embeds = {
-    acdc: [credResult.acdc, ""],
-    iss: [credResult.iss, ""],
+    acdc: [credResult.acdc, ''],
+    iss: [credResult.iss, ''],
     anc: [credResult.anc, atc],
   };
   const recp = otherMembersAIDs.map((aid) => aid.prefix);
@@ -428,12 +428,12 @@ export async function issueCredentialMultisig(
     .exchanges()
     .send(
       aid.name,
-      "multisig",
+      'multisig',
       aid,
-      "/multisig/iss",
+      '/multisig/iss',
       { gid: multisigAID.prefix },
       embeds,
-      recp,
+      recp
     );
 
   return op;
@@ -444,7 +444,7 @@ export async function multisigRevoke(
   memberName: string,
   groupName: string,
   rev: Serder,
-  anc: Serder,
+  anc: Serder
 ) {
   const leaderHab = await client.identifiers().get(memberName);
   const groupHab = await client.identifiers().get(groupName);
@@ -457,7 +457,7 @@ export async function multisigRevoke(
   const atc = ims.substring(anc.size);
 
   const embeds = {
-    iss: [rev, ""],
+    iss: [rev, ''],
     anc: [anc, atc],
   };
 
@@ -469,23 +469,18 @@ export async function multisigRevoke(
     .exchanges()
     .send(
       memberName,
-      "multisig",
+      'multisig',
       leaderHab,
-      "/multisig/rev",
+      '/multisig/rev',
       { gid: groupHab.prefix },
       embeds,
-      recipients,
+      recipients
     );
 }
 
 export async function startMultisigIncept(
   client: SignifyClient,
-  {
-    groupName,
-    localMemberName,
-    participants,
-    ...args
-  }: StartMultisigInceptArgs,
+  { groupName, localMemberName, participants, ...args }: StartMultisigInceptArgs
 ) {
   const aid1 = await client.identifiers().get(localMemberName);
   const participantStates = await getStates(client, participants);
@@ -511,7 +506,7 @@ export async function startMultisigIncept(
     icp: [serder, atc],
   };
 
-  const smids = participantStates.map((state) => state["i"]);
+  const smids = participantStates.map((state) => state['i']);
 
   await client
     .exchanges()
@@ -519,25 +514,25 @@ export async function startMultisigIncept(
       localMemberName,
       groupName,
       aid1,
-      "/multisig/icp",
+      '/multisig/icp',
       { gid: serder.pre, smids: smids, rmids: smids },
       embeds,
-      participants,
+      participants
     );
   return op1;
 }
 
 export async function waitAndMarkNotification(
   client: SignifyClient,
-  route: string,
+  route: string
 ) {
   const notes = await waitForNotifications(client, route);
 
   await Promise.all(
     notes.map((note) => {
       client.notifications().mark(note.i);
-    }),
+    })
   );
 
-  return notes[notes.length - 1]?.a.d ?? "";
+  return notes[notes.length - 1]?.a.d ?? '';
 }

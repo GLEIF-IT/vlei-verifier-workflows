@@ -1,5 +1,5 @@
-import { VleiIssuance } from "../vlei-issuance";
-import { WorkflowState } from "../workflow-state";
+import { VleiIssuance } from '../vlei-issuance';
+import { WorkflowState } from '../workflow-state';
 
 import {
   IssueCredentialStepRunner,
@@ -11,10 +11,10 @@ import {
   CreateAidStepRunner,
   CreateRegistryStepRunner,
   AddRootOfTrustStepRunner,
-} from "./workflow-step-runners";
+} from './workflow-step-runners';
 
-const fs = require("fs");
-const yaml = require("js-yaml");
+const fs = require('fs');
+const yaml = require('js-yaml');
 
 export class WorkflowRunner {
   stepRunners: Map<string, StepRunner> = new Map<string, StepRunner>();
@@ -30,19 +30,19 @@ export class WorkflowRunner {
   }
 
   private registerPredefinedRunners() {
-    this.registerRunner("create_client", new CreateClientStepRunner());
-    this.registerRunner("create_aid", new CreateAidStepRunner());
-    this.registerRunner("create_registry", new CreateRegistryStepRunner());
-    this.registerRunner("issue_credential", new IssueCredentialStepRunner());
-    this.registerRunner("revoke_credential", new RevokeCredentialStepRunner());
-    this.registerRunner("add_root_of_trust", new AddRootOfTrustStepRunner());
+    this.registerRunner('create_client', new CreateClientStepRunner());
+    this.registerRunner('create_aid', new CreateAidStepRunner());
+    this.registerRunner('create_registry', new CreateRegistryStepRunner());
+    this.registerRunner('issue_credential', new IssueCredentialStepRunner());
+    this.registerRunner('revoke_credential', new RevokeCredentialStepRunner());
+    this.registerRunner('add_root_of_trust', new AddRootOfTrustStepRunner());
     this.registerRunner(
-      "notify_credential_issuee",
-      new NotifyCredentialIssueeStepRunner(),
+      'notify_credential_issuee',
+      new NotifyCredentialIssueeStepRunner()
     );
     this.registerRunner(
-      "credential_verification",
-      new CredentialVerificationStepRunner(),
+      'credential_verification',
+      new CredentialVerificationStepRunner()
     );
   }
 
@@ -52,7 +52,7 @@ export class WorkflowRunner {
 
   public async runWorkflow() {
     for (const [stepName, step] of Object.entries(
-      this.workflow.workflow.steps,
+      this.workflow.workflow.steps
     ) as any[]) {
       console.log(`Executing: ${step.description}`);
       const runner = this.stepRunners.get(step.type);

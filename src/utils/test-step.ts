@@ -11,7 +11,7 @@
  */
 export async function step<T>(
   description: string,
-  fn: () => Promise<T>,
+  fn: () => Promise<T>
 ): Promise<T> {
   try {
     const start = Date.now();
@@ -19,7 +19,7 @@ export async function step<T>(
 
     // Bypassing console.log to avoid the verbose log output from jest
     process.stdout.write(
-      `Step - ${description} - finished (${Date.now() - start}ms)\n`,
+      `Step - ${description} - finished (${Date.now() - start}ms)\n`
     );
     return response;
   } catch (error) {

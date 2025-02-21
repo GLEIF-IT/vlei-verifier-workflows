@@ -9,8 +9,8 @@
 // import { loadWorkflow } from "../src/utils/test-data"
 
 // Dummy test as placeholder for now
-describe("Dummy test", () => {
-  it("should pass", () => {
+describe('Dummy test', () => {
+  it('should pass', () => {
     expect(true).toBe(true);
   });
 });

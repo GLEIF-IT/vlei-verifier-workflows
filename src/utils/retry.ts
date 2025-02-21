@@ -1,4 +1,4 @@
-import { setTimeout } from "timers/promises";
+import { setTimeout } from 'timers/promises';
 
 export interface RetryOptions {
   maxSleep?: number;
@@ -10,7 +10,7 @@ export interface RetryOptions {
 
 export async function retry<T>(
   fn: () => Promise<T>,
-  options: RetryOptions = {},
+  options: RetryOptions = {}
 ): Promise<T> {
   const {
     maxSleep = 1000,
@@ -37,7 +37,7 @@ export async function retry<T>(
       cause = err as Error;
       const delay = Math.max(
         minSleep,
-        Math.min(maxSleep, 2 ** retries * increaseFactor),
+        Math.min(maxSleep, 2 ** retries * increaseFactor)
       );
       console.log(`Retrying in ${delay}ms`);
       retries++;
