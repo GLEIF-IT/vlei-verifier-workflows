@@ -187,7 +187,7 @@ export async function getOrCreateClient(
   await ready();
   bran ??= randomPasscode();
   bran = bran.padEnd(21, "_");
-  const client = new SignifyClient(testKeria.keriaAdminUrl.toString(), bran, Tier.low, testKeria.keriaBootUrl.toString());
+  const client = new SignifyClient(testKeria.keriaAdminUrl.toString().replace(/\/$/, ""), bran, Tier.low, testKeria.keriaBootUrl.toString().replace(/\/$/, ""));
   try {
     await client.connect();
   } catch (e: any) {

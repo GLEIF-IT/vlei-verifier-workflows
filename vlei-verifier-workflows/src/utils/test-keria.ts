@@ -15,13 +15,13 @@ export const ARG_KERIA_BOOT_PORT = "keria-boot-port";
 export const ARG_KERIA_START_PORT = "keria-start-port";
 
 export interface KeriaConfig {
-  dt: string;
-  keria: {
+  dt?: string;
+  keria?: {
     dt: string;
     curls: string[];
   };
-  iurls: string[];
-  durls: string[];
+  iurls?: string[];
+  durls?: string[];
 }
 export class TestKeria {
   private static instance: TestKeria;
@@ -66,25 +66,27 @@ export class TestKeria {
         throw new Error(
           "TestKeria.getInstance() called without arguments means we expected it to be initialized earlier. This must be done with great care to avoid unexpected side effects."
         );
+      } else {
+        const args = TestKeria.processKeriaArgs(
+            baseAdminPort!,
+            baseHttpPort!,
+            baseBootPort!,
+            offset
+          );
+          TestKeria.instance = new TestKeria(
+            testPaths!,
+            testHost,
+            parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
+            parseInt(args[ARG_KERIA_HTTP_PORT], 10),
+            parseInt(args[ARG_KERIA_BOOT_PORT], 10)
+          );
+      
       }
     } else if (testPaths !== undefined) {
       console.warn(
         "TestEnvironment.getInstance() called with arguments, but instance already exists. Overriding original config. This must be done with great care to avoid unexpected side effects."
       );
     }
-    const args = TestKeria.processKeriaArgs(
-      baseAdminPort!,
-      baseHttpPort!,
-      baseBootPort!,
-      offset
-    );
-    TestKeria.instance = new TestKeria(
-      testPaths!,
-      testHost,
-      parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
-      parseInt(args[ARG_KERIA_HTTP_PORT], 10),
-      parseInt(args[ARG_KERIA_BOOT_PORT], 10)
-    );
     return TestKeria.instance;
   }
 

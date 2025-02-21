@@ -110,7 +110,7 @@ export class TestPaths {
       userName = "Bank_1",
       dockerComposeFile = path.join(
         process.cwd(),
-        "docker-compose-banktest.yaml",
+        "docker-compose.yaml",
       ),
     ): TestPaths {
       if (!TestPaths.instance) {
