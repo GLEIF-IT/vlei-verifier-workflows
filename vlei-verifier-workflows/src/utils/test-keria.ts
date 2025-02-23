@@ -32,6 +32,10 @@ export class TestKeria {
   public keriaHttpUrl: URL;
   public keriaBootPort: number;
   public keriaBootUrl: URL;
+  public keriaConfig: KeriaConfig;
+  public domain: string;
+  public witnessHost: string;
+  public host: string;
   public containers: Map<string, dockerode.Container> = new Map<
     string,
     dockerode.Container
@@ -40,22 +44,44 @@ export class TestKeria {
 
   private constructor(
     testPaths: TestPaths,
-    testHost: string,
+    domain: string,
+    host: string,
+    witnessHost: string,
     kAdminPort: number,
     kHttpPort: number,
     kBootPort: number
   ) {
     this.testPaths = testPaths;
+    this.domain = domain;
+    this.witnessHost = witnessHost;
+    this.host = host;
     this.keriaAdminPort = kAdminPort;
-    this.keriaAdminUrl = new URL(`http://${testHost}:${kAdminPort}`);
+    this.keriaAdminUrl = new URL(`http://${host}:${kAdminPort}`);
     this.keriaHttpPort = kHttpPort;
-    this.keriaHttpUrl = new URL(`http://${testHost}:${kHttpPort}`);
+    this.keriaHttpUrl = new URL(`http://${host}:${kHttpPort}`);
     this.keriaBootPort = kBootPort;
-    this.keriaBootUrl = new URL(`http://${testHost}:${kBootPort}`);
+    this.keriaBootUrl = new URL(`http://${host}:${kBootPort}`);
+    this.keriaConfig = {
+      dt: "2023-12-01T10:05:25.062609+00:00",
+      keria: {
+        dt: "2023-12-01T10:05:25.062609+00:00",
+        curls: [`http://${host}:${this.keriaAdminPort}/`],
+      },
+      iurls: [
+        `http://${witnessHost}:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller`,
+        `http://${witnessHost}:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller`,
+        `http://${witnessHost}:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller`,
+        `http://${witnessHost}:5645/oobi/BM35JN8XeJSEfpxopjn5jr7tAHCE5749f0OobhMLCorE/controller`,
+        `http://${witnessHost}:5646/oobi/BIj15u5V11bkbtAxMA7gcNJZcax-7TgaBMLsQnMHpYHP/controller`,
+        `http://${witnessHost}:5647/oobi/BF2rZTW79z4IXocYRQnjjsOuvFUQv-ptCf8Yltd7PfsM/controller`,
+      ],
+    };
   }
   public static getInstance(
     testPaths?: TestPaths,
-    testHost="localhost",
+    domain?: string,
+    host?: string,
+    containerLocalhost?: string,
     baseAdminPort?: number,
     baseHttpPort?: number,
     baseBootPort?: number,
@@ -68,19 +94,20 @@ export class TestKeria {
         );
       } else {
         const args = TestKeria.processKeriaArgs(
-            baseAdminPort!,
-            baseHttpPort!,
-            baseBootPort!,
-            offset
-          );
-          TestKeria.instance = new TestKeria(
-            testPaths!,
-            testHost,
-            parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
-            parseInt(args[ARG_KERIA_HTTP_PORT], 10),
-            parseInt(args[ARG_KERIA_BOOT_PORT], 10)
-          );
-      
+          baseAdminPort!,
+          baseHttpPort!,
+          baseBootPort!,
+          offset
+        );
+        TestKeria.instance = new TestKeria(
+          testPaths!,
+          domain!,
+          host!,
+          containerLocalhost!,
+          parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
+          parseInt(args[ARG_KERIA_HTTP_PORT], 10),
+          parseInt(args[ARG_KERIA_BOOT_PORT], 10)
+        );
       }
     } else if (testPaths !== undefined) {
       console.warn(
@@ -127,8 +154,7 @@ export class TestKeria {
   async beforeAll(
     imageName: string,
     containerName: string = "keria",
-    pullImage: boolean = false,
-    keriaConfig?: KeriaConfig
+    pullImage: boolean = false
   ) {
     process.env.DOCKER_HOST = process.env.DOCKER_HOST
       ? process.env.DOCKER_HOST
@@ -156,7 +182,6 @@ export class TestKeria {
       const keriaContainer = await this.launchTestKeria(
         imageName,
         containerName,
-        keriaConfig,
         pullImage
       );
       this.containers.set(containerName, keriaContainer);
@@ -193,9 +218,10 @@ export class TestKeria {
 
   async startContainerWithConfig(
     imageName: string,
-    containerName: string,
-    keriaConfig?: KeriaConfig
+    containerName: string
   ): Promise<dockerode.Container> {
+    const networkName = "vlei-verifier-workflows_default"; // Replace with your actual network name
+
     let containerOptions: dockerode.ContainerCreateOptions;
     containerOptions = {
       name: containerName,
@@ -211,11 +237,17 @@ export class TestKeria {
           "3902/tcp": [{ HostPort: `${this.keriaHttpPort}` }],
           "3903/tcp": [{ HostPort: `${this.keriaBootPort}` }],
         },
+        NetworkMode: networkName, // Connect to the Docker Compose network
+        // ExtraHosts: [
+        //   "localhost:127.0.0.1", // Add this line for Linux support
+        // ],
       },
     };
 
-    if (keriaConfig) {
-      const tempConfigPath = await this.createTempKeriaConfigFile(keriaConfig);
+    if (this.keriaConfig) {
+      const tempConfigPath = await this.createTempKeriaConfigFile(
+        this.keriaConfig
+      );
       containerOptions["HostConfig"]!["Binds"] = [
         `${tempConfigPath}:/usr/local/var/keri/cf/keria.json`,
       ];
@@ -223,7 +255,7 @@ export class TestKeria {
         "keria",
         "start",
         "--config-dir",
-        "/usr/local/var/keri/cf",
+        "/usr/local/var/",
         "--config-file",
         "keria",
         "--name",
@@ -232,7 +264,7 @@ export class TestKeria {
         "DEBUG",
       ];
       console.log(
-        `Container started with configuration: ${JSON.stringify(keriaConfig)} at ${tempConfigPath}}`
+        `Container started with configuration: ${JSON.stringify(this.keriaConfig)} at ${tempConfigPath}}`
       );
     }
 
@@ -263,13 +295,33 @@ export class TestKeria {
         );
       }
     }
+    const network = this.docker.getNetwork(networkName);
+    const networkInspect = await network.inspect();
+    const isConnected =
+      networkInspect.Containers && networkInspect.Containers[container.id];
+    if (!isConnected) {
+      try {
+        await network.connect({ Container: container.id });
+        console.log(
+          `Container ${containerName} connected to network ${networkName}`
+        );
+      } catch (error) {
+        console.warn(
+          `Error connecting container ${containerName} to network ${networkName}`,
+          error
+        );
+      }
+    } else {
+      console.log(
+        `Container ${containerName} is already connected to network ${networkName}`
+      );
+    }
     return container!;
   }
 
   public async launchTestKeria(
     kimageName: string,
     kontainerName: string,
-    keriaConfig?: KeriaConfig,
     pullImage: boolean = false
   ): Promise<dockerode.Container> {
     // Check if the container is already running
@@ -370,13 +422,12 @@ export class TestKeria {
       }
       container = await this.startContainerWithConfig(
         kimageName,
-        kontainerName,
-        keriaConfig
+        kontainerName
       );
     }
 
     await performHealthCheck(
-      `http://localhost:${this.keriaHttpPort}/spec.yaml`
+      `http://${this.domain}:${this.keriaHttpPort}/spec.yaml`
     );
     return container;
   }

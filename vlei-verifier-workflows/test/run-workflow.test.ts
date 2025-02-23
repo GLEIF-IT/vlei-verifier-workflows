@@ -12,24 +12,13 @@ let testPaths: TestPaths;
 let testKeria: TestKeria;
 let env: TestEnvironment;
 
+const ARG_KERIA_DOMAIN = "keria_domain"; //external domain for keria
+const ARG_WITNESS_HOST = "witness_host"; //docker domain for witness
+const ARG_KERIA_HOST = "keria_host"; //docker domain for witness
 const ARG_KERIA_NUM = "keria_num";
 const ARG_REFRESH = "refresh";
 
-const keriaConfig = {
-  "dt": "2023-12-01T10:05:25.062609+00:00",
-  "keria": {
-    "dt": "2023-12-01T10:05:25.062609+00:00",
-    "curls": ["http://localhost:3902/"]
-  },
-  "iurls": [
-    "http://localhost:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
-    "http://localhost:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller",
-    "http://localhost:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller",
-    "http://localhost:5645/oobi/BM35JN8XeJSEfpxopjn5jr7tAHCE5749f0OobhMLCorE/controller",
-    "http://localhost:5646/oobi/BIj15u5V11bkbtAxMA7gcNJZcax-7TgaBMLsQnMHpYHP/controller",
-    "http://localhost:5647/oobi/BF2rZTW79z4IXocYRQnjjsOuvFUQv-ptCf8Yltd7PfsM/controller"
-  ]
-}
+const keriaContainer = `keria_vvw`;
 
 // Parse command-line arguments using minimist
 const args = minimist(process.argv.slice(process.argv.indexOf("--") + 1), {
@@ -38,6 +27,9 @@ const args = minimist(process.argv.slice(process.argv.indexOf("--") + 1), {
     [ARG_REFRESH]: "r",
   },
   default: {
+    [ARG_WITNESS_HOST]: "witness-demo",
+    [ARG_KERIA_HOST]: keriaContainer,
+    [ARG_KERIA_DOMAIN]: "localhost",
     [ARG_KERIA_NUM]: 1,
     [ARG_REFRESH]: false,
     [ARG_KERIA_START_PORT]: 20000,
@@ -52,7 +44,6 @@ const args = minimist(process.argv.slice(process.argv.indexOf("--") + 1), {
 
 const keriaImage = `weboftrust/keria:0.2.0-dev4`;
 const keriaNum = parseInt(args[ARG_KERIA_NUM], 10) || 0;
-const keriaContainer = `keria_vvw`.toLowerCase();
 const offset = 10 * (keriaNum - 1);
 const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === "false" : true;
 
@@ -63,8 +54,17 @@ afterAll(async () => {
 beforeAll(async () => {
   env = resolveEnvironment();
   testPaths = TestPaths.getInstance();
-  testKeria = TestKeria.getInstance(testPaths, "localhost", 20001, 20002, 20003, offset);
-  await testKeria.beforeAll(keriaImage, keriaContainer, refresh, keriaConfig);
+  testKeria = TestKeria.getInstance(
+    testPaths,
+    args[ARG_KERIA_DOMAIN],
+    args[ARG_KERIA_HOST],
+    args[ARG_WITNESS_HOST],
+    20001,
+    20002,
+    20003,
+    offset
+  );
+  await testKeria.beforeAll(keriaImage, keriaContainer, refresh);
 });
 
 test.only("workflow", async function run() {

@@ -1,22 +1,6 @@
-configs:
-  keria.json:
-    content: |
-      {
-            "dt": "2023-12-01T10:05:25.062609+00:00",
-            "keria": {
-              "dt": "2023-12-01T10:05:25.062609+00:00",
-              "curls": ["http://localhost:3902/"]
-            },
-            "iurls": [
-              "http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
-              "http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller",
-              "http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller",
-              "http://witness-demo:5645/oobi/BM35JN8XeJSEfpxopjn5jr7tAHCE5749f0OobhMLCorE/controller",
-              "http://witness-demo:5646/oobi/BIj15u5V11bkbtAxMA7gcNJZcax-7TgaBMLsQnMHpYHP/controller",
-              "http://witness-demo:5647/oobi/BF2rZTW79z4IXocYRQnjjsOuvFUQv-ptCf8Yltd7PfsM/controller"
-            ]
-      }
+version: '3.8'
 
+configs:
   wan.json:
     content: |
       {
@@ -24,9 +8,8 @@ configs:
           "wan": {
             "dt": "2022-01-20T12:57:59.823350+00:00",
             "curls": ["tcp://localhost:5632/", "http://localhost:5642/"]
-          },
+          }
       }
-
   wil.json:
     content: |
       {
@@ -45,7 +28,6 @@ configs:
               "curls": ["http://localhost:5644/"]
           }
       }
-
   wit.json:
     content: |
       {
@@ -55,7 +37,6 @@ configs:
               "curls": ["http://localhost:5645/"]
           }
       }
-
   wub.json:
     content: |
       {
@@ -65,7 +46,6 @@ configs:
               "curls": ["http://localhost:5646/"]
           }
       }
-
   wyx.json:
     content: |
       {
@@ -102,35 +82,8 @@ services:
       start_period: 2s
     ports:
       - 7723:7723
-
-  keria:
-    depends_on:
-      vlei-server:
-        condition: service_healthy
-      witness-demo:
-        condition: service_healthy
-    image: ${KERIA_IMAGE:-weboftrust/keria}:${KERIA_IMAGE_TAG:-0.2.0-dev4}
-    platform: linux/x86_64
-    environment:
-      - KERI_AGENT_CORS=1
-      - PYTHONUNBUFFERED=1
-      - PYTHONIOENCODING=UTF-8
-      - KERI_URL=http://keria:3902
-    configs:
-      - source: keria.json
-        target: /usr/local/var/keri/cf/keria.json
-    entrypoint: ["keria", "start", "--config-file", "keria", "--name", "agent"]
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://keria:3902/spec.yaml"]
-      interval: 2s
-      timeout: 3s
-      retries: 5
-      start_period: 2s
-
-    ports:
-      - 3901:3901
-      - 3902:3902
-      - 3903:3903
+    # extra_hosts:
+    #   - "localhost:127.0.0.1"
 
   witness-demo:
     image: weboftrust/keri-witness-demo:1.1.0
@@ -156,6 +109,15 @@ services:
         target: /keripy/scripts/keri/cf/main/wub.json
       - source: wyx.json
         target: /keripy/scripts/keri/cf/main/wyx.json
+    ports:
+      - 5642:5642
+      - 5643:5643
+      - 5644:5644
+      - 5645:5645
+      - 5646:5646
+      - 5647:5647
+    # extra_hosts:
+    #   - "localhost:127.0.0.1"
 
   vlei-verifier:
     image: gleif/vlei-verifier:latest
@@ -174,6 +136,8 @@ services:
       timeout: 3s
       retries: 5
       start_period: 2s
+    # extra_hosts:
+    #   - "localhost:127.0.0.1"
 
   deps:
     image: alpine
@@ -181,19 +145,20 @@ services:
     depends_on:
       vlei-server:
         condition: service_healthy
-      keria:
-        condition: service_healthy
       witness-demo:
         condition: service_healthy
+    # extra_hosts:
+    #   - "localhost:127.0.0.1"
+
   verify:
     image: alpine
     command: ["echo", "Dependencies running"]
     depends_on:
       vlei-server:
         condition: service_healthy
-      keria:
-        condition: service_healthy
       witness-demo:
         condition: service_healthy
       vlei-verifier:
         condition: service_healthy
+    # extra_hosts:
+    #   - "localhost:127.0.0.1"
