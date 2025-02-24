@@ -91,12 +91,12 @@ describe("testing Registry creation workflow step", () => {
       const workflowRunResult = await wr.runWorkflow();
       const workflowState = WorkflowState.getInstance();
       expect(workflowRunResult).toEqual(true);
-      expect(workflowState.aids.get(aidName)).not.toEqual(undefined);
+      expect(workflowState.registries.get(aidName)).not.toEqual(undefined);
     }
     else throw("Invalid workflow of configuration");
   }, 3600000);
 
-  test("AID creation failed. Client was not created", async function run() {
+  test("Registry creation failed. AID was not created", async function run() {
     const workflowsDir = "./workflows/";
     const workflowFile = "create-registry-invalid-no-aid.yaml";
     const workflow = loadWorkflow(
