@@ -40,7 +40,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: reg-pilot unit and integration tests
+      - name: workflow steps integration tests
         run: npx jest -- --runInBand --watchAll=false --runTestsByPath ./test/integration/workflow-steps.test.ts
         # run: npx jest ./test/run-workflow-bank.test.ts -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
         # run: npx jest ./test/run-workflow-bank.test.ts --testNamePattern api-verifier-bank-test-workflow -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
