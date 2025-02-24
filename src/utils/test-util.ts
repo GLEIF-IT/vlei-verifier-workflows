@@ -9,12 +9,15 @@ import signify, {
   Serder,
   SignifyClient,
   Tier,
-} from "signify-ts";
-import { RetryOptions, retry } from "./retry";
-import assert = require("assert");
-import { resolveEnvironment } from "./resolve-env";
-import { WorkflowState } from "../workflow-state";
-import { getIdentifierData, SinglesigIdentifierData } from "./handle-json-config";
+} from 'signify-ts';
+import { RetryOptions, retry } from './retry';
+import assert = require('assert');
+import { resolveEnvironment } from './resolve-env';
+import { WorkflowState } from '../workflow-state';
+import {
+  getIdentifierData,
+  SinglesigIdentifierData,
+} from './handle-json-config';
 
 export interface Aid {
   name: string;
@@ -38,13 +41,13 @@ export function sleep(ms: number): Promise<void> {
 export async function admitSinglesig(
   client: SignifyClient,
   aidName: string,
-  recipientAid: HabState,
+  recipientAid: HabState
 ) {
-  const grantMsgSaid = await waitAndMarkNotification(client, "/exn/ipex/grant");
+  const grantMsgSaid = await waitAndMarkNotification(client, '/exn/ipex/grant');
 
   const [admit, sigs, aend] = await client.ipex().admit({
     senderName: aidName,
-    message: "",
+    message: '',
     grantSaid: grantMsgSaid,
     recipient: recipientAid.prefix,
   });
@@ -86,7 +89,7 @@ export async function assertNotifications(
 
 export async function createAid(
   client: SignifyClient,
-  name: string,
+  name: string
 ): Promise<Aid> {
   const [prefix, oobi] = await getOrCreateIdentifier(client, name);
   return { prefix, oobi, name };
@@ -95,12 +98,12 @@ export async function createAid(
 export async function createAID(client: signify.SignifyClient, name: string) {
   await getOrCreateIdentifier(client, name);
   const aid = await client.identifiers().get(name);
-  console.log(name, "AID:", aid.prefix);
+  console.log(name, 'AID:', aid.prefix);
   return aid;
 }
 
 export function createTimestamp() {
-  return new Date().toISOString().replace("Z", "000+00:00");
+  return new Date().toISOString().replace('Z', '000+00:00');
 }
 
 /**
@@ -109,13 +112,13 @@ export function createTimestamp() {
 export async function getEndRoles(
   client: SignifyClient,
   alias: string,
-  role?: string,
+  role?: string
 ): Promise<any> {
   const path =
     role !== undefined
       ? `/identifiers/${alias}/endroles/${role}`
       : `/identifiers/${alias}/endroles`;
-  const response: Response = await client.fetch(path, "GET", null);
+  const response: Response = await client.fetch(path, 'GET', null);
   if (!response.ok) throw new Error(await response.text());
   const result = await response.json();
   // console.log("getEndRoles", result);
@@ -124,10 +127,10 @@ export async function getEndRoles(
 
 export async function getGrantedCredential(
   client: SignifyClient,
-  credId: string,
+  credId: string
 ): Promise<any> {
   const credentialList = await client.credentials().list({
-    filter: { "-d": credId },
+    filter: { '-d': credId },
   });
   let credential: any;
   if (credentialList.length > 0) {
@@ -141,13 +144,13 @@ export async function getIssuedCredential(
   issuerClient: SignifyClient,
   issuerAID: HabState,
   recipientAID: HabState,
-  schemaSAID: string,
+  schemaSAID: string
 ) {
   const credentialList = await issuerClient.credentials().list({
     filter: {
-      "-i": issuerAID.prefix,
-      "-s": schemaSAID,
-      "-a-i": recipientAID.prefix,
+      '-i': issuerAID.prefix,
+      '-s': schemaSAID,
+      '-a-i': recipientAID.prefix,
     },
   });
   assert(credentialList.length <= 1);
@@ -157,12 +160,12 @@ export async function getIssuedCredential(
 export async function getOrCreateAID(
   client: SignifyClient,
   name: string,
-  kargs: CreateIdentiferArgs,
+  kargs: CreateIdentiferArgs
 ): Promise<HabState> {
   try {
     return await client.identifiers().get(name);
   } catch {
-    console.log("Creating AID", name, ": ", kargs);
+    console.log('Creating AID', name, ': ', kargs);
     const result: EventResult = await client.identifiers().create(name, kargs);
 
     await waitOperation(client, await result.op());
@@ -170,9 +173,9 @@ export async function getOrCreateAID(
 
     const op = await client
       .identifiers()
-      .addEndRole(name, "agent", client!.agent!.pre);
+      .addEndRole(name, 'agent', client!.agent!.pre);
     await waitOperation(client, await op.op());
-    console.log(name, "AID:", aid.prefix);
+    console.log(name, 'AID:', aid.prefix);
     return aid;
   }
 }
@@ -182,12 +185,12 @@ export async function getOrCreateAID(
  */
 export async function getOrCreateClient(
   bran: string | undefined = undefined,
-  getOnly: boolean = false,
+  getOnly: boolean = false
 ): Promise<SignifyClient> {
   const env = resolveEnvironment();
   await ready();
   bran ??= randomPasscode();
-  bran = bran.padEnd(21, "_");
+  bran = bran.padEnd(21, '_');
   const client = new SignifyClient(env.url, bran, Tier.low, env.bootUrl);
   try {
     await client.connect();
@@ -198,11 +201,11 @@ export async function getOrCreateClient(
       await client.connect();
     } else {
       throw new Error(
-        "Could not connect to client w/ bran " + bran + e.message,
+        'Could not connect to client w/ bran ' + bran + e.message
       );
     }
   }
-  console.log("client", {
+  console.log('client', {
     agent: client.agent?.pre,
     controller: client.controller.pre,
   });
@@ -223,14 +226,14 @@ export async function getOrCreateClient(
 export async function getOrCreateClients(
   count: number,
   brans: string[] | undefined = undefined,
-  getOnly: boolean = false,
+  getOnly: boolean = false
 ): Promise<SignifyClient[]> {
   const tasks: Promise<SignifyClient>[] = [];
   for (let i = 0; i < count; i++) {
     tasks.push(getOrCreateClient(brans?.at(i) ?? undefined, getOnly));
   }
   const clients: SignifyClient[] = await Promise.all(tasks);
-  console.log(`secrets="${clients.map((i) => i.bran).join(",")}"`);
+  console.log(`secrets="${clients.map((i) => i.bran).join(',')}"`);
   return clients;
 }
 
@@ -246,9 +249,9 @@ export async function getOrCreateClients(
 export async function getOrCreateContact(
   client: SignifyClient,
   name: string,
-  oobi: string,
+  oobi: string
 ): Promise<string> {
-  const list = await client.contacts().list(undefined, "alias", `^${name}$`);
+  const list = await client.contacts().list(undefined, 'alias', `^${name}$`);
   // console.log("contacts.list", list);
   if (list.length > 0) {
     const contact = list[0];
@@ -275,7 +278,7 @@ export async function getOrCreateContact(
 export async function getOrCreateIdentifier(
   client: SignifyClient,
   name: string,
-  kargs: CreateIdentiferArgs | undefined = undefined,
+  kargs: CreateIdentiferArgs | undefined = undefined
 ): Promise<[string, string]> {
   let id: any = undefined;
   try {
@@ -295,16 +298,16 @@ export async function getOrCreateIdentifier(
     id = op.response.i;
   }
   const eid = client.agent?.pre!;
-  if (!(await hasEndRole(client, name, "agent", eid))) {
+  if (!(await hasEndRole(client, name, 'agent', eid))) {
     const result: EventResult = await client
       .identifiers()
-      .addEndRole(name, "agent", eid);
+      .addEndRole(name, 'agent', eid);
     let op = await result.op();
     op = await waitOperation(client, op);
-    console.log("identifiers.addEndRole", op);
+    console.log('identifiers.addEndRole', op);
   }
 
-  const oobi = await client.oobis().get(name, "agent");
+  const oobi = await client.oobis().get(name, 'agent');
   const result: [string, string] = [id, oobi.oobis[0]];
   console.log(name, result);
   return result;
@@ -319,7 +322,7 @@ export async function getOrIssueCredential(
   schema: string,
   rules?: any,
   source?: any,
-  privacy = false,
+  privacy = false
 ): Promise<any> {
   const credentialList = await issuerClient.credentials().list();
 
@@ -330,7 +333,7 @@ export async function getOrIssueCredential(
         cred.sad.i === issuerAid.prefix &&
         cred.sad.a.i === recipientAid.prefix &&
         cred.sad.a.AID === credData.AID! &&
-        cred.status.et != "rev",
+        cred.status.et != 'rev'
     );
     if (credential) return credential;
   }
@@ -357,7 +360,7 @@ export async function getOrIssueCredential(
 export async function revokeCredential(
   issuerClient: SignifyClient,
   issuerAid: Aid,
-  credentialSaid: string,
+  credentialSaid: string
 ): Promise<any> {
   const credentialList = await issuerClient.credentials().list();
 
@@ -373,7 +376,7 @@ export async function revokeCredential(
 
 export async function getStates(client: SignifyClient, prefixes: string[]) {
   const participantStates = await Promise.all(
-    prefixes.map((p) => client.keyStates().get(p)),
+    prefixes.map((p) => client.keyStates().get(p))
   );
   return participantStates.map((s: any[]) => s[0]);
 }
@@ -385,7 +388,7 @@ export async function hasEndRole(
   client: SignifyClient,
   alias: string,
   role: string,
-  eid: string,
+  eid: string
 ): Promise<boolean> {
   const list = await getEndRoles(client, alias, role);
   for (const i of list) {
@@ -410,7 +413,7 @@ export async function warnNotifications(
     const notes = res.notes.filter((i: { r: boolean }) => i.r === false);
     if (notes.length > 0) {
       count += notes.length;
-      console.warn("notifications", notes);
+      console.warn('notifications', notes);
     }
   }
   expect(count).toBeGreaterThan(0); // replace warnNotifications with assertNotifications
@@ -418,7 +421,7 @@ export async function warnNotifications(
 
 export async function deleteOperations<T = any>(
   client: SignifyClient,
-  op: Operation<T>,
+  op: Operation<T>
 ) {
   if (op.metadata?.depends) {
     await deleteOperations(client, op.metadata.depends);
@@ -429,11 +432,11 @@ export async function deleteOperations<T = any>(
 
 export async function getReceivedCredential(
   client: SignifyClient,
-  credId: string,
+  credId: string
 ): Promise<any> {
   const credentialList = await client.credentials().list({
     filter: {
-      "-d": credId,
+      '-d': credId,
     },
   });
   let credential: any;
@@ -449,7 +452,7 @@ export async function getReceivedCredential(
  */
 export async function markAndRemoveNotification(
   client: SignifyClient,
-  note: Notification,
+  note: Notification
 ): Promise<void> {
   try {
     await client.notifications().mark(note.i);
@@ -463,7 +466,7 @@ export async function markAndRemoveNotification(
  */
 export async function markNotification(
   client: SignifyClient,
-  note: Notification,
+  note: Notification
 ): Promise<void> {
   await client.notifications().mark(note.i);
 }
@@ -471,7 +474,7 @@ export async function markNotification(
 export async function resolveOobi(
   client: SignifyClient,
   oobi: string,
-  alias?: string,
+  alias?: string
 ) {
   const op = await client.oobis().resolve(oobi, alias);
   await waitOperation(client, op);
@@ -480,7 +483,7 @@ export async function resolveOobi(
 export async function waitForCredential(
   client: SignifyClient,
   credSAID: string,
-  MAX_RETRIES: number = 10,
+  MAX_RETRIES: number = 10
 ) {
   let retryCount = 0;
   while (retryCount < MAX_RETRIES) {
@@ -491,28 +494,28 @@ export async function waitForCredential(
     console.log(` retry-${retryCount}: No credentials yet...`);
     retryCount = retryCount + 1;
   }
-  throw Error("Credential SAID: " + credSAID + " has not been received");
+  throw Error('Credential SAID: ' + credSAID + ' has not been received');
 }
 
 export async function waitAndMarkNotification(
   client: SignifyClient,
-  route: string,
+  route: string
 ) {
   const notes = await waitForNotifications(client, route);
 
   await Promise.all(
     notes.map((note) => {
       client.notifications().mark(note.i);
-    }),
+    })
   );
 
-  return notes[notes.length - 1]?.a.d ?? "";
+  return notes[notes.length - 1]?.a.d ?? '';
 }
 
 export async function waitForNotifications(
   client: SignifyClient,
   route: string,
-  options: RetryOptions = {},
+  options: RetryOptions = {}
 ): Promise<Notification[]> {
   return retry(async () => {
     const response: { notes: Notification[] } = await client
@@ -520,7 +523,7 @@ export async function waitForNotifications(
       .list();
 
     const notes = response.notes.filter(
-      (note) => note.a.r === route && note.r === false,
+      (note) => note.a.r === route && note.r === false
     );
 
     if (!notes.length) {
@@ -538,9 +541,9 @@ export async function waitForNotifications(
 export async function waitOperation<T = any>(
   client: SignifyClient,
   op: Operation<T> | string,
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<Operation<T>> {
-  if (typeof op === "string") {
+  if (typeof op === 'string') {
     op = await client.operations().get(op);
   }
 
@@ -556,11 +559,11 @@ export async function waitOperation<T = any>(
 export async function getOrCreateRegistry(
   client: SignifyClient,
   aid: Aid,
-  registryName: string,
+  registryName: string
 ): Promise<{ name: string; regk: string }> {
   let registries = await client.registries().list(aid.name);
   registries = registries.filter(
-    (reg: { name: string }) => reg.name == registryName,
+    (reg: { name: string }) => reg.name == registryName
   );
   if (registries.length > 0) {
     assert.equal(registries.length, 1);
@@ -571,7 +574,7 @@ export async function getOrCreateRegistry(
     await waitOperation(client, await regResult.op());
     registries = await client.registries().list(aid.name);
     registries = registries.filter(
-      (reg: { name: string }) => reg.name == registryName,
+      (reg: { name: string }) => reg.name == registryName
     );
   }
   console.log(registries);
@@ -583,7 +586,7 @@ export async function sendGrantMessage(
   senderClient: SignifyClient,
   senderAid: Aid,
   recipientAid: Aid,
-  credential: any,
+  credential: any
 ) {
   const [grant, gsigs, gend] = await senderClient.ipex().grant({
     senderName: senderAid.name,
@@ -604,18 +607,18 @@ export async function sendGrantMessage(
 export async function sendAdmitMessage(
   senderClient: SignifyClient,
   senderAid: Aid,
-  recipientAid: Aid,
+  recipientAid: Aid
 ) {
   const notifications = await waitForNotifications(
     senderClient,
-    "/exn/ipex/grant",
+    '/exn/ipex/grant'
   );
   assert.equal(notifications.length, 1);
   const grantNotification = notifications[0];
 
   const [admit, sigs, aend] = await senderClient.ipex().admit({
     senderName: senderAid.name,
-    message: "",
+    message: '',
     grantSaid: grantNotification.a.d!,
     recipient: recipientAid.prefix,
     datetime: createTimestamp(),
@@ -629,21 +632,27 @@ export async function sendAdmitMessage(
   await markAndRemoveNotification(senderClient, grantNotification);
 }
 
-export async function getRootOfTrust(configJson: any, rot_aid: string, rot_member_aid?: string): Promise<any> {
+export async function getRootOfTrust(
+  configJson: any,
+  rot_aid: string,
+  rot_member_aid?: string
+): Promise<any> {
   const workflow_state = WorkflowState.getInstance();
-  
+
   // Use the rot_member_aid if provided, otherwise fall back to rot_aid
   const identifierToUse = rot_member_aid || rot_aid;
-  
+
   const identifierData = getIdentifierData(
     configJson,
-    identifierToUse,
+    identifierToUse
   ) as SinglesigIdentifierData;
-  
+
   const client = workflow_state.clients.get(identifierData.agent.name);
-  
+
   if (!client) {
-    throw new Error(`Failed to initialize client for identifier: ${identifierToUse}`);
+    throw new Error(
+      `Failed to initialize client for identifier: ${identifierToUse}`
+    );
   }
 
   const rootOfTrustIdentifierName = rot_aid;
@@ -655,10 +664,10 @@ export async function getRootOfTrust(configJson: any, rot_aid: string, rot_membe
   let oobiUrl = oobi.oobis[0];
   console.log(`Root of trust OOBI: ${oobiUrl}`);
   const url = new URL(oobiUrl);
-  if (url.hostname === "keria") oobiUrl = oobiUrl.replace("keria", "localhost");
+  if (url.hostname === 'keria') oobiUrl = oobiUrl.replace('keria', 'localhost');
   const oobiResp = await fetch(oobiUrl);
   const oobiRespBody = await oobiResp.text();
-  
+
   return {
     vlei: oobiRespBody,
     aid: rootOfTrustAid.prefix,
