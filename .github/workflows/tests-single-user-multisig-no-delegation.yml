@@ -2,10 +2,10 @@ name: Run Multisig Single User Non Delegated AIDs Tests
 on:
   push:
     branches:
-      - "main"
+      - 'main'
   pull_request:
     branches:
-      - "main"
+      - 'main'
   workflow_dispatch:
 jobs:
   test-single-aid-multisig-non-delegated-aids:
@@ -14,12 +14,12 @@ jobs:
     timeout-minutes: 60
     defaults:
       run:
-        working-directory: vlei-verifier-workflows/
+        working-directory: .
     strategy:
       matrix:
-        os: ["ubuntu-latest"]
-        keria-version: ["0.2.0-dev3"]
-        node-version: ["20"]
+        os: ['ubuntu-latest']
+        keria-version: ['0.2.0-dev3']
+        node-version: ['20']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
     steps:
@@ -28,21 +28,19 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}       
+          node-version: ${{ matrix.node-version }}
       - name: install deps
         run: |
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
-          npm ci     
+          npm ci
       - name: Run docker
         run: |
           docker compose down -v
           docker compose up verify -d --pull always
-      
+
       - name: Build
         run: npm run build
 
       - name: Issue Credentials, Generate reports, API test, Verifier test
         run: SPEED=fast WORKFLOW=multisig-single-user-non-delegated-aids.yaml CONFIGURATION=configuration-multisig-single-user-non-delegated-aids.json npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
-
-
