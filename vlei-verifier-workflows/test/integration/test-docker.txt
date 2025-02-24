@@ -1,0 +1,191 @@
+import fs from "fs";
+import path from "path";
+import os from "os";
+import Docker, { ContainerCreateOptions, DockerOptions } from "dockerode";
+import minimist from "minimist";
+import {
+  dockerLogin,
+  performHealthCheck,
+  pullContainer,
+  runDockerCompose,
+  stopDockerCompose,
+} from "./test-util";
+
+export type TestEnvironmentPreset =
+  | "local"
+  | "docker"
+  | "rootsid_dev"
+  | "rootsid_test"
+  | "bank_test"
+  | "eba_bank_test"
+  | "nordlei_dev"
+  | "nordlei_demo"
+  | "nordlei_dry";
+
+const WAN = "BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha";
+const WIL = "BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM";
+const WES = "BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX";
+
+const ARG_KERIA_ADMIN_PORT = "keria-admin-port";
+const ARG_KERIA_HTTP_PORT = "keria-http-port";
+const ARG_KERIA_BOOT_PORT = "keria-boot-port";
+const ARG_KERIA_START_PORT = "keria-start-port";
+
+const docker = new Docker();
+
+export interface KeriaConfig {
+  dt: string;
+  keria: {
+    dt: string;
+    curls: string[];
+  };
+  iurls: string[];
+  durls: string[];
+}
+export class TestKeria {
+  private static instance: TestKeria;
+  public testPaths: TestPaths;
+  public keriaAdminPort: number;
+  public keriaHttpPort: number;
+  public keriaBootPort: number;
+  public containers: Map<string, Docker.Container> = new Map<
+    string,
+    Docker.Container
+  >();
+  private constructor(
+    testPaths: TestPaths,
+    kAdminPort: number,
+    kHttpPort: number,
+    kBootPort: number,
+  ) {
+    this.testPaths = testPaths;
+    this.keriaAdminPort = kAdminPort;
+    this.keriaHttpPort = kHttpPort;
+    this.keriaBootPort = kBootPort;
+  }
+  public static getInstance(
+    testPaths: TestPaths,
+    baseAdminPort?: number,
+    baseHttpPort?: number,
+    baseBootPort?: number,
+    offset?: number,
+  ): TestKeria {
+    if (!TestKeria.instance) {
+      if (testPaths === undefined) {
+        throw new Error(
+          "TestKeria.getInstance() called without arguments means we expected it to be initialized earlier. This must be done with great care to avoid unexpected side effects.",
+        );
+      }
+    } else if (testPaths !== undefined) {
+      console.warn(
+        "TestEnvironment.getInstance() called with arguments, but instance already exists. Overriding original config. This must be done with great care to avoid unexpected side effects.",
+      );
+    }
+    const args = TestKeria.processKeriaArgs(
+      baseAdminPort!,
+      baseHttpPort!,
+      baseBootPort!,
+      offset,
+    );
+    TestKeria.instance = new TestKeria(
+      testPaths,
+      parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
+      parseInt(args[ARG_KERIA_HTTP_PORT], 10),
+      parseInt(args[ARG_KERIA_BOOT_PORT], 10),
+    );
+    return TestKeria.instance;
+  }
+
+  public static processKeriaArgs(
+    baseAdminPort: number,
+    baseHttpPort: number,
+    baseBootPort: number,
+    offset = 0,
+  ): minimist.ParsedArgs {
+    // Parse command-line arguments using minimist
+    const args = minimist(process.argv.slice(process.argv.indexOf("--") + 1), {
+      alias: {
+        [ARG_KERIA_ADMIN_PORT]: "kap",
+        [ARG_KERIA_HTTP_PORT]: "khp",
+        [ARG_KERIA_BOOT_PORT]: "kbp",
+      },
+      default: {
+        [ARG_KERIA_ADMIN_PORT]: process.env.KERIA_ADMIN_PORT
+          ? parseInt(process.env.KERIA_ADMIN_PORT)
+          : baseAdminPort + offset,
+        [ARG_KERIA_HTTP_PORT]: process.env.KERIA_HTTP_PORT
+          ? parseInt(process.env.KERIA_HTTP_PORT)
+          : baseHttpPort + offset,
+        [ARG_KERIA_BOOT_PORT]: process.env.KERIA_BOOT_PORT
+          ? parseInt(process.env.KERIA_BOOT_PORT)
+          : baseBootPort + offset,
+      },
+      "--": true,
+      unknown: (arg) => {
+        console.info(`Unknown keria argument, skipping: ${arg}`);
+        return false;
+      },
+    });
+
+    return args;
+  }
+
+  
+async beforeAll(
+    imageName: string,
+    containerName: string = "keria",
+    pullImage: boolean = false,
+    keriaConfig?: KeriaConfig,
+  ) {
+    process.env.DOCKER_HOST = process.env.DOCKER_HOST
+      ? process.env.DOCKER_HOST
+      : "localhost";
+    if (
+      process.env.START_TEST_KERIA === undefined ||
+      process.env.START_TEST_KERIA === "true"
+    ) {
+      console.log(
+        `Starting local services using ${this.testPaths.dockerComposeFile} up -d verify`,
+      );
+      if (process.env.DOCKER_USER && process.env.DOCKER_PASSWORD) {
+        await dockerLogin(process.env.DOCKER_USER, process.env.DOCKER_PASSWORD);
+      } else {
+        console.info(
+          "Docker login credentials not provided, skipping docker login",
+        );
+      }
+      await runDockerCompose(
+        this.testPaths.dockerComposeFile,
+        "up -d",
+        "verify",
+      );
+
+      const keriaContainer = await this.launchTestKeria(
+        imageName,
+        containerName,
+        keriaConfig,
+        pullImage,
+      );
+      this.containers.set(containerName, keriaContainer);
+    }
+  }
+
+  async afterAll(clean = true) {
+    if (clean) {
+      console.log("Cleaning up test data");
+      for (const container of this.containers) {
+        await container[1].stop();
+        await container[1].remove();
+        // await container.remove();
+        // await testKeria.containers.delete();
+      }
+      console.log(
+        `Stopping local services using ${this.testPaths.dockerComposeFile}`,
+      );
+      await stopDockerCompose(
+        this.testPaths.dockerComposeFile,
+        "down -v",
+        "verify",
+      );
+    }
+  }
