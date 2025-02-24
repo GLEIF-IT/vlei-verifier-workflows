@@ -630,28 +630,23 @@ export async function sendAdmitMessage(
 }
 
 export async function getRootOfTrust(configJson: any, rot_aid: string, rot_member_aid?: string): Promise<any> {
-  const workflow_state = WorkflowState.getInstance(configJson);
-  const rotAID = workflow_state.aids.get(rot_aid);
-  let client;
-
-  const rootOfTrustIdentifierName = configJson.users.find(
-    (usr: any) => usr.type === "GLEIF"
-  )?.identifiers[0];
-
-  if (rot_member_aid) {
-    const identifierData = getIdentifierData(
-      configJson,
-      rot_member_aid,
-    ) as SinglesigIdentifierData;
-    client = workflow_state.clients.get(identifierData.agent.secret);
-  } else {
-    const identifierData = getIdentifierData(
-      configJson,
-      rot_aid,
-    ) as SinglesigIdentifierData;
-    client = workflow_state.clients.get(identifierData.agent.secret);
+  const workflow_state = WorkflowState.getInstance();
+  
+  // Use the rot_member_aid if provided, otherwise fall back to rot_aid
+  const identifierToUse = rot_member_aid || rot_aid;
+  
+  const identifierData = getIdentifierData(
+    configJson,
+    identifierToUse,
+  ) as SinglesigIdentifierData;
+  
+  const client = workflow_state.clients.get(identifierData.agent.name);
+  
+  if (!client) {
+    throw new Error(`Failed to initialize client for identifier: ${identifierToUse}`);
   }
 
+  const rootOfTrustIdentifierName = rot_aid;
   const rootOfTrustAid = await client
     .identifiers()
     .get(rootOfTrustIdentifierName);
@@ -663,6 +658,7 @@ export async function getRootOfTrust(configJson: any, rot_aid: string, rot_membe
   if (url.hostname === "keria") oobiUrl = oobiUrl.replace("keria", "localhost");
   const oobiResp = await fetch(oobiUrl);
   const oobiRespBody = await oobiResp.text();
+  
   return {
     vlei: oobiRespBody,
     aid: rootOfTrustAid.prefix,

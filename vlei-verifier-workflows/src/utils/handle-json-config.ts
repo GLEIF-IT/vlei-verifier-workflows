@@ -2,15 +2,34 @@ export function getIdentifierData(
   jsonConfig: any,
   aidName: string,
 ): IdentifierData {
-  const identifier = jsonConfig.identifiers[aidName];
+  const identifier = jsonConfig.identifiers?.[aidName];
+  
+  // Check if identifier exists
+  if (!identifier) {
+    throw new Error(`Identifier not found: ${aidName}`);
+  }
+  
   if (identifier.identifiers) {
     return {
       type: "multisig",
       ...identifier,
     } as MultisigIdentifierData;
   }
-  const agent = jsonConfig.agents[identifier["agent"]];
-  const secret = jsonConfig.secrets[agent["secret"]];
+  
+  // Make sure agent exists
+  if (!identifier.agent || !jsonConfig.agents?.[identifier.agent]) {
+    throw new Error(`Agent not found for identifier: ${aidName}`);
+  }
+  
+  const agent = jsonConfig.agents[identifier.agent];
+  
+  // Make sure secret exists
+  if (!agent.secret || !jsonConfig.secrets?.[agent.secret]) {
+    throw new Error(`Secret not found for agent: ${identifier.agent}`);
+  }
+  
+  const secret = jsonConfig.secrets[agent.secret];
+  
   return {
     type: "singlesig",
     ...identifier,
