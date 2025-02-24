@@ -2,35 +2,35 @@ name: utils unit test
 on:
   push:
     branches:
-      - "main"
+      - 'main'
   pull_request:
     branches:
-      - "main"
+      - 'main'
   workflow_dispatch:
-jobs: 
+jobs:
   unit-integration-tests:
     name: Run utils unit tests, using keria:${{ matrix.keria-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     defaults:
       run:
-        working-directory: vlei-verifier-workflows/
+        working-directory: .
     strategy:
       matrix:
-        os: ["ubuntu-latest"]
-        keria-version: ["0.2.0-dev3"]
-        node-version: ["20"]
+        os: ['ubuntu-latest']
+        keria-version: ['0.2.0-dev3']
+        node-version: ['20']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      
+
       - name: install deps
         run: |
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
-          npm ci    
+          npm ci
 
       - name: Build
         run: npm run build

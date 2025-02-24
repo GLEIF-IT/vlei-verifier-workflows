@@ -8,5 +8,5 @@ dist
 .idea
 coverage/*
 
-
-
+# Visual Studio Code
+.vscode
