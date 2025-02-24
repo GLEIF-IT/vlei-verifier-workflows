@@ -1,0 +1,15 @@
+{
+  "secrets": {
+    "client1": "D_PbQb01zuzQgK-testq1"    
+  },
+  "credentials": {    
+  },
+  "agents": {
+    "client-agent-1": {
+      "secret": "client1"
+    }
+  },
+  "identifiers": {
+    
+  }
+}

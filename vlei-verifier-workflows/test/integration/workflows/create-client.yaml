@@ -1,0 +1,8 @@
+workflow:
+  steps:
+    client1:
+      id: "client1"
+      type: "create_client"
+      agent_name: "client-agent-1"
+      description: "Creating client for client-agent-1"
+    

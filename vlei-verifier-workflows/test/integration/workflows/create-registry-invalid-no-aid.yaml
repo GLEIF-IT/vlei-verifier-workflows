@@ -1,0 +1,13 @@
+workflow:
+  steps:
+    client2:
+      id: "client2"
+      type: "create_client"
+      agent_name: "client-agent-2"
+      description: "Creating client for client-agent-2"
+    registry1:
+      id: "registry1"
+      type: "create_registry"
+      aid: "aid-2"
+      description: "Creating registry for aid-2"
+    
