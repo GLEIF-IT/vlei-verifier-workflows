@@ -27,8 +27,8 @@ const args = minimist(process.argv.slice(process.argv.indexOf("--") + 1), {
     [ARG_REFRESH]: "r",
   },
   default: {
-    [ARG_WITNESS_HOST]: "witness-demo",
-    [ARG_KERIA_HOST]: keriaContainer,
+    [ARG_WITNESS_HOST]: "localhost",
+    [ARG_KERIA_HOST]: "localhost",
     [ARG_KERIA_DOMAIN]: "localhost",
     [ARG_KERIA_NUM]: 1,
     [ARG_REFRESH]: false,

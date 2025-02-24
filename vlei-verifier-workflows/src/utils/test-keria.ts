@@ -65,7 +65,7 @@ export class TestKeria {
       dt: "2023-12-01T10:05:25.062609+00:00",
       keria: {
         dt: "2023-12-01T10:05:25.062609+00:00",
-        curls: [`http://${host}:${this.keriaAdminPort}/`],
+        curls: [`http://${host}:${this.keriaHttpPort}/`],
       },
       iurls: [
         `http://${witnessHost}:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller`,
@@ -220,7 +220,7 @@ export class TestKeria {
     imageName: string,
     containerName: string
   ): Promise<dockerode.Container> {
-    const networkName = "vlei-verifier-workflows_default"; // Replace with your actual network name
+    // const networkName = "vlei-verifier-workflows_default"; // Replace with your actual network name
 
     let containerOptions: dockerode.ContainerCreateOptions;
     containerOptions = {
@@ -237,10 +237,7 @@ export class TestKeria {
           "3902/tcp": [{ HostPort: `${this.keriaHttpPort}` }],
           "3903/tcp": [{ HostPort: `${this.keriaBootPort}` }],
         },
-        NetworkMode: networkName, // Connect to the Docker Compose network
-        // ExtraHosts: [
-        //   "localhost:127.0.0.1", // Add this line for Linux support
-        // ],
+        NetworkMode: "host", // Connect to the Docker Compose network
       },
     };
 
@@ -295,27 +292,17 @@ export class TestKeria {
         );
       }
     }
-    const network = this.docker.getNetwork(networkName);
-    const networkInspect = await network.inspect();
-    const isConnected =
-      networkInspect.Containers && networkInspect.Containers[container.id];
-    if (!isConnected) {
-      try {
-        await network.connect({ Container: container.id });
-        console.log(
-          `Container ${containerName} connected to network ${networkName}`
-        );
-      } catch (error) {
-        console.warn(
-          `Error connecting container ${containerName} to network ${networkName}`,
-          error
-        );
-      }
-    } else {
-      console.log(
-        `Container ${containerName} is already connected to network ${networkName}`
-      );
-    }
+    // Inspect the container to verify network mode and port bindings
+    const containerInfo = await container.inspect();
+    console.log(
+      `Container NetworkMode: ${containerInfo.HostConfig.NetworkMode}`
+    );
+    console.log(
+      `Container PortBindings: ${JSON.stringify(containerInfo.HostConfig.PortBindings)}`
+    );
+    console.log(
+      `Container ExposedPorts: ${JSON.stringify(containerInfo.Config.ExposedPorts)}`
+    );
     return container!;
   }
 

@@ -59,6 +59,8 @@ configs:
 services:
   vlei-server:
     image: gleif/vlei
+    network_mode: host
+    # container_name: vlei-server
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
@@ -82,11 +84,13 @@ services:
       start_period: 2s
     ports:
       - 7723:7723
-    # extra_hosts:
-    #   - "localhost:127.0.0.1"
+    extra_hosts:
+      - "localhost:127.0.0.1"
 
   witness-demo:
     image: weboftrust/keri-witness-demo:1.1.0
+    network_mode: host
+    # container_name: witness-demo
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
@@ -116,13 +120,13 @@ services:
       - 5645:5645
       - 5646:5646
       - 5647:5647
-    # extra_hosts:
-    #   - "localhost:127.0.0.1"
+    extra_hosts:
+      - "localhost:127.0.0.1"
 
   vlei-verifier:
     image: gleif/vlei-verifier:latest
-    container_name: vlei-verifier
-    hostname: vlei-verifier
+    network_mode: host
+    # container_name: vlei-verifier
     environment:
       - VERIFIER_CONFIG_FILE=verifier-config-test.json
     depends_on:
@@ -131,27 +135,29 @@ services:
     ports:
       - 7676:7676
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://vlei-verifier:7676/health"]
+      test: ["CMD", "wget", "--spider", "http://localhost:7676/health"]
       interval: 2s
       timeout: 3s
       retries: 5
       start_period: 2s
-    # extra_hosts:
-    #   - "localhost:127.0.0.1"
+    extra_hosts:
+      - "localhost:127.0.0.1"
 
   deps:
     image: alpine
+    network_mode: host
     command: ["echo", "Dependencies running"]
     depends_on:
       vlei-server:
         condition: service_healthy
       witness-demo:
         condition: service_healthy
-    # extra_hosts:
-    #   - "localhost:127.0.0.1"
+    extra_hosts:
+      - "localhost:127.0.0.1"
 
   verify:
     image: alpine
+    network_mode: host
     command: ["echo", "Dependencies running"]
     depends_on:
       vlei-server:
@@ -160,5 +166,5 @@ services:
         condition: service_healthy
       vlei-verifier:
         condition: service_healthy
-    # extra_hosts:
-    #   - "localhost:127.0.0.1"
+    extra_hosts:
+      - "localhost:127.0.0.1"
