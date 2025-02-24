@@ -157,7 +157,7 @@ export async function getOrCreateAID(
   name: string,
   kargs: CreateIdentiferArgs
 ): Promise<HabState> {
-  if (!client){
+  if (!client) {
     throw new Error("getOrCreateAID: client doesn't exist");
   }
   try {

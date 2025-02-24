@@ -1,18 +1,17 @@
 workflow:
   steps:
     client1:
-      id: "client1"
-      type: "create_client"
-      agent_name: "client-agent-1"
-      description: "Creating client for client-agent-1"
+      id: 'client1'
+      type: 'create_client'
+      agent_name: 'client-agent-1'
+      description: 'Creating client for client-agent-1'
     aid1:
-      id: "aid1"
-      type: "create_aid"
-      aid: "aid-1"
-      description: "Creating AID: aid-1"
+      id: 'aid1'
+      type: 'create_aid'
+      aid: 'aid-1'
+      description: 'Creating AID: aid-1'
     registry1:
-      id: "registry1"
-      type: "create_registry"
-      aid: "aid-1"
-      description: "Creating registry for aid-1"
-    
+      id: 'registry1'
+      type: 'create_registry'
+      aid: 'aid-1'
+      description: 'Creating registry for aid-1'

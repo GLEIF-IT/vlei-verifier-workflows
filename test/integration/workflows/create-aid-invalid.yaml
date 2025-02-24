@@ -1,8 +1,7 @@
 workflow:
   steps:
     aid2:
-      id: "aid2"
-      type: "create_aid"
-      aid: "aid-2"
-      description: "Creating AID: aid-2"
-    
+      id: 'aid2'
+      type: 'create_aid'
+      aid: 'aid-2'
+      description: 'Creating AID: aid-2'
