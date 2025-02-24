@@ -34,6 +34,9 @@ describe("testing Client creation workflow step", () => {
 
 
 describe("testing AID creation workflow step", () => {
+  beforeEach(() => {
+    WorkflowState.resetInstance();
+  });
   test("successful AID creation", async function run() {
     const workflowsDir = "./workflows/";
     const workflowFile = "create-aid-valid.yaml";
@@ -75,6 +78,9 @@ describe("testing AID creation workflow step", () => {
 
 
 describe("testing Registry creation workflow step", () => {
+  beforeEach(() => {
+    WorkflowState.resetInstance();
+  });
   test("successful Registry creation", async function run() {
     const workflowsDir = "./workflows/";
     const workflowFile = "create-registry-valid.yaml";

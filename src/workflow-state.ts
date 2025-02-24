@@ -36,6 +36,12 @@ export class WorkflowState {
   }
 
 
+  static resetInstance() {
+    if (WorkflowState.instance){
+      WorkflowState.instance = new WorkflowState(WorkflowState.instance.configJson);
+    }    
+  }
+
   public async preloadState(){
 
   }
