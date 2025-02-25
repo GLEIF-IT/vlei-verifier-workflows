@@ -39,15 +39,15 @@ export function resolveEnvironment(
           process.env.WITNESS_URLS === ""
             ? []
             : process.env.WITNESS_URLS?.split(",") || [
-                "http://witness-demo:5642",
-                "http://witness-demo:5643",
-                "http://witness-demo:5644",
+                "http://localhost:5642",
+                "http://localhost:5643",
+                "http://localhost:5644",
               ],
         witnessIds:
           process.env.WITNESS_IDS === ""
             ? []
             : process.env.WITNESS_IDS?.split(",") || [WAN, WIL, WES],
-        vleiServerUrl: process.env.VLEI_SERVER || "http://vlei-server:7723",
+        vleiServerUrl: process.env.VLEI_SERVER || "http://localhost:7723",
         verifierBaseUrl: process.env.VLEI_VERIFIER || "http://localhost:7676",
         workflow: process.env.WORKFLOW || "singlesig-single-user-light.yaml",
         configuration:

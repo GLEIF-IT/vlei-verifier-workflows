@@ -227,16 +227,16 @@ export class TestKeria {
       name: containerName,
       Image: imageName,
       ExposedPorts: {
-        "3901/tcp": {},
-        "3902/tcp": {},
-        "3903/tcp": {},
+        [`${this.keriaAdminPort}/tcp`]: {},
+        [`${this.keriaHttpPort}/tcp`]: {},
+        [`${this.keriaBootPort}/tcp`]: {},
       },
       HostConfig: {
-        PortBindings: {
-          "3901/tcp": [{ HostPort: `${this.keriaAdminPort}` }],
-          "3902/tcp": [{ HostPort: `${this.keriaHttpPort}` }],
-          "3903/tcp": [{ HostPort: `${this.keriaBootPort}` }],
-        },
+        // PortBindings: {
+        //   "3901/tcp": [{ HostPort: `${this.keriaAdminPort}` }],
+        //   "3902/tcp": [{ HostPort: `${this.keriaHttpPort}` }],
+        //   "3903/tcp": [{ HostPort: `${this.keriaBootPort}` }],
+        // },
         NetworkMode: "host", // Connect to the Docker Compose network
       },
     };
@@ -259,6 +259,7 @@ export class TestKeria {
         "agent",
         "--loglevel",
         "DEBUG",
+        "-a", "20001", "-H", "20002", "-B", "20003",
       ];
       console.log(
         `Container started with configuration: ${JSON.stringify(this.keriaConfig)} at ${tempConfigPath}}`
