@@ -1,18 +1,18 @@
-import * as fs from "fs";
-import * as path from "path";
-import * as os from "os";
-import { TestPaths } from "./test-paths";
-import { URL } from "url";
-import { runDockerCompose, stopDockerCompose } from "./test-docker";
-import axios from "axios";
-import minimist = require("minimist");
-import * as dockerode from "dockerode";
-import Dockerode = require("dockerode");
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
+import { TestPaths } from './test-paths';
+import { URL } from 'url';
+import { runDockerCompose, stopDockerCompose } from './test-docker';
+import axios from 'axios';
+import minimist = require('minimist');
+import * as dockerode from 'dockerode';
+import Dockerode = require('dockerode');
 
-export const ARG_KERIA_ADMIN_PORT = "keria-admin-port";
-export const ARG_KERIA_HTTP_PORT = "keria-http-port";
-export const ARG_KERIA_BOOT_PORT = "keria-boot-port";
-export const ARG_KERIA_START_PORT = "keria-start-port";
+export const ARG_KERIA_ADMIN_PORT = 'keria-admin-port';
+export const ARG_KERIA_HTTP_PORT = 'keria-http-port';
+export const ARG_KERIA_BOOT_PORT = 'keria-boot-port';
+export const ARG_KERIA_START_PORT = 'keria-start-port';
 
 export interface KeriaConfig {
   dt?: string;
@@ -62,9 +62,9 @@ export class TestKeria {
     this.keriaBootPort = kBootPort;
     this.keriaBootUrl = new URL(`http://${host}:${kBootPort}`);
     this.keriaConfig = {
-      dt: "2023-12-01T10:05:25.062609+00:00",
+      dt: '2023-12-01T10:05:25.062609+00:00',
       keria: {
-        dt: "2023-12-01T10:05:25.062609+00:00",
+        dt: '2023-12-01T10:05:25.062609+00:00',
         curls: [`http://${host}:${this.keriaHttpPort}/`],
       },
       iurls: [
@@ -90,7 +90,7 @@ export class TestKeria {
     if (!TestKeria.instance) {
       if (testPaths === undefined) {
         throw new Error(
-          "TestKeria.getInstance() called without arguments means we expected it to be initialized earlier. This must be done with great care to avoid unexpected side effects."
+          'TestKeria.getInstance() called without arguments means we expected it to be initialized earlier. This must be done with great care to avoid unexpected side effects.'
         );
       } else {
         const args = TestKeria.processKeriaArgs(
@@ -111,7 +111,7 @@ export class TestKeria {
       }
     } else if (testPaths !== undefined) {
       console.warn(
-        "TestEnvironment.getInstance() called with arguments, but instance already exists. Overriding original config. This must be done with great care to avoid unexpected side effects."
+        'TestEnvironment.getInstance() called with arguments, but instance already exists. Overriding original config. This must be done with great care to avoid unexpected side effects.'
       );
     }
     return TestKeria.instance;
@@ -124,11 +124,11 @@ export class TestKeria {
     offset = 0
   ): minimist.ParsedArgs {
     // Parse command-line arguments using minimist
-    const args = minimist(process.argv.slice(process.argv.indexOf("--") + 1), {
+    const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
       alias: {
-        [ARG_KERIA_ADMIN_PORT]: "kap",
-        [ARG_KERIA_HTTP_PORT]: "khp",
-        [ARG_KERIA_BOOT_PORT]: "kbp",
+        [ARG_KERIA_ADMIN_PORT]: 'kap',
+        [ARG_KERIA_HTTP_PORT]: 'khp',
+        [ARG_KERIA_BOOT_PORT]: 'kbp',
       },
       default: {
         [ARG_KERIA_ADMIN_PORT]: process.env.KERIA_ADMIN_PORT
@@ -141,7 +141,7 @@ export class TestKeria {
           ? parseInt(process.env.KERIA_BOOT_PORT)
           : baseBootPort + offset,
       },
-      "--": true,
+      '--': true,
       unknown: (arg) => {
         console.info(`Unknown keria argument, skipping: ${arg}`);
         return false;
@@ -153,15 +153,15 @@ export class TestKeria {
 
   async beforeAll(
     imageName: string,
-    containerName: string = "keria",
+    containerName: string = 'keria',
     pullImage: boolean = false
   ) {
     process.env.DOCKER_HOST = process.env.DOCKER_HOST
       ? process.env.DOCKER_HOST
-      : "localhost";
+      : 'localhost';
     if (
       process.env.START_TEST_KERIA === undefined ||
-      process.env.START_TEST_KERIA === "true"
+      process.env.START_TEST_KERIA === 'true'
     ) {
       console.log(
         `Starting local services using ${this.testPaths.dockerComposeFile} up -d verify`
@@ -170,13 +170,13 @@ export class TestKeria {
         await dockerLogin(process.env.DOCKER_USER, process.env.DOCKER_PASSWORD);
       } else {
         console.info(
-          "Docker login credentials not provided, skipping docker login"
+          'Docker login credentials not provided, skipping docker login'
         );
       }
       await runDockerCompose(
         this.testPaths.dockerComposeFile,
-        "up -d",
-        "verify"
+        'up -d',
+        'verify'
       );
 
       const keriaContainer = await this.launchTestKeria(
@@ -190,7 +190,7 @@ export class TestKeria {
 
   async afterAll(clean = true) {
     if (clean) {
-      console.log("Cleaning up test data");
+      console.log('Cleaning up test data');
       for (const container of this.containers) {
         await container[1].stop();
         await container[1].remove();
@@ -202,15 +202,15 @@ export class TestKeria {
       );
       await stopDockerCompose(
         this.testPaths.dockerComposeFile,
-        "down -v",
-        "verify"
+        'down -v',
+        'verify'
       );
     }
   }
 
   async createTempKeriaConfigFile(kConfig: KeriaConfig): Promise<string> {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "keria-config-"));
-    const tempFilePath = path.join(tempDir, "keria.json");
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'keria-config-'));
+    const tempFilePath = path.join(tempDir, 'keria.json');
     const configStr = JSON.stringify(kConfig);
     fs.writeFileSync(tempFilePath, configStr);
     return tempFilePath;
@@ -237,7 +237,7 @@ export class TestKeria {
         //   "3902/tcp": [{ HostPort: `${this.keriaHttpPort}` }],
         //   "3903/tcp": [{ HostPort: `${this.keriaBootPort}` }],
         // },
-        NetworkMode: "host", // Connect to the Docker Compose network
+        NetworkMode: 'host', // Connect to the Docker Compose network
       },
     };
 
@@ -245,21 +245,26 @@ export class TestKeria {
       const tempConfigPath = await this.createTempKeriaConfigFile(
         this.keriaConfig
       );
-      containerOptions["HostConfig"]!["Binds"] = [
+      containerOptions['HostConfig']!['Binds'] = [
         `${tempConfigPath}:/usr/local/var/keri/cf/keria.json`,
       ];
-      containerOptions["Entrypoint"] = [
-        "keria",
-        "start",
-        "--config-dir",
-        "/usr/local/var/",
-        "--config-file",
-        "keria",
-        "--name",
-        "agent",
-        "--loglevel",
-        "DEBUG",
-        "-a", "20001", "-H", "20002", "-B", "20003",
+      containerOptions['Entrypoint'] = [
+        'keria',
+        'start',
+        '--config-dir',
+        '/usr/local/var/',
+        '--config-file',
+        'keria',
+        '--name',
+        'agent',
+        '--loglevel',
+        'DEBUG',
+        '-a',
+        '20001',
+        '-H',
+        '20002',
+        '-B',
+        '20003',
       ];
       console.log(
         `Container started with configuration: ${JSON.stringify(this.keriaConfig)} at ${tempConfigPath}}`
@@ -333,7 +338,7 @@ export class TestKeria {
       console.warn(
         `Warning: One of the specified ports (${this.keriaAdminPort}, ${this.keriaHttpPort}, ${this.keriaBootPort}) is already in use. Stopping that one\n` +
           `Container ID: ${portInUse.Id}\n` +
-          `Container Names: ${portInUse.Names.join(", ")}\n` +
+          `Container Names: ${portInUse.Names.join(', ')}\n` +
           `Container Image: ${portInUse.Image}\n` +
           `Container State: ${portInUse.State}\n` +
           `Container Status: ${portInUse.Status}`
@@ -350,11 +355,11 @@ export class TestKeria {
         container = pContainer;
       }
     }
-    if (existingContainer && existingContainer.State === "running") {
+    if (existingContainer && existingContainer.State === 'running') {
       console.warn(
         `Warning: Container with name ${kontainerName} is already running.\n` +
           `Container ID: ${existingContainer.Id}\n` +
-          `Container Names: ${existingContainer.Names.join(", ")}\n` +
+          `Container Names: ${existingContainer.Names.join(', ')}\n` +
           `Container Image: ${existingContainer.Image}\n` +
           `Container State: ${existingContainer.State}\n` +
           `Container Status: ${existingContainer.Status}`
@@ -365,7 +370,7 @@ export class TestKeria {
         console.info(
           `TestKeria: Older container with name ${kontainerName} exists but is not running.\n` +
             `Container ID: ${existingContainer.Id}\n` +
-            `Container Names: ${existingContainer.Names.join(", ")}\n` +
+            `Container Names: ${existingContainer.Names.join(', ')}\n` +
             `Container Image: ${existingContainer.Image}\n` +
             `Container State: ${existingContainer.State}\n` +
             `Container Status: ${existingContainer.Status}`
@@ -422,7 +427,7 @@ export class TestKeria {
 }
 
 function dockerLogin(DOCKER_USER: string, DOCKER_PASSWORD: string) {
-  throw new Error("Function not implemented.");
+  throw new Error('Function not implemented.');
 }
 
 // Function to perform health check
@@ -436,7 +441,7 @@ export async function performHealthCheck(
     try {
       const response = await axios.get(url);
       if (response.status === 200) {
-        console.log("Service is healthy");
+        console.log('Service is healthy');
         return;
       }
     } catch (error) {

@@ -9,13 +9,16 @@ import signify, {
   Serder,
   SignifyClient,
   Tier,
-} from "signify-ts";
-import { RetryOptions, retry } from "./retry";
-import assert = require("assert");
-import { resolveEnvironment } from "./resolve-env";
-import { TestKeria } from "./test-keria";
-import { WorkflowState } from "../workflow-state";
-import { getIdentifierData, SinglesigIdentifierData } from "./handle-json-config";
+} from 'signify-ts';
+import { RetryOptions, retry } from './retry';
+import assert = require('assert');
+import { resolveEnvironment } from './resolve-env';
+import { TestKeria } from './test-keria';
+import { WorkflowState } from '../workflow-state';
+import {
+  getIdentifierData,
+  SinglesigIdentifierData,
+} from './handle-json-config';
 
 export interface Aid {
   name: string;
@@ -41,11 +44,11 @@ export async function admitSinglesig(
   aidName: string,
   recipientAid: HabState
 ) {
-  const grantMsgSaid = await waitAndMarkNotification(client, "/exn/ipex/grant");
+  const grantMsgSaid = await waitAndMarkNotification(client, '/exn/ipex/grant');
 
   const [admit, sigs, aend] = await client.ipex().admit({
     senderName: aidName,
-    message: "",
+    message: '',
     grantSaid: grantMsgSaid,
     recipient: recipientAid.prefix,
   });
@@ -96,12 +99,12 @@ export async function createAid(
 export async function createAID(client: signify.SignifyClient, name: string) {
   await getOrCreateIdentifier(client, name);
   const aid = await client.identifiers().get(name);
-  console.log(name, "AID:", aid.prefix);
+  console.log(name, 'AID:', aid.prefix);
   return aid;
 }
 
 export function createTimestamp() {
-  return new Date().toISOString().replace("Z", "000+00:00");
+  return new Date().toISOString().replace('Z', '000+00:00');
 }
 
 /**
@@ -116,7 +119,7 @@ export async function getEndRoles(
     role !== undefined
       ? `/identifiers/${alias}/endroles/${role}`
       : `/identifiers/${alias}/endroles`;
-  const response: Response = await client.fetch(path, "GET", null);
+  const response: Response = await client.fetch(path, 'GET', null);
   if (!response.ok) throw new Error(await response.text());
   const result = await response.json();
   // console.log("getEndRoles", result);
@@ -128,7 +131,7 @@ export async function getGrantedCredential(
   credId: string
 ): Promise<any> {
   const credentialList = await client.credentials().list({
-    filter: { "-d": credId },
+    filter: { '-d': credId },
   });
   let credential: any;
   if (credentialList.length > 0) {
@@ -146,9 +149,9 @@ export async function getIssuedCredential(
 ) {
   const credentialList = await issuerClient.credentials().list({
     filter: {
-      "-i": issuerAID.prefix,
-      "-s": schemaSAID,
-      "-a-i": recipientAID.prefix,
+      '-i': issuerAID.prefix,
+      '-s': schemaSAID,
+      '-a-i': recipientAID.prefix,
     },
   });
   assert(credentialList.length <= 1);
@@ -163,7 +166,7 @@ export async function getOrCreateAID(
   try {
     return await client.identifiers().get(name);
   } catch {
-    console.log("Creating AID", name, ": ", kargs);
+    console.log('Creating AID', name, ': ', kargs);
     const result: EventResult = await client.identifiers().create(name, kargs);
 
     await waitOperation(client, await result.op());
@@ -171,9 +174,9 @@ export async function getOrCreateAID(
 
     const op = await client
       .identifiers()
-      .addEndRole(name, "agent", client!.agent!.pre);
+      .addEndRole(name, 'agent', client!.agent!.pre);
     await waitOperation(client, await op.op());
-    console.log(name, "AID:", aid.prefix);
+    console.log(name, 'AID:', aid.prefix);
     return aid;
   }
 }
@@ -188,7 +191,7 @@ export async function getOrCreateClient(
   const testKeria = TestKeria.getInstance();
   await ready();
   bran ??= randomPasscode();
-  bran = bran.padEnd(21, "_");
+  bran = bran.padEnd(21, '_');
   const client = new SignifyClient(
     `http://${testKeria.domain}:${testKeria.keriaAdminPort}`,
     bran,
@@ -204,11 +207,11 @@ export async function getOrCreateClient(
       await client.connect();
     } else {
       throw new Error(
-        "Could not connect to client w/ bran " + bran + e.message
+        'Could not connect to client w/ bran ' + bran + e.message
       );
     }
   }
-  console.log("client", {
+  console.log('client', {
     agent: client.agent?.pre,
     controller: client.controller.pre,
   });
@@ -236,7 +239,7 @@ export async function getOrCreateClients(
     tasks.push(getOrCreateClient(brans?.at(i) ?? undefined, getOnly));
   }
   const clients: SignifyClient[] = await Promise.all(tasks);
-  console.log(`secrets="${clients.map((i) => i.bran).join(",")}"`);
+  console.log(`secrets="${clients.map((i) => i.bran).join(',')}"`);
   return clients;
 }
 
@@ -254,7 +257,7 @@ export async function getOrCreateContact(
   name: string,
   oobi: string
 ): Promise<string> {
-  const list = await client.contacts().list(undefined, "alias", `^${name}$`);
+  const list = await client.contacts().list(undefined, 'alias', `^${name}$`);
   // console.log("contacts.list", list);
   if (list.length > 0) {
     const contact = list[0];
@@ -301,16 +304,16 @@ export async function getOrCreateIdentifier(
     id = op.response.i;
   }
   const eid = client.agent?.pre!;
-  if (!(await hasEndRole(client, name, "agent", eid))) {
+  if (!(await hasEndRole(client, name, 'agent', eid))) {
     const result: EventResult = await client
       .identifiers()
-      .addEndRole(name, "agent", eid);
+      .addEndRole(name, 'agent', eid);
     let op = await result.op();
     op = await waitOperation(client, op);
-    console.log("identifiers.addEndRole", op);
+    console.log('identifiers.addEndRole', op);
   }
 
-  const oobi = await client.oobis().get(name, "agent");
+  const oobi = await client.oobis().get(name, 'agent');
   const result: [string, string] = [id, oobi.oobis[0]];
   console.log(name, result);
   return result;
@@ -336,7 +339,7 @@ export async function getOrIssueCredential(
         cred.sad.i === issuerAid.prefix &&
         cred.sad.a.i === recipientAid.prefix &&
         cred.sad.a.AID === credData.AID! &&
-        cred.status.et != "rev"
+        cred.status.et != 'rev'
     );
     if (credential) return credential;
   }
@@ -416,7 +419,7 @@ export async function warnNotifications(
     const notes = res.notes.filter((i: { r: boolean }) => i.r === false);
     if (notes.length > 0) {
       count += notes.length;
-      console.warn("notifications", notes);
+      console.warn('notifications', notes);
     }
   }
   expect(count).toBeGreaterThan(0); // replace warnNotifications with assertNotifications
@@ -439,7 +442,7 @@ export async function getReceivedCredential(
 ): Promise<any> {
   const credentialList = await client.credentials().list({
     filter: {
-      "-d": credId,
+      '-d': credId,
     },
   });
   let credential: any;
@@ -497,7 +500,7 @@ export async function waitForCredential(
     console.log(` retry-${retryCount}: No credentials yet...`);
     retryCount = retryCount + 1;
   }
-  throw Error("Credential SAID: " + credSAID + " has not been received");
+  throw Error('Credential SAID: ' + credSAID + ' has not been received');
 }
 
 export async function waitAndMarkNotification(
@@ -512,7 +515,7 @@ export async function waitAndMarkNotification(
     })
   );
 
-  return notes[notes.length - 1]?.a.d ?? "";
+  return notes[notes.length - 1]?.a.d ?? '';
 }
 
 export async function waitForNotifications(
@@ -546,7 +549,7 @@ export async function waitOperation<T = any>(
   op: Operation<T> | string,
   signal?: AbortSignal
 ): Promise<Operation<T>> {
-  if (typeof op === "string") {
+  if (typeof op === 'string') {
     op = await client.operations().get(op);
   }
 
@@ -614,14 +617,14 @@ export async function sendAdmitMessage(
 ) {
   const notifications = await waitForNotifications(
     senderClient,
-    "/exn/ipex/grant"
+    '/exn/ipex/grant'
   );
   assert.equal(notifications.length, 1);
   const grantNotification = notifications[0];
 
   const [admit, sigs, aend] = await senderClient.ipex().admit({
     senderName: senderAid.name,
-    message: "",
+    message: '',
     grantSaid: grantNotification.a.d!,
     recipient: recipientAid.prefix,
     datetime: createTimestamp(),

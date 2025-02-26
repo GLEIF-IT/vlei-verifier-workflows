@@ -85,7 +85,7 @@ services:
     ports:
       - 7723:7723
     extra_hosts:
-      - "localhost:127.0.0.1"
+      - 'localhost:127.0.0.1'
 
   witness-demo:
     image: weboftrust/keri-witness-demo:1.1.0
@@ -121,7 +121,7 @@ services:
       - 5646:5646
       - 5647:5647
     extra_hosts:
-      - "localhost:127.0.0.1"
+      - 'localhost:127.0.0.1'
 
   vlei-verifier:
     image: gleif/vlei-verifier:latest
@@ -135,30 +135,30 @@ services:
     ports:
       - 7676:7676
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:7676/health"]
+      test: ['CMD', 'wget', '--spider', 'http://localhost:7676/health']
       interval: 2s
       timeout: 3s
       retries: 5
       start_period: 2s
     extra_hosts:
-      - "localhost:127.0.0.1"
+      - 'localhost:127.0.0.1'
 
   deps:
     image: alpine
     network_mode: host
-    command: ["echo", "Dependencies running"]
+    command: ['echo', 'Dependencies running']
     depends_on:
       vlei-server:
         condition: service_healthy
       witness-demo:
         condition: service_healthy
     extra_hosts:
-      - "localhost:127.0.0.1"
+      - 'localhost:127.0.0.1'
 
   verify:
     image: alpine
     network_mode: host
-    command: ["echo", "Dependencies running"]
+    command: ['echo', 'Dependencies running']
     depends_on:
       vlei-server:
         condition: service_healthy
@@ -167,4 +167,4 @@ services:
       vlei-verifier:
         condition: service_healthy
     extra_hosts:
-      - "localhost:127.0.0.1"
+      - 'localhost:127.0.0.1'

@@ -8,38 +8,38 @@ import { WorkflowRunner } from '../../src/utils/run-workflow';
 import { strict as assert } from 'assert';
 import { loadWorkflow } from '../../src/utils/test-data';
 import { WorkflowState } from '../../src/workflow-state';
-import minimist from "minimist";
+import minimist from 'minimist';
 
-import { ARG_KERIA_START_PORT, TestKeria } from "../../src/utils/test-keria";
-import { TestPaths } from "../../src/utils/test-paths";
+import { ARG_KERIA_START_PORT, TestKeria } from '../../src/utils/test-keria';
+import { TestPaths } from '../../src/utils/test-paths';
 
 let testPaths: TestPaths;
 let testKeria: TestKeria;
 let env: TestEnvironment;
 
-const ARG_KERIA_DOMAIN = "keria_domain"; //external domain for keria
-const ARG_WITNESS_HOST = "witness_host"; //docker domain for witness
-const ARG_KERIA_HOST = "keria_host"; //docker domain for witness
-const ARG_KERIA_NUM = "keria_num";
-const ARG_REFRESH = "refresh";
+const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
+const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
+const ARG_KERIA_HOST = 'keria_host'; //docker domain for witness
+const ARG_KERIA_NUM = 'keria_num';
+const ARG_REFRESH = 'refresh';
 
 const keriaContainer = `keria_vvw`;
 
 // Parse command-line arguments using minimist
-const args = minimist(process.argv.slice(process.argv.indexOf("--") + 1), {
+const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
   alias: {
-    [ARG_KERIA_NUM]: "knum",
-    [ARG_REFRESH]: "r",
+    [ARG_KERIA_NUM]: 'knum',
+    [ARG_REFRESH]: 'r',
   },
   default: {
-    [ARG_WITNESS_HOST]: "localhost",
-    [ARG_KERIA_HOST]: "localhost",
-    [ARG_KERIA_DOMAIN]: "localhost",
+    [ARG_WITNESS_HOST]: 'localhost',
+    [ARG_KERIA_HOST]: 'localhost',
+    [ARG_KERIA_DOMAIN]: 'localhost',
     [ARG_KERIA_NUM]: 1,
     [ARG_REFRESH]: false,
     [ARG_KERIA_START_PORT]: 20000,
   },
-  "--": true,
+  '--': true,
   unknown: (arg: any) => {
     console.info(`Unknown run-workflow-bank argument, Skipping: ${arg}`);
     // throw new Error(`Unknown argument: ${arg}`);
@@ -50,7 +50,7 @@ const args = minimist(process.argv.slice(process.argv.indexOf("--") + 1), {
 const keriaImage = `weboftrust/keria:0.2.0-dev4`;
 const keriaNum = parseInt(args[ARG_KERIA_NUM], 10) || 0;
 const offset = 10 * (keriaNum - 1);
-const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === "false" : true;
+const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : true;
 
 afterAll(async () => {
   // await testKeria.afterAll();
@@ -71,7 +71,6 @@ beforeAll(async () => {
   );
   await testKeria.beforeAll(keriaImage, keriaContainer, refresh);
 });
-
 
 describe('testing Client creation workflow step', () => {
   test('successful client creation', async function run() {
