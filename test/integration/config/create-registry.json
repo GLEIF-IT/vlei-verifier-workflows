@@ -1,0 +1,25 @@
+{
+  "secrets": {
+    "client1": "D_PbQb01zuzQgK-testq1",
+    "client2": "D_PbQb01zuzQgK-testq1"
+  },
+  "credentials": {},
+  "agents": {
+    "client-agent-1": {
+      "secret": "client1"
+    },
+    "client-agent-2": {
+      "secret": "client2"
+    }
+  },
+  "identifiers": {
+    "aid-1": {
+      "agent": "client-agent-1",
+      "name": "aid-1"
+    },
+    "aid-2": {
+      "agent": "client-agent-2",
+      "name": "aid-2"
+    }
+  }
+}
