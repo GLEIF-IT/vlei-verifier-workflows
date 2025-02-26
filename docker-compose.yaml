@@ -59,6 +59,7 @@ configs:
 services:
   vlei-server:
     image: gleif/vlei
+    platform: linux/amd64
     network_mode: host
     # container_name: vlei-server
     environment:
@@ -89,6 +90,7 @@ services:
 
   witness-demo:
     image: weboftrust/keri-witness-demo:1.1.0
+    platform: linux/amd64
     network_mode: host
     # container_name: witness-demo
     environment:
@@ -125,6 +127,7 @@ services:
 
   vlei-verifier:
     image: gleif/vlei-verifier:latest
+    platform: linux/amd64
     network_mode: host
     # container_name: vlei-verifier
     environment:
