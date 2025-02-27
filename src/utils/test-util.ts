@@ -188,7 +188,7 @@ export async function getOrCreateAID(
  */
 export async function getOrCreateClient(
   bran: string | undefined = undefined,
-  getOnly: boolean = false
+  getOnly = false
 ): Promise<SignifyClient> {
   const env = resolveEnvironment();
   await ready();
@@ -229,7 +229,7 @@ export async function getOrCreateClient(
 export async function getOrCreateClients(
   count: number,
   brans: string[] | undefined = undefined,
-  getOnly: boolean = false
+  getOnly = false
 ): Promise<SignifyClient[]> {
   const tasks: Promise<SignifyClient>[] = [];
   for (let i = 0; i < count; i++) {
@@ -486,7 +486,7 @@ export async function resolveOobi(
 export async function waitForCredential(
   client: SignifyClient,
   credSAID: string,
-  MAX_RETRIES: number = 10
+  MAX_RETRIES = 10
 ) {
   let retryCount = 0;
   while (retryCount < MAX_RETRIES) {

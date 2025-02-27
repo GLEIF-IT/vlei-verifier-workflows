@@ -117,7 +117,7 @@ export class VleiIssuance {
       }
     } else {
       const multisigIdentifierData = identifierData as MultisigIdentifierData;
-      let oobis = [];
+      const oobis = [];
       for (const identifierName of multisigIdentifierData.identifiers) {
         const identifier = workflow_state.aidsInfo.get(
           multisigIdentifierData.identifiers[0]
@@ -236,7 +236,7 @@ export class VleiIssuance {
   public static async createAidSinglesig(identifierData: IdentifierData) {
     const workflow_state = WorkflowState.getInstance();
     const delegator = identifierData.delegator;
-    let kargsSinglesigAID: CreateIdentiferArgs = {
+    const kargsSinglesigAID: CreateIdentiferArgs = {
       toad: workflow_state.kargsAID.toad,
       wits: workflow_state.kargsAID.wits,
     };
@@ -324,10 +324,10 @@ export class VleiIssuance {
     const workflow_state = WorkflowState.getInstance();
     const multisigIdentifierData = identifierData as MultisigIdentifierData;
     let multisigAids: HabState[] = [];
-    const aidIdentifierNames: Array<string> =
+    const aidIdentifierNames: string[] =
       multisigIdentifierData.identifiers;
 
-    let issuerAids =
+    const issuerAids =
       aidIdentifierNames.map((aidIdentifierName) =>
         workflow_state.aids.get(aidIdentifierName)
       ) || [];
@@ -352,7 +352,7 @@ export class VleiIssuance {
       const rstates = issuerAids.map((aid) => aid.state);
       const states = rstates;
 
-      let kargsMultisigAID: CreateIdentiferArgs = {
+      const kargsMultisigAID: CreateIdentiferArgs = {
         algo: signify.Algos.group,
         isith: multisigIdentifierData.isith,
         nsith: multisigIdentifierData.nsith,
@@ -366,7 +366,7 @@ export class VleiIssuance {
           multisigIdentifierData.delegator!
         ).prefix;
       }
-      let multisigOps: any[] = [];
+      const multisigOps: any[] = [];
       for (let index = 0; index < issuerAids.length; index++) {
         const aid = issuerAids[index];
         const singlesigIdentifierData = workflow_state.aidsInfo.get(
@@ -394,9 +394,9 @@ export class VleiIssuance {
         const delegatoridentifierData = workflow_state.aidsInfo.get(
           multisigIdentifierData.delegator
         ) as MultisigIdentifierData;
-        const delegatorAidIdentifierNames: Array<string> =
+        const delegatorAidIdentifierNames: string[] =
           delegatoridentifierData.identifiers;
-        let delegatorAids =
+        const delegatorAids =
           delegatorAidIdentifierNames.map((aidIdentifierName) =>
             workflow_state.aids.get(aidIdentifierName)
           ) || [];
@@ -410,7 +410,7 @@ export class VleiIssuance {
         const delegatorMultisigAid = workflow_state.aids.get(
           delegatoridentifierData.name
         );
-        let delegateOps = [];
+        const delegateOps = [];
         for (
           let index = 0;
           index < delegatoridentifierData.identifiers.length;
@@ -507,7 +507,7 @@ export class VleiIssuance {
       const multisigAid = multisigAids[0];
 
       // Skip if they have already been authorized.
-      let oobis: Array<any> = await Promise.all(
+      let oobis: any[] = await Promise.all(
         issuerAids.map(async (aid) => {
           const tmpAidData = workflow_state.aidsInfo.get(
             aid.name
@@ -598,10 +598,10 @@ export class VleiIssuance {
     const workflow_state = WorkflowState.getInstance();
     const multisigAid: HabState = workflow_state.aids.get(identifierData.name);
     const registryIdentifierName = `${identifierData.name}Registry`;
-    const aidIdentifierNames: Array<string> =
+    const aidIdentifierNames: string[] =
       multisigIdentifierData.identifiers;
-    let registries: Array<any> = new Array<any>();
-    let issuerAids =
+    const registries: any[] = new Array<any>();
+    const issuerAids =
       aidIdentifierNames.map((aidIdentifierName) =>
         workflow_state.aids.get(aidIdentifierName)
       ) || [];
@@ -702,8 +702,8 @@ export class VleiIssuance {
     issuerAidKey: string,
     issueeAidKey: string,
     credSourceId?: string,
-    generateTestData: boolean = false,
-    testName: string = 'default_test'
+    generateTestData = false,
+    testName = 'default_test'
   ): Promise<any> {
     const workflow_state = WorkflowState.getInstance();
     const issuerAidInfo = workflow_state.aidsInfo.get(issuerAidKey)!;
@@ -736,8 +736,8 @@ export class VleiIssuance {
     credId: string,
     issuerAidKey: string,
     issueeAidKey: string,
-    generateTestData: boolean = false,
-    testName: string = 'default_test'
+    generateTestData = false,
+    testName = 'default_test'
   ) {
     const workflow_state = WorkflowState.getInstance();
     const issuerAidInfo = workflow_state.aidsInfo.get(issuerAidKey)!;
@@ -767,8 +767,8 @@ export class VleiIssuance {
     issuerAidKey: string,
     issueeAidKey: string,
     credSourceId?: string,
-    generateTestData: boolean = false,
-    testName: string = 'default_test'
+    generateTestData = false,
+    testName = 'default_test'
   ): Promise<any> {
     const workflow_state = WorkflowState.getInstance();
     const credInfo: CredentialInfo =
@@ -834,8 +834,8 @@ export class VleiIssuance {
     workflow_state.credentials.set(credId, cred);
     const credCesr = await recipientclient!.credentials().get(cred.sad.d, true);
     if (generateTestData) {
-      let tmpCred = cred;
-      let testData: EcrTestData = {
+      const tmpCred = cred;
+      const testData: EcrTestData = {
         aid: recipientAID.prefix,
         lei: credData.LEI,
         credential: { raw: tmpCred, cesr: credCesr },
@@ -860,8 +860,8 @@ export class VleiIssuance {
     issuerAidKey: string,
     issueeAidKey: string,
     credSourceId?: string,
-    generateTestData: boolean = false,
-    testName: string = 'default_test'
+    generateTestData = false,
+    testName = 'default_test'
   ) {
     const workflow_state = WorkflowState.getInstance();
     const credInfo: CredentialInfo =
@@ -879,7 +879,7 @@ export class VleiIssuance {
     let rules = workflow_state.rules[credInfo.rules!];
     const privacy = credInfo.privacy;
     const registryName = issuerAidInfo.name;
-    let issuerRegistry = workflow_state.registries.get(registryName)!;
+    const issuerRegistry = workflow_state.registries.get(registryName)!;
     const issuerAids =
       issuerAidInfo.identifiers.map((identifier: any) =>
         workflow_state.aids.get(identifier)
@@ -1145,8 +1145,8 @@ export class VleiIssuance {
     credId: string,
     issuerAidKey: string,
     issueeAidKey: string,
-    generateTestData: boolean = false,
-    testName: string = 'default_test'
+    generateTestData = false,
+    testName = 'default_test'
   ) {
     const workflow_state = WorkflowState.getInstance();
     const cred: any = workflow_state.credentials.get(credId)!;
@@ -1171,8 +1171,8 @@ export class VleiIssuance {
     workflow_state.credentials.set(credId, revCred);
     const credCesr = await issuerclient!.credentials().get(revCred.sad.d, true);
     if (generateTestData) {
-      let tmpCred = revCred;
-      let testData: EcrTestData = {
+      const tmpCred = revCred;
+      const testData: EcrTestData = {
         aid: recipientAID.prefix,
         lei: revCred.sad.a.LEI,
         credential: { raw: tmpCred, cesr: credCesr },
@@ -1195,8 +1195,8 @@ export class VleiIssuance {
     credId: string,
     issuerAidKey: string,
     issueeAidKey: string,
-    generateTestData: boolean = false,
-    testName: string = 'default_test'
+    generateTestData = false,
+    testName = 'default_test'
   ) {
     const workflow_state = WorkflowState.getInstance();
     const recipientAID = workflow_state.aids.get(issueeAidKey);
@@ -1211,7 +1211,7 @@ export class VleiIssuance {
       ) || [];
     let revCred: any;
     let issuerclient!: any;
-    let revOps = [];
+    const revOps = [];
     let i = 0;
     const REVTIME = new Date().toISOString().replace('Z', '000+00:00');
     for (const issuerAid of issuerAids) {
@@ -1249,11 +1249,11 @@ export class VleiIssuance {
     revCred = await issuerclient!.credentials().get(cred.sad.d);
     workflow_state.credentials.set(credId, revCred);
     if (generateTestData) {
-      let tmpCred = revCred;
+      const tmpCred = revCred;
       const credCesr = await issuerclient!
         .credentials()
         .get(revCred.sad.d, true);
-      let testData: EcrTestData = {
+      const testData: EcrTestData = {
         aid: recipientAID.prefix,
         lei: revCred.sad.a.LEI,
         credential: { raw: tmpCred, cesr: credCesr },
@@ -1417,7 +1417,7 @@ export class VleiIssuance {
   }
 
   public static buildCredSource(credType: string, cred: any, o?: string) {
-    const credDict: { [key: string]: any } = {
+    const credDict: Record<string, any> = {
       n: cred.sad.d,
       s: cred.sad.s,
     };

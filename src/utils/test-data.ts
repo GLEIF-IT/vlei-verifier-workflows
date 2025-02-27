@@ -96,18 +96,18 @@ export const CREDENTIAL_NOT_VALID_ROOT_OF_TRUST: CredentialAuthorizationStatus =
     status: 'fail',
   };
 
-export const credPresentationStatusMapping: Map<
+export const credPresentationStatusMapping = new Map<
   string,
   CredentialPresentationStatus
-> = new Map([
+>([
   ['cred_crypt_valid', CREDENTIAL_CRYPT_VALID],
   ['cred_crypt_invalid', CREDENTIAL_CRYPT_INVALID],
 ]);
 
-export const credAuthorizationStatusMapping: Map<
+export const credAuthorizationStatusMapping = new Map<
   string,
   CredentialAuthorizationStatus
-> = new Map([
+>([
   ['cred_verified', CREDENTIAL_VERIFIED],
   ['cred_revoked', CREDENTIAL_REVOKED],
   ['cred_invalid_schema', CREDENTIAL_INVALID_SCHEMA],

@@ -19,7 +19,7 @@ import { getRootOfTrust } from './test-util';
 import { VerifierClient } from 'vlei-verifier-client';
 
 export abstract class StepRunner {
-  type: string = '';
+  type = '';
   public abstract run(
     stepName: string,
     step: any,
@@ -28,7 +28,7 @@ export abstract class StepRunner {
 }
 
 export class CreateClientStepRunner extends StepRunner {
-  type: string = 'create_client';
+  type = 'create_client';
   public async run(
     stepName: string,
     step: any,
@@ -42,7 +42,7 @@ export class CreateClientStepRunner extends StepRunner {
 }
 
 export class CreateAidStepRunner extends StepRunner {
-  type: string = 'create_aid';
+  type = 'create_aid';
   public async run(
     stepName: string,
     step: any,
@@ -58,7 +58,7 @@ export class CreateAidStepRunner extends StepRunner {
 }
 
 export class CreateRegistryStepRunner extends StepRunner {
-  type: string = 'create_registry';
+  type = 'create_registry';
   public async run(
     stepName: string,
     step: any,
@@ -74,7 +74,7 @@ export class CreateRegistryStepRunner extends StepRunner {
 }
 
 export class IssueCredentialStepRunner extends StepRunner {
-  type: string = 'issue_credential';
+  type = 'issue_credential';
   public async run(
     stepName: string,
     step: any,
@@ -95,7 +95,7 @@ export class IssueCredentialStepRunner extends StepRunner {
 }
 
 export class RevokeCredentialStepRunner extends StepRunner {
-  type: string = 'revoke_credential';
+  type = 'revoke_credential';
   public async run(
     stepName: string,
     step: any,
@@ -113,7 +113,7 @@ export class RevokeCredentialStepRunner extends StepRunner {
 }
 
 export class NotifyCredentialIssueeStepRunner extends StepRunner {
-  type: string = 'notify_credential_issuee';
+  type = 'notify_credential_issuee';
   public async run(
     stepName: string,
     step: any,
@@ -129,7 +129,7 @@ export class NotifyCredentialIssueeStepRunner extends StepRunner {
 }
 
 export class CredentialVerificationStepRunner extends StepRunner {
-  type: string = 'credential_verification';
+  type = 'credential_verification';
   public async run(
     stepName: string,
     step: any,
@@ -187,7 +187,7 @@ export class CredentialVerificationStepRunner extends StepRunner {
 }
 
 export class AddRootOfTrustStepRunner extends StepRunner {
-  type: string = 'add_root_of_trust';
+  type = 'add_root_of_trust';
 
   public async run(stepName: string, step: any, configJson: any): Promise<any> {
     const env = resolveEnvironment();

@@ -1,7 +1,7 @@
 export class CESRProccessor {
   public static removeEvent(cesr: string, eventType: string) {
     const parsedCesr = this.parseCesr(cesr);
-    let result: string = '';
+    let result = '';
     for (const event of parsedCesr) {
       if (event.json.t != eventType) {
         result += `${JSON.stringify(event.json)}${event.signature}`;
@@ -13,7 +13,7 @@ export class CESRProccessor {
   public static parseCesr(cesr: string) {
     const signatureRegex = /(?<=})(-.*?)(?={|$)/g;
     const signatures = cesr.match(signatureRegex) || [];
-    let jsonString = `[${cesr.replace(signatureRegex, ',').trim()}]`.replace(
+    const jsonString = `[${cesr.replace(signatureRegex, ',').trim()}]`.replace(
       /,(?=[^,]*$)/,
       ''
     );

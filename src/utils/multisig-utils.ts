@@ -89,7 +89,7 @@ export async function addEndRoleMultisig(
   otherMembersAIDs: HabState[],
   multisigAID: HabState,
   timestamp: string,
-  isInitiator: boolean = false
+  isInitiator = false
 ) {
   if (!isInitiator) await waitAndMarkNotification(client, '/multisig/rpy');
 
@@ -197,7 +197,7 @@ export async function createAIDMultisig(
   otherMembersAIDs: HabState[],
   groupName: string,
   kargs: CreateIdentiferArgs,
-  isInitiator: boolean = false
+  isInitiator = false
 ) {
   if (!isInitiator) await waitAndMarkNotification(client, '/multisig/icp');
 
@@ -237,7 +237,7 @@ export async function createRegistryMultisig(
   multisigAID: HabState,
   registryName: string,
   nonce: string,
-  isInitiator: boolean = false
+  isInitiator = false
 ) {
   if (!isInitiator) await waitAndMarkNotification(client, '/multisig/vcp');
 
@@ -281,7 +281,7 @@ export async function delegateMultisig(
   otherMembersAIDs: HabState[],
   multisigAID: HabState,
   anchor: { i: string; s: string; d: string },
-  isInitiator: boolean = false
+  isInitiator = false
 ) {
   if (!isInitiator) {
     const msgSaid = await waitAndMarkNotification(client, '/multisig/ixn');
@@ -352,7 +352,7 @@ export async function grantMultisig(
   recipientAID: HabState,
   credential: any,
   timestamp: string,
-  isInitiator: boolean = false
+  isInitiator = false
 ) {
   if (!isInitiator) await waitAndMarkNotification(client, '/multisig/exn');
 
@@ -402,7 +402,7 @@ export async function issueCredentialMultisig(
   otherMembersAIDs: HabState[],
   multisigAIDName: string,
   kargsIss: CredentialData,
-  isInitiator: boolean = false
+  isInitiator = false
 ) {
   if (!isInitiator) await waitAndMarkNotification(client, '/multisig/iss');
 

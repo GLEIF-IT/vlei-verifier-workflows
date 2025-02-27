@@ -11,13 +11,13 @@ export class WorkflowState {
   configJson: any;
   schemas: any = SCHEMAS;
   rules: any = RULES;
-  clients: Map<string, SignifyClient> = new Map();
-  aids: Map<string, any> = new Map();
-  oobis: Map<string, Array<any>> = new Map();
-  credentialsInfo: Map<string, CredentialInfo> = new Map();
-  registries: Map<string, { regk: string }> = new Map();
-  credentials: Map<string, any> = new Map();
-  aidsInfo: Map<string, IdentifierData> = new Map();
+  clients = new Map<string, SignifyClient>();
+  aids = new Map<string, any>();
+  oobis = new Map<string, any[]>();
+  credentialsInfo = new Map<string, CredentialInfo>();
+  registries = new Map<string, { regk: string }>();
+  credentials = new Map<string, any>();
+  aidsInfo = new Map<string, IdentifierData>();
   kargsAID =
     witnessIds.length > 0 ? { toad: witnessIds.length, wits: witnessIds } : {};
 

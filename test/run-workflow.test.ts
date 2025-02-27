@@ -23,7 +23,7 @@ test.only('workflow', async function run() {
     path.join(__dirname, `${workflowsDir}${workflowFile}`)
   );
   const configFileName = env.configuration;
-  let dirPath = '../src/config/';
+  const dirPath = '../src/config/';
   const configFilePath = path.join(__dirname, dirPath) + configFileName;
   const configJson = await getConfig(configFilePath);
   if (workflow && configJson) {
