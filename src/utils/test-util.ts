@@ -13,6 +13,7 @@ import signify, {
 import { RetryOptions, retry } from './retry';
 import assert = require('assert');
 import { resolveEnvironment } from './resolve-env';
+import { TestKeria } from './test-keria';
 import { WorkflowState } from '../workflow-state';
 import {
   getIdentifierData,
@@ -162,9 +163,6 @@ export async function getOrCreateAID(
   name: string,
   kargs: CreateIdentiferArgs
 ): Promise<HabState> {
-  if (!client) {
-    throw new Error("getOrCreateAID: client doesn't exist");
-  }
   try {
     return await client.identifiers().get(name);
   } catch {
@@ -190,11 +188,16 @@ export async function getOrCreateClient(
   bran: string | undefined = undefined,
   getOnly: boolean = false
 ): Promise<SignifyClient> {
-  const env = resolveEnvironment();
+  const testKeria = TestKeria.getInstance();
   await ready();
   bran ??= randomPasscode();
   bran = bran.padEnd(21, '_');
-  const client = new SignifyClient(env.url, bran, Tier.low, env.bootUrl);
+  const client = new SignifyClient(
+    `http://${testKeria.domain}:${testKeria.keriaAdminPort}`,
+    bran,
+    Tier.low,
+    `http://${testKeria.domain}:${testKeria.keriaBootPort}`
+  );
   try {
     await client.connect();
   } catch (e: any) {
