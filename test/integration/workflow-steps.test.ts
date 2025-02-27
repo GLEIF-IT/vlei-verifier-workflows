@@ -12,6 +12,7 @@ import minimist from 'minimist';
 
 import { ARG_KERIA_START_PORT, TestKeria } from '../../src/utils/test-keria';
 import { TestPaths } from '../../src/utils/test-paths';
+import { DockerComposeState } from '../../src/utils/test-docker';
 
 let testPaths: TestPaths;
 let testKeria: TestKeria;
@@ -22,8 +23,6 @@ const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
 const ARG_KERIA_HOST = 'keria_host'; //docker domain for witness
 const ARG_KERIA_NUM = 'keria_num';
 const ARG_REFRESH = 'refresh';
-
-const keriaContainer = `keria_vvw`;
 
 // Parse command-line arguments using minimist
 const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
@@ -50,10 +49,11 @@ const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
 const keriaImage = `weboftrust/keria:0.2.0-dev4`;
 const keriaNum = parseInt(args[ARG_KERIA_NUM], 10) || 0;
 const offset = 10 * (keriaNum - 1);
-const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : true;
+const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : false;
+const keriaContainer = keriaNum === 0 ? 'keria_vvw' : `keria_vvw_${keriaNum}`;
 
 afterAll(async () => {
-  // await testKeria.afterAll();
+  await DockerComposeState.getInstance().stop();
 });
 
 beforeAll(async () => {
