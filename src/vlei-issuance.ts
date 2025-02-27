@@ -324,8 +324,7 @@ export class VleiIssuance {
     const workflow_state = WorkflowState.getInstance();
     const multisigIdentifierData = identifierData as MultisigIdentifierData;
     let multisigAids: HabState[] = [];
-    const aidIdentifierNames: string[] =
-      multisigIdentifierData.identifiers;
+    const aidIdentifierNames: string[] = multisigIdentifierData.identifiers;
 
     const issuerAids =
       aidIdentifierNames.map((aidIdentifierName) =>
@@ -598,8 +597,7 @@ export class VleiIssuance {
     const workflow_state = WorkflowState.getInstance();
     const multisigAid: HabState = workflow_state.aids.get(identifierData.name);
     const registryIdentifierName = `${identifierData.name}Registry`;
-    const aidIdentifierNames: string[] =
-      multisigIdentifierData.identifiers;
+    const aidIdentifierNames: string[] = multisigIdentifierData.identifiers;
     const registries: any[] = new Array<any>();
     const issuerAids =
       aidIdentifierNames.map((aidIdentifierName) =>
