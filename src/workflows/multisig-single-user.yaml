@@ -198,6 +198,8 @@ workflow:
     add_root_of_trust:
       id: 'add_root_of_trust'
       type: 'add_root_of_trust'
+      rot_aid: 'gleif-multisig-1'
+      rot_member_aid: 'gleif-aid-1'
       description: 'Adding Root of Trust'
     credential_verification_valid_verified:
       id: 'credential_verification_valid_verified'

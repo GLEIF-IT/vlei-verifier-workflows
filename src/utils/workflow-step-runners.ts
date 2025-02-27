@@ -191,8 +191,13 @@ export class AddRootOfTrustStepRunner extends StepRunner {
 
   public async run(stepName: string, step: any, configJson: any): Promise<any> {
     const env = resolveEnvironment();
-
-    const rootOfTrustData = await getRootOfTrust(configJson);
+    const rot_aid = step.rot_aid;
+    const rot_member_aid = step.rot_member_aid;
+    const rootOfTrustData = await getRootOfTrust(
+      configJson,
+      rot_aid,
+      rot_member_aid
+    );
     const verifierClient = new VerifierClient(env.verifierBaseUrl);
     const response = await verifierClient.addRootOfTrust(
       rootOfTrustData.aid,
