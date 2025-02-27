@@ -13,6 +13,7 @@ import minimist from 'minimist';
 import { ARG_KERIA_START_PORT, TestKeria } from '../../src/utils/test-keria';
 import { TestPaths } from '../../src/utils/test-paths';
 import { DockerComposeState } from '../../src/utils/test-docker';
+import { DockerLock } from '../../src/utils/docker-lock';
 
 let testPaths: TestPaths;
 let testKeria: TestKeria;
@@ -52,25 +53,84 @@ const offset = 10 * (keriaNum - 1);
 const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : false;
 const keriaContainer = keriaNum === 0 ? 'keria_vvw' : `keria_vvw_${keriaNum}`;
 
-afterAll(async () => {
-  await DockerComposeState.getInstance().stop();
-});
-
 beforeAll(async () => {
-  env = resolveEnvironment();
-  testPaths = TestPaths.getInstance();
-  testKeria = TestKeria.getInstance(
-    testPaths,
-    args[ARG_KERIA_DOMAIN],
-    args[ARG_KERIA_HOST],
-    args[ARG_WITNESS_HOST],
-    20001,
-    20002,
-    20003,
-    offset
-  );
-  await testKeria.beforeAll(keriaImage, keriaContainer, refresh);
-});
+  try {
+    console.log('Starting beforeAll setup...');
+    env = resolveEnvironment();
+    testPaths = TestPaths.getInstance();
+
+    console.log(
+      `Setting up Keria with image: ${keriaImage}, container: ${keriaContainer}`
+    );
+    testKeria = TestKeria.getInstance(
+      testPaths,
+      args[ARG_KERIA_DOMAIN],
+      args[ARG_KERIA_HOST],
+      args[ARG_WITNESS_HOST],
+      20001,
+      20002,
+      20003,
+      offset
+    );
+
+    const beforeAllPromise = testKeria.beforeAll(
+      keriaImage,
+      keriaContainer,
+      refresh
+    );
+
+    // Add timeout to prevent infinite hanging
+    const timeout = 180000; // 180 seconds
+    let timeoutId: NodeJS.Timeout;
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => reject(new Error('beforeAll timeout')), timeout);
+      timeoutId.unref(); // Prevent keeping process alive
+    });
+
+    try {
+      await Promise.race([beforeAllPromise, timeoutPromise]);
+    } finally {
+      clearTimeout(timeoutId!);
+    }
+
+    // Wait for container to fully start
+    await new Promise((resolve) => {
+      const startupDelay = setTimeout(resolve, 5000);
+      startupDelay.unref();
+    });
+  } catch (error) {
+    console.error('Error in beforeAll:', error);
+    console.error(
+      'Full error details:',
+      error instanceof Error ? error.stack : error
+    );
+    throw error;
+  }
+}, 30000);
+
+afterAll(async () => {
+  console.log('Running global test cleanup...');
+  try {
+    await testKeria.afterAll();
+    
+    await Promise.all([
+      DockerComposeState.getInstance().stop(),
+      DockerLock.getInstance().forceRelease(),
+      new Promise((resolve) => {
+        const timeout = setTimeout(() => {
+          clearTimeout(timeout);
+          resolve(null);
+        }, 2000);
+        timeout.unref();
+      }),
+    ]);
+    
+    console.log('Cleanup completed successfully');
+  } catch (error) {
+    console.error('Error during cleanup:', error);
+    throw error;
+  }
+}, 30000);
 
 describe('testing Client creation workflow step', () => {
   test('successful client creation', async function run() {

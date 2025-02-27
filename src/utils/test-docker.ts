@@ -88,15 +88,116 @@ export class DockerComposeState {
   public async stop(): Promise<void> {
     await this.cleanup();
   }
+
+  public addProcess(process: import('child_process').ChildProcess): void {
+    this.activeProcesses.add(process);
+  }
+
+  public removeProcess(process: import('child_process').ChildProcess): void {
+    this.activeProcesses.delete(process);
+  }
 }
 
 export async function runDockerCompose(
   file: string,
-  command: string,
-  service?: string
+  command: string = 'up',
+  service?: string,
+  options: string[] = []
 ): Promise<void> {
-  const state = DockerComposeState.getInstance();
-  await state.initialize(file, command, service);
+  return new Promise((resolve, reject) => {
+    const args = ['-f', file, command];
+    if (service) {
+      args.push(service);
+    }
+    args.push(...options);
+    
+    console.log(`Running docker compose command: docker compose ${args.join(' ')}`);
+    
+    // Add --wait flag to ensure containers are healthy
+    if (command === 'up') {
+      args.push('--wait');
+    }
+
+    const process = exec(`docker compose ${args.join(' ')}`, {
+      maxBuffer: 1024 * 1024 * 10 // 10MB buffer
+    }, (error, stdout, stderr) => {
+      if (error && (!service || service !== 'verify' || error.code !== 1)) {
+        console.error('Docker compose error:', {
+          error: error.message,
+          stdout,
+          stderr,
+          code: error.code,
+          signal: error.signal
+        });
+        
+        // Check if containers are running but unhealthy
+        exec('docker ps --format "{{.Names}}: {{.Status}}"', (err, containersOutput) => {
+          if (!err) {
+            console.log('Container statuses:', containersOutput);
+          }
+          reject(error);
+        });
+        return;
+      }
+      console.log('Docker compose output:', stdout);
+      resolve();
+    });
+
+    // Track active process
+    DockerComposeState.getInstance().addProcess(process);
+    process.on('exit', (code, signal) => {
+      DockerComposeState.getInstance().removeProcess(process);
+      if (code !== 0) {
+        console.log(`Process exited with code ${code} and signal ${signal}`);
+      }
+    });
+  });
+}
+
+export async function startDockerServices(file: string, maxRetries = 3): Promise<void> {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    try {
+      // Clean up any existing containers first
+      await stopDockerCompose(file, 'down', 'verify');
+      
+      // Start services with health check
+      console.log(`Starting Docker services (attempt ${attempt + 1}/${maxRetries})...`);
+      await runDockerCompose(file, 'up', 'verify', ['-d']);
+      
+      // Wait for services to be healthy
+      await waitForHealthyServices();
+      console.log('All services started successfully');
+      return;
+    } catch (error) {
+      attempt++;
+      console.error(`Attempt ${attempt} failed:`, error);
+      if (attempt === maxRetries) {
+        throw new Error(`Failed to start Docker services after ${maxRetries} attempts`);
+      }
+      // Wait before retrying
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+  }
+}
+
+async function waitForHealthyServices(timeout = 60000): Promise<void> {
+  const startTime = Date.now();
+  while (Date.now() - startTime < timeout) {
+    try {
+      const { stdout } = await exec('docker ps --format "{{.Names}}: {{.Status}}"');
+      const output = stdout?.toString() || '';
+      console.log('Current container statuses:', output);
+      
+      if (!output.includes('unhealthy') && !output.includes('starting')) {
+        return;
+      }
+    } catch (error) {
+      console.error('Error checking container health:', error);
+    }
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+  throw new Error('Timeout waiting for services to be healthy');
 }
 
 export async function stopDockerCompose(
@@ -110,18 +211,16 @@ export async function stopDockerCompose(
       `Stopping docker compose command: ${file} ${command} ${service}`
     );
     return new Promise((resolve, reject) => {
-      exec(
-        `docker compose -f ${file} ${command} ${service}`,
-        (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error stopping docker compose command: ${stderr}`);
-            return reject(error);
-          }
-          DockerComposeState.getInstance().stop();
-          console.log(stdout);
-          resolve(true);
+      const cmd = `docker compose -f ${file} ${command} ${service} -v --remove-orphans`;
+      exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error stopping docker compose command: ${stderr}`);
+          return reject(error);
         }
-      );
+        DockerComposeState.getInstance().stop();
+        console.log(stdout);
+        resolve(true);
+      });
     });
   } else {
     console.log(
