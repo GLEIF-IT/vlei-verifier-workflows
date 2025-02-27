@@ -159,129 +159,155 @@ export class TestKeria {
     containerName: string = 'keria',
     pullImage: boolean = false
   ) {
-    runDockerCompose(this.testPaths.dockerComposeFile, "up", "verify")
+    runDockerCompose(this.testPaths.dockerComposeFile, 'up', 'verify');
 
     console.log('Starting beforeAll execution...');
     await this.dockerLock.acquireForService(TestKeria.SERVICE_NAME);
-    
+
     console.log(`Checking if service ${TestKeria.SERVICE_NAME} is running...`);
     const isRunning = this.dockerLock.isServiceRunning(TestKeria.SERVICE_NAME);
     console.log(`Service running status: ${isRunning}`);
-    
+
     // Force container creation regardless of service status
-    console.log(`Starting Keria container ${containerName} with image ${imageName}`);
+    console.log(
+      `Starting Keria container ${containerName} with image ${imageName}`
+    );
     try {
-        await this.startContainer(imageName, containerName, pullImage);
-        
-        // Wait for container to be ready
-        await this.waitForContainer(containerName);
-        
-        // Store container reference
-        const container = await this.docker.getContainer(containerName);
-        this.containers.set(containerName, container);
-        
-        console.log(`Keria container ${containerName} started successfully`);
+      await this.startContainer(imageName, containerName, pullImage);
+
+      // Wait for container to be ready
+      await this.waitForContainer(containerName);
+
+      // Store container reference
+      const container = await this.docker.getContainer(containerName);
+      this.containers.set(containerName, container);
+
+      console.log(`Keria container ${containerName} started successfully`);
     } catch (error) {
-        console.error('Error starting Keria container:', error);
-        throw error;
+      console.error('Error starting Keria container:', error);
+      throw error;
     }
   }
 
   private async startContainer(
-    imageName: string, 
-    containerName: string, 
+    imageName: string,
+    containerName: string,
     pullImage: boolean,
     useHostNetwork: boolean = true
-): Promise<dockerode.Container> {
+  ): Promise<dockerode.Container> {
     try {
-        console.log(`Creating container ${containerName}...`);
-        const containerOptions: dockerode.ContainerCreateOptions = {
-            Image: imageName,
-            name: containerName,
-            platform: "linux/amd64",
-            ExposedPorts: {
-                [`${this.keriaAdminPort}/tcp`]: {},
-                [`${this.keriaHttpPort}/tcp`]: {},
-                [`${this.keriaBootPort}/tcp`]: {}
-            },
-            HostConfig: useHostNetwork ? {
-                NetworkMode: 'host'
-            } : {
-                PortBindings: {
-                    [`${this.keriaAdminPort}/tcp`]: [{ HostPort: this.keriaAdminPort.toString() }],
-                    [`${this.keriaHttpPort}/tcp`]: [{ HostPort: this.keriaHttpPort.toString() }],
-                    [`${this.keriaBootPort}/tcp`]: [{ HostPort: this.keriaBootPort.toString() }]
-                }
+      console.log(`Creating container ${containerName}...`);
+      const containerOptions: dockerode.ContainerCreateOptions = {
+        Image: imageName,
+        name: containerName,
+        platform: 'linux/amd64',
+        ExposedPorts: {
+          [`${this.keriaAdminPort}/tcp`]: {},
+          [`${this.keriaHttpPort}/tcp`]: {},
+          [`${this.keriaBootPort}/tcp`]: {},
+        },
+        HostConfig: useHostNetwork
+          ? {
+              NetworkMode: 'host',
             }
-        };
+          : {
+              PortBindings: {
+                [`${this.keriaAdminPort}/tcp`]: [
+                  { HostPort: this.keriaAdminPort.toString() },
+                ],
+                [`${this.keriaHttpPort}/tcp`]: [
+                  { HostPort: this.keriaHttpPort.toString() },
+                ],
+                [`${this.keriaBootPort}/tcp`]: [
+                  { HostPort: this.keriaBootPort.toString() },
+                ],
+              },
+            },
+      };
 
-        if (this.keriaConfig) {
-            const tempConfigPath = await this.createTempKeriaConfigFile(this.keriaConfig);
-            containerOptions.HostConfig!.Binds = [
-                `${tempConfigPath}:/usr/local/var/keri/cf/keria.json`,
-            ];
-            containerOptions.Entrypoint = [
-                'keria', 'start',
-                '--config-dir', '/usr/local/var/',
-                '--config-file', 'keria',
-                '--name', 'agent',
-                '--loglevel', 'DEBUG',
-                '-a', '20001',
-                '-H', '20002',
-                '-B', '20003',
-            ];
-        }
+      if (this.keriaConfig) {
+        const tempConfigPath = await this.createTempKeriaConfigFile(
+          this.keriaConfig
+        );
+        containerOptions.HostConfig!.Binds = [
+          `${tempConfigPath}:/usr/local/var/keri/cf/keria.json`,
+        ];
+        containerOptions.Entrypoint = [
+          'keria',
+          'start',
+          '--config-dir',
+          '/usr/local/var/',
+          '--config-file',
+          'keria',
+          '--name',
+          'agent',
+          '--loglevel',
+          'DEBUG',
+          '-a',
+          '20001',
+          '-H',
+          '20002',
+          '-B',
+          '20003',
+        ];
+      }
 
-        if (pullImage) {
-            console.log(`Pulling image ${imageName}...`);
-            await this.docker.pull(imageName);
-        }
+      if (pullImage) {
+        console.log(`Pulling image ${imageName}...`);
+        await this.docker.pull(imageName);
+      }
 
-        // Remove existing container if it exists
-        try {
-            const existingContainer = await this.docker.getContainer(containerName);
-            console.log('Found existing container, removing it...');
-            await existingContainer.remove({ force: true });
-        } catch (e) {
-            // Container doesn't exist, which is fine
-        }
+      // Remove existing container if it exists
+      try {
+        const existingContainer = await this.docker.getContainer(containerName);
+        console.log('Found existing container, removing it...');
+        await existingContainer.remove({ force: true });
+      } catch (e) {
+        // Container doesn't exist, which is fine
+      }
 
-        const container = await this.docker.createContainer(containerOptions);
-        console.log(`Starting container ${containerName}...`);
-        await container.start();
-        
-        return container;
+      const container = await this.docker.createContainer(containerOptions);
+      console.log(`Starting container ${containerName}...`);
+      await container.start();
+
+      return container;
     } catch (error) {
-        console.error('Error in startContainer:', error);
-        throw error;
+      console.error('Error in startContainer:', error);
+      throw error;
     }
-}
+  }
 
   private async waitForContainer(containerName: string, timeout = 30000) {
     const startTime = Date.now();
     while (Date.now() - startTime < timeout) {
-        try {
-            const response = await fetch(`http://${this.host}:${this.keriaHttpPort}/spec.yaml`);
-            if (response.ok) {
-                console.log(`Container ${containerName} is ready`);
-                return;
-            }
-        } catch (e) {
-            // Container not ready yet, wait and retry
-            await new Promise(resolve => setTimeout(resolve, 1000));
+      try {
+        const response = await fetch(
+          `http://${this.host}:${this.keriaHttpPort}/spec.yaml`
+        );
+        if (response.ok) {
+          console.log(`Container ${containerName} is ready`);
+          return;
         }
+      } catch (e) {
+        // Container not ready yet, wait and retry
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
     }
-    throw new Error(`Container ${containerName} failed to become ready within ${timeout}ms`);
+    throw new Error(
+      `Container ${containerName} failed to become ready within ${timeout}ms`
+    );
   }
 
   async afterAll(clean = true) {
-    const shouldStop = await this.dockerLock.releaseService(TestKeria.SERVICE_NAME);
-    
+    const shouldStop = await this.dockerLock.releaseService(
+      TestKeria.SERVICE_NAME
+    );
+
     if (shouldStop && clean) {
       console.log('Starting afterAll cleanup...');
       try {
-        console.log("Cleaning up test data");
-        
+        console.log('Cleaning up test data');
+
         // Clean up containers with force option
         for (const [name, container] of this.containers) {
           try {
@@ -289,52 +315,75 @@ export class TestKeria {
             try {
               await Promise.race([
                 container.stop(),
-                new Promise((_, reject) => 
-                  setTimeout(() => reject(new Error('Container stop timeout')), 5000)
-                )
+                new Promise((_, reject) =>
+                  setTimeout(
+                    () => reject(new Error('Container stop timeout')),
+                    5000
+                  )
+                ),
               ]);
             } catch (error) {
               const stopError = error as Error;
-              console.log(`Warning: Error stopping container ${name}, proceeding with force remove:`, 
-                stopError?.message || 'Unknown error');
+              console.log(
+                `Warning: Error stopping container ${name}, proceeding with force remove:`,
+                stopError?.message || 'Unknown error'
+              );
             }
 
             console.log(`Force removing container ${name}...`);
             await Promise.race([
               container.remove({ force: true }), // Add force: true option
-              new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Container remove timeout')), 5000)
-              )
+              new Promise((_, reject) =>
+                setTimeout(
+                  () => reject(new Error('Container remove timeout')),
+                  5000
+                )
+              ),
             ]).catch(async (error) => {
               const removeError = error as Error;
-              console.log(`Warning: Error removing container ${name}:`, 
-                removeError?.message || 'Unknown error');
+              console.log(
+                `Warning: Error removing container ${name}:`,
+                removeError?.message || 'Unknown error'
+              );
               // Try one more time with force and v option
               try {
                 await container.remove({ force: true, v: true });
               } catch (error) {
                 const finalError = error as Error;
-                console.log(`Final attempt to remove container ${name} failed:`, 
-                  finalError?.message || 'Unknown error');
+                console.log(
+                  `Final attempt to remove container ${name} failed:`,
+                  finalError?.message || 'Unknown error'
+                );
               }
             });
 
             console.log(`Container ${name} cleanup attempted`);
           } catch (error) {
-            console.error(`Error in container cleanup for ${name}:`, 
-              (error as Error)?.message || 'Unknown error');
+            console.error(
+              `Error in container cleanup for ${name}:`,
+              (error as Error)?.message || 'Unknown error'
+            );
           }
         }
         this.containers.clear();
 
         // Clean up docker compose with force
-        console.log(`Stopping local services using ${this.testPaths.dockerComposeFile}`);
+        console.log(
+          `Stopping local services using ${this.testPaths.dockerComposeFile}`
+        );
         try {
           await Promise.race([
-            stopDockerCompose(this.testPaths.dockerComposeFile, "down -v --remove-orphans -f", "verify"),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Docker compose stop timeout')), 10000)
-            )
+            stopDockerCompose(
+              this.testPaths.dockerComposeFile,
+              'down -v --remove-orphans -f',
+              'verify'
+            ),
+            new Promise((_, reject) =>
+              setTimeout(
+                () => reject(new Error('Docker compose stop timeout')),
+                10000
+              )
+            ),
           ]);
         } catch (composeError) {
           console.error('Error stopping docker compose:', composeError);
@@ -371,7 +420,10 @@ export class TestKeria {
         // Force cleanup any remaining handles
         process.removeAllListeners();
       } catch (error) {
-        console.error('Error in afterAll:', (error as Error)?.message || 'Unknown error');
+        console.error(
+          'Error in afterAll:',
+          (error as Error)?.message || 'Unknown error'
+        );
       } finally {
         console.log('afterAll cleanup completed');
       }
@@ -383,16 +435,16 @@ export class TestKeria {
     try {
       const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'keria-config-'));
       console.log('Created temp directory:', tempDir);
-      
+
       const tempFilePath = path.join(tempDir, 'keria.json');
       console.log('Writing config to:', tempFilePath);
-      
+
       const configStr = JSON.stringify(kConfig, null, 2);
       console.log('Config to write:', configStr);
-      
+
       fs.writeFileSync(tempFilePath, configStr);
       console.log('Config file written successfully');
-      
+
       return tempFilePath;
     } catch (error) {
       console.error('Error creating temp config file:', error);
@@ -404,33 +456,35 @@ export class TestKeria {
     imageName: string,
     containerName: string,
     alreadyLocked: boolean = false
-): Promise<dockerode.Container> {
+  ): Promise<dockerode.Container> {
     if (!alreadyLocked) {
-        await this.dockerLock.acquire();
+      await this.dockerLock.acquire();
     }
-    
+
     try {
-        return await this.startContainer(imageName, containerName, false, true);
+      return await this.startContainer(imageName, containerName, false, true);
     } finally {
-        if (!alreadyLocked) {
-            this.dockerLock.release();
-        }
+      if (!alreadyLocked) {
+        this.dockerLock.release();
+      }
     }
-}
+  }
 
   public async launchTestKeria(
     kimageName: string,
     kontainerName: string,
     pullImage: boolean = false
   ): Promise<dockerode.Container> {
-    console.log(`Starting launchTestKeria for ${kontainerName} with image ${kimageName}`);
-    
+    console.log(
+      `Starting launchTestKeria for ${kontainerName} with image ${kimageName}`
+    );
+
     // Check if container exists and is running (no lock needed)
     try {
       console.log(`Checking for existing container ${kontainerName}`);
       const container = await this.docker.getContainer(kontainerName);
       const containerInfo = await container.inspect();
-      
+
       if (containerInfo.State.Running) {
         console.log(`Found running container ${kontainerName}, reusing it`);
         return container;
@@ -448,8 +502,14 @@ export class TestKeria {
         await this.docker.pull(kimageName);
       }
 
-      const container = await this.startContainerWithConfig(kimageName, kontainerName, true);
-      console.log(`Successfully created and started new container ${kontainerName}`);
+      const container = await this.startContainerWithConfig(
+        kimageName,
+        kontainerName,
+        true
+      );
+      console.log(
+        `Successfully created and started new container ${kontainerName}`
+      );
       return container;
     } finally {
       this.dockerLock.release();

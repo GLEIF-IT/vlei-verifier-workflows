@@ -5,7 +5,8 @@ export class DockerComposeState {
   private static instance: DockerComposeState;
   private isRunning: boolean = false;
   private initializationPromise: Promise<void> | null = null;
-  private activeProcesses: Set<import('child_process').ChildProcess> = new Set();
+  private activeProcesses: Set<import('child_process').ChildProcess> =
+    new Set();
 
   private constructor() {
     // Handle cleanup on process exit
@@ -34,7 +35,11 @@ export class DockerComposeState {
     return DockerComposeState.instance;
   }
 
-  public async initialize(file: string, command: string, service?: string): Promise<void> {
+  public async initialize(
+    file: string,
+    command: string,
+    service?: string
+  ): Promise<void> {
     if (this.isRunning) {
       return;
     }
@@ -52,7 +57,11 @@ export class DockerComposeState {
     }
   }
 
-  private async _initialize(file: string, command: string, service?: string): Promise<void> {
+  private async _initialize(
+    file: string,
+    command: string,
+    service?: string
+  ): Promise<void> {
     // Skip cleanup on initialization to reuse containers
     const cmd = service
       ? `docker compose -f ${file} ${command} ${service}`
@@ -67,7 +76,7 @@ export class DockerComposeState {
         console.log(stdout);
         resolve();
       });
-      
+
       // Track active process
       this.activeProcesses.add(process);
       process.on('exit', () => {
@@ -97,20 +106,27 @@ export async function stopDockerCompose(
 ): Promise<boolean> {
   const running = await isDockerComposeRunning(file);
   if (running) {
-    console.log(`Stopping docker compose command: ${file} ${command} ${service}`);
+    console.log(
+      `Stopping docker compose command: ${file} ${command} ${service}`
+    );
     return new Promise((resolve, reject) => {
-      exec(`docker compose -f ${file} ${command} ${service}`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error stopping docker compose command: ${stderr}`);
-          return reject(error);
+      exec(
+        `docker compose -f ${file} ${command} ${service}`,
+        (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Error stopping docker compose command: ${stderr}`);
+            return reject(error);
+          }
+          DockerComposeState.getInstance().stop();
+          console.log(stdout);
+          resolve(true);
         }
-        DockerComposeState.getInstance().stop();
-        console.log(stdout);
-        resolve(true);
-      });
+      );
     });
   } else {
-    console.log(`Docker compose is already stopped: ${file} ${command} ${service}`);
+    console.log(
+      `Docker compose is already stopped: ${file} ${command} ${service}`
+    );
     return running;
   }
 }

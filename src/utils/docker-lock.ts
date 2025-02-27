@@ -19,7 +19,7 @@ export class DockerLock {
   async acquire(): Promise<void> {
     console.log('DockerLock: Attempting to acquire lock. Current state:', {
       isLocked: this.lock,
-      queueLength: this.queue.length
+      queueLength: this.queue.length,
     });
 
     if (!this.lock) {
@@ -39,11 +39,11 @@ export class DockerLock {
 
   release(): void {
     console.log('DockerLock: Releasing lock. Queue length:', this.queue.length);
-    
+
     // Clear any pending timeouts
-    this.timeouts.forEach(timeout => clearTimeout(timeout));
+    this.timeouts.forEach((timeout) => clearTimeout(timeout));
     this.timeouts = [];
-    
+
     if (this.queue.length > 0) {
       const next = this.queue.shift();
       console.log('DockerLock: Executing next queued operation');
@@ -66,7 +66,7 @@ export class DockerLock {
   }
 
   cleanup(): void {
-    this.timeouts.forEach(timeout => clearTimeout(timeout));
+    this.timeouts.forEach((timeout) => clearTimeout(timeout));
     this.timeouts = [];
     this.queue = [];
     this.lock = false;
@@ -76,7 +76,9 @@ export class DockerLock {
     await this.acquire();
     const count = this.serviceReferenceCount.get(serviceName) || 0;
     this.serviceReferenceCount.set(serviceName, count + 1);
-    console.log(`DockerLock: Service ${serviceName} reference count: ${count + 1}`);
+    console.log(
+      `DockerLock: Service ${serviceName} reference count: ${count + 1}`
+    );
     this.release();
   }
 
@@ -91,8 +93,10 @@ export class DockerLock {
 
     const newCount = count - 1;
     this.serviceReferenceCount.set(serviceName, newCount);
-    console.log(`DockerLock: Service ${serviceName} reference count: ${newCount}`);
-    
+    console.log(
+      `DockerLock: Service ${serviceName} reference count: ${newCount}`
+    );
+
     const shouldStop = newCount === 0;
     this.release();
     return shouldStop;
@@ -101,4 +105,4 @@ export class DockerLock {
   isServiceRunning(serviceName: string): boolean {
     return (this.serviceReferenceCount.get(serviceName) || 0) > 0;
   }
-} 
+}

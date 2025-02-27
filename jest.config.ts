@@ -6,18 +6,16 @@ const config: Config.InitialOptions = {
   testTimeout: 90000,
   setupFilesAfterEnv: ['./jest.setup.ts'],
   verbose: true,
-  testMatch: [
-    "**/test/**/*.test.ts"
-  ],
+  testMatch: ['**/test/**/*.test.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.tsx?$': 'ts-jest',
   },
   globals: {
     'ts-jest': {
-      tsconfig: 'tsconfig.json'
-    }
-  }
+      tsconfig: 'tsconfig.json',
+    },
+  },
 };
 
 export default config;
