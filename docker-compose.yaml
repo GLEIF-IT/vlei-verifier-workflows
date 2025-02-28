@@ -176,7 +176,7 @@ services:
       start_period: 2s
 
   deps:
-    image: alpine
+    image: alpine:latest
     command: ['echo', 'Dependencies running']
     depends_on:
       vlei-server:
@@ -186,7 +186,7 @@ services:
       witness-demo:
         condition: service_healthy
   verify:
-    image: alpine
+    image: alpine:latest
     command: ['echo', 'Dependencies running']
     depends_on:
       vlei-server:
