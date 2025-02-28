@@ -1,23 +1,27 @@
-name: Run Multisig Single User Tests
+name: Multisig Single-User Test
 on:
   push:
     branches:
       - 'main'
   pull_request:
     branches:
-      - 'main'
+      - '**' # Run Validate Build on all PR branches
   workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   test-single-aid-multisig:
-    name: Run multisig single user integration test using keria:${{ matrix.keria-version }}
-    runs-on: ${{ matrix.os }}
+    name: Run multisig single-user test using keria:${{ matrix.keria-version }}
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     defaults:
       run:
         working-directory: .
     strategy:
       matrix:
-        os: ['ubuntu-latest']
         keria-version: ['0.2.0-dev3']
         node-version: ['20']
     env:
@@ -26,10 +30,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: install deps
+
+      - name: Install dependencies
         run: |
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
@@ -42,5 +48,5 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Issue Credentials, Generate reports, API test, Verifier test
+      - name: Run workflow
         run: WORKFLOW=multisig-single-user.yaml CONFIGURATION=configuration-multisig-single-user.json npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit

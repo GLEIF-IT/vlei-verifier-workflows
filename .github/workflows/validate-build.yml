@@ -1,4 +1,5 @@
-name: Singlesig Credential Revocation test
+name: Validate Build
+
 on:
   push:
     branches:
@@ -13,8 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  test-singlesig-revocation:
-    name: Run singlesig credential revocation test using keria:${{ matrix.keria-version }}
+  validate-build:
+    name: Validate Build
     runs-on: ubuntu-latest
     timeout-minutes: 60
     defaults:
@@ -22,10 +23,7 @@ jobs:
         working-directory: .
     strategy:
       matrix:
-        keria-version: ['0.2.0-dev3']
         node-version: ['20']
-    env:
-      KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -40,13 +38,15 @@ jobs:
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
           npm ci
-      - name: Run docker
-        run: |
-          docker compose down -v
-          docker compose up verify -d --pull always
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Prettier
+        run: npm run pretty:check
 
       - name: Build
         run: npm run build
 
-      - name: Run workflow
-        run: WORKFLOW=revocation-test-singlesig.yaml CONFIGURATION=configuration-revocation-test-singlesig.json npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
+      - name: Run unit tests
+        run: npm test -- --runInBand --watchAll=false --runTestsByPath ./test/unit/utils.test.ts
