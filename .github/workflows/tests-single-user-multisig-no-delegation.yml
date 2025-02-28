@@ -1,15 +1,12 @@
-name: Run Multisig Single User Non Delegated AIDs Tests
+name: Multisig Single-User, Non-Delegated AIDs Test
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - 'main'
-  workflow_dispatch:
+  workflow_run:
+    workflows: ['Validate Build'] # only run these expensive tests after unit tests, etc. pass
+    types:
+      - completed
 jobs:
   test-single-aid-multisig-non-delegated-aids:
-    name: Run multisig single user non delegated aids integration test using keria:${{ matrix.keria-version }}
+    name: Run multisig single-user, non-delegated aids test using keria:${{ matrix.keria-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     defaults:

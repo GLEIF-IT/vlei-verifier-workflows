@@ -1,15 +1,12 @@
-name: Run Singlesig Single User Tests
+name: Singlesig Single-User Test
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - 'main'
-  workflow_dispatch:
+  workflow_run:
+    workflows: ['Validate Build'] # only run these expensive tests after unit tests, etc. pass
+    types:
+      - completed
 jobs:
   test-single-aid-singlesig:
-    name: Run singlesig single user integration test using keria:${{ matrix.keria-version }}
+    name: Run singlesig single-user test using keria:${{ matrix.keria-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     defaults:

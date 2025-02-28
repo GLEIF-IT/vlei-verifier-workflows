@@ -1,12 +1,9 @@
-name: workflow steps integration tests
+name: Workflow Steps Integration Tests
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - 'main'
-  workflow_dispatch:
+  workflow_run:
+    workflows: ['Validate Build'] # only run these expensive tests after unit tests, etc. pass
+    types:
+      - completed
 jobs:
   workflow-steps-integration-tests:
     name: Run workflow steps integration tests, using keria:${{ matrix.keria-version }}

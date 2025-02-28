@@ -1,12 +1,9 @@
-name: Run Singlesig Credential Revocation test
+name: Singlesig Credential Revocation test
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - 'main'
-  workflow_dispatch:
+  workflow_run:
+    workflows: ['Validate Build'] # only run these expensive tests after unit tests, etc. pass
+    types:
+      - completed
 jobs:
   test-singlesig-revocation:
     name: Run singlesig credential revocation test using keria:${{ matrix.keria-version }}

@@ -1,4 +1,5 @@
-name: utils unit test
+name: Validate Build
+
 on:
   push:
     branches:
@@ -7,9 +8,10 @@ on:
     branches:
       - 'main'
   workflow_dispatch:
+
 jobs:
-  unit-integration-tests:
-    name: Run utils unit tests, using keria:${{ matrix.keria-version }}
+  validate-build:
+    name: Validate Build
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     defaults:
@@ -18,24 +20,30 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest']
-        keria-version: ['0.2.0-dev3']
         node-version: ['20']
-    env:
-      KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: install deps
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
         run: |
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
           npm ci
 
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Prettier
+        run: npm run pretty:check
+
       - name: Build
         run: npm run build
 
-      - name: reg-pilot unit and integration tests
+      - name: Run unit tests
         run: npm test -- --runInBand --watchAll=false --runTestsByPath ./test/unit/utils.test.ts
-        # run: npx jest ./test/run-workflow-bank.test.ts -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
-        # run: npx jest ./test/run-workflow-bank.test.ts --testNamePattern api-verifier-bank-test-workflow -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
