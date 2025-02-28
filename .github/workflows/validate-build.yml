@@ -6,20 +6,23 @@ on:
       - 'main'
   pull_request:
     branches:
-      - 'main'
+      - '**' # Run Validate Build on all PR branches
   workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
 
 jobs:
   validate-build:
     name: Validate Build
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     defaults:
       run:
         working-directory: .
     strategy:
       matrix:
-        os: ['ubuntu-latest']
         node-version: ['20']
     steps:
       - name: Checkout repo

@@ -1,20 +1,27 @@
 name: Workflow Steps Integration Tests
 on:
-  workflow_run:
-    workflows: ['Validate Build'] # only run these expensive tests after unit tests, etc. pass
-    types:
-      - completed
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - '**' # Run Validate Build on all PR branches
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   workflow-steps-integration-tests:
     name: Run workflow steps integration tests, using keria:${{ matrix.keria-version }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     defaults:
       run:
         working-directory: .
     strategy:
       matrix:
-        os: ['ubuntu-latest']
         keria-version: ['0.2.0-dev3']
         node-version: ['20']
     env:
@@ -23,7 +30,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: install deps
+      - name: Install dependencies
         run: |
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
@@ -37,7 +44,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: workflow steps integration tests
+      - name: Run workflow
         run: npx jest -- --runInBand --watchAll=false --runTestsByPath ./test/integration/workflow-steps.test.ts
         # run: npx jest ./test/run-workflow-bank.test.ts -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
         # run: npx jest ./test/run-workflow-bank.test.ts --testNamePattern api-verifier-bank-test-workflow -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
