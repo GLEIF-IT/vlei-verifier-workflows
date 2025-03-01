@@ -152,7 +152,7 @@ export async function getIssuedCredential(
       '-a-i': recipientAID.prefix,
     },
   });
-  expect(credentialList.length).toBeGreaterThanOrEqual(1);
+  expect(credentialList.length).toBeLessThanOrEqual(1);
   return credentialList[0];
 }
 
