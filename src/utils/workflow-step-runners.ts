@@ -138,22 +138,29 @@ export class CredentialVerificationStepRunner extends StepRunner {
     const credVerification = new CredentialVerification();
     const presenterAid = step.presenter_aid;
     const aid = workflow_state.aids.get(presenterAid);
-    const aidInfo = workflow_state.aidsInfo.get(presenterAid)!;
+    const aidInfo = workflow_state.aidsInfo.get(presenterAid);
     let client;
-    if (aidInfo.type == 'multisig') {
+    if (
+      aidInfo !== undefined &&
+      aidInfo.type !== undefined &&
+      aidInfo.type == 'multisig'
+    ) {
       const multisigIdentifierData = aidInfo as MultisigIdentifierData;
       const multisigMemberAidInfo = workflow_state.aidsInfo.get(
-        multisigIdentifierData.identifiers![0]
-      )! as SinglesigIdentifierData;
-      client = workflow_state.clients.get(multisigMemberAidInfo.agent!.name);
+        multisigIdentifierData.identifiers[0]
+      ) as SinglesigIdentifierData;
+      client = workflow_state.clients.get(multisigMemberAidInfo.agent.name);
     } else {
       const singlesigIdentifierData = aidInfo as SinglesigIdentifierData;
-      client = workflow_state.clients.get(singlesigIdentifierData.agent!.name);
+      client = workflow_state.clients.get(singlesigIdentifierData.agent.name);
     }
 
     const credId = step.credential;
     const cred = workflow_state.credentials.get(credId);
-    const credCesr = await client!.credentials().get(cred.sad.d, true);
+    const credCesr =
+      client !== undefined
+        ? await client.credentials().get(cred.sad.d, true)
+        : undefined;
     const vleiUser: VleiUser = {
       roleClient: client,
       ecrAid: aid,

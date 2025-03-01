@@ -176,7 +176,7 @@ export async function getOrCreateAID(
 
     const op = await client
       .identifiers()
-      .addEndRole(name, 'agent', client!.agent!.pre);
+      .addEndRole(name, 'agent', client?.agent?.pre ?? undefined);
     await waitOperation(client, await op.op());
     console.log(name, 'AID:', aid.prefix);
     return aid;
@@ -300,7 +300,7 @@ export async function getOrCreateIdentifier(
     // console.log("identifiers.create", op);
     id = op.response.i;
   }
-  const eid = client.agent?.pre!;
+  const eid = client.agent?.pre ?? ''; // considering this used to be a non-null assertion, presumably it will never end up being ''
   if (!(await hasEndRole(client, name, 'agent', eid))) {
     const result: EventResult = await client
       .identifiers()
@@ -335,7 +335,7 @@ export async function getOrIssueCredential(
         cred.sad.s === schema &&
         cred.sad.i === issuerAid.prefix &&
         cred.sad.a.i === recipientAid.prefix &&
-        cred.sad.a.AID === credData.AID! &&
+        cred.sad.a.AID === credData.AID &&
         cred.status.et != 'rev'
     );
     if (credential) return credential;
@@ -619,7 +619,7 @@ export async function sendAdmitMessage(
   const [admit, sigs, aend] = await senderClient.ipex().admit({
     senderName: senderAid.name,
     message: '',
-    grantSaid: grantNotification.a.d!,
+    grantSaid: grantNotification.a.d ?? '', // presumably, since this was originally a non-null assertion, it will never be ''
     recipient: recipientAid.prefix,
     datetime: createTimestamp(),
   });
