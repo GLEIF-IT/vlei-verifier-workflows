@@ -304,10 +304,9 @@ export async function delegateMultisig(
     } with anchor ${JSON.stringify(anchor)}`
   );
 
-  // assert.equal(
-  //   JSON.stringify(delResult.serder.ked.a[0]),
-  //   JSON.stringify(anchor)
-  // );
+  expect(JSON.stringify(delResult.serder.ked.a[0])).toEqual(
+    JSON.stringify(anchor)
+  );
 
   const serder = delResult.serder;
   const sigs = delResult.sigs;
