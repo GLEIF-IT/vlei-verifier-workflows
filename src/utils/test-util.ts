@@ -11,7 +11,6 @@ import signify, {
   Tier,
 } from 'signify-ts';
 import { RetryOptions, retry } from './retry';
-import assert = require('assert');
 import { resolveEnvironment } from './resolve-env';
 import { WorkflowState } from '../workflow-state';
 import {
@@ -134,7 +133,7 @@ export async function getGrantedCredential(
   });
   let credential: any;
   if (credentialList.length > 0) {
-    assert.equal(credentialList.length, 1);
+    expect(credentialList.length).toEqual(1);
     credential = credentialList[0];
   }
   return credential;
@@ -153,7 +152,7 @@ export async function getIssuedCredential(
       '-a-i': recipientAID.prefix,
     },
   });
-  assert(credentialList.length <= 1);
+  expect(credentialList.length).toBeGreaterThanOrEqual(1);
   return credentialList[0];
 }
 
@@ -442,7 +441,7 @@ export async function getReceivedCredential(
   });
   let credential: any;
   if (credentialList.length > 0) {
-    assert.equal(credentialList.length, 1);
+    expect(credentialList.length).toEqual(1);
     credential = credentialList[0];
   }
   return credential;
@@ -566,7 +565,7 @@ export async function getOrCreateRegistry(
     (reg: { name: string }) => reg.name == registryName
   );
   if (registries.length > 0) {
-    assert.equal(registries.length, 1);
+    expect(registries.length).toEqual(1);
   } else {
     const regResult = await client
       .registries()
@@ -613,7 +612,7 @@ export async function sendAdmitMessage(
     senderClient,
     '/exn/ipex/grant'
   );
-  assert.equal(notifications.length, 1);
+  expect(notifications.length).toEqual(1);
   const grantNotification = notifications[0];
 
   const [admit, sigs, aend] = await senderClient.ipex().admit({
