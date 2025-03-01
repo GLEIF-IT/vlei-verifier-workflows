@@ -59,8 +59,6 @@ import { VleiUser } from './utils/test-data';
 import { WorkflowState } from './workflow-state';
 
 export class VleiIssuance {
-  constructor() {}
-
   // Create client for given AID
   public static async createClient(secret: string, agentName: string) {
     const workflow_state = WorkflowState.getInstance();
@@ -1200,7 +1198,6 @@ export class VleiIssuance {
       issuerAidInfo.identifiers.map((identifier: any) =>
         workflow_state.aids.get(identifier)
       ) || [];
-    let revCred: any;
     let issuerclient!: any;
     const revOps = [];
     let i = 0;
@@ -1237,7 +1234,7 @@ export class VleiIssuance {
     for (const [client, op] of revOps) {
       await waitOperation(client!, op);
     }
-    revCred = await issuerclient!.credentials().get(cred.sad.d);
+    const revCred = await issuerclient!.credentials().get(cred.sad.d);
     workflow_state.credentials.set(credId, revCred);
     if (generateTestData) {
       const tmpCred = revCred;

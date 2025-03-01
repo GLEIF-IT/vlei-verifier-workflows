@@ -31,10 +31,7 @@ export default tseslint.config(
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-extraneous-class': 'off',
       '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
-      '@typescript-eslint/no-useless-constructor': 'off',
-      '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/prefer-for-of': 'off',
-      'prefer-const': 'off',
     },
   }
 );
