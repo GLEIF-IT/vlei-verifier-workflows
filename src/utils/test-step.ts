@@ -22,7 +22,7 @@ export async function step<T>(
       `Step - ${description} - finished (${Date.now() - start}ms)\n`
     );
     return response;
-  } catch (error) {
+  } catch (_error) {
     throw new Error(`Step - ${description} - failed`);
   }
 }

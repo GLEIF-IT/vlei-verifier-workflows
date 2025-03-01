@@ -1,4 +1,3 @@
-import { VleiIssuance } from '../src/vlei-issuance';
 import path from 'path';
 import { resolveEnvironment, TestEnvironment } from '../src/utils/resolve-env';
 import { getConfig } from '../src/utils/test-data';

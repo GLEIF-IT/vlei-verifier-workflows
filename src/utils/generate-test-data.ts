@@ -1,6 +1,6 @@
 const testDataDir = 'test_data';
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
 
 export async function buildTestData(
   testData: EcrTestData,
@@ -25,9 +25,7 @@ export async function buildTestData(
     `${testDataDirPrefixed}/${fileName}`,
     testDataJson,
     'utf8',
-    (err: Error) => {
-      if (err) throw err;
-    }
+    () => ({})
   );
   return testDataDirPrefixed;
 }

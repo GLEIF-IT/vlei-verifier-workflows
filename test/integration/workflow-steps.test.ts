@@ -1,15 +1,8 @@
 import path from 'path';
-import {
-  resolveEnvironment,
-  TestEnvironment,
-} from '../../src/utils/resolve-env';
 import { getConfig } from '../../src/utils/test-data';
 import { WorkflowRunner } from '../../src/utils/run-workflow';
-import { strict as assert } from 'assert';
 import { loadWorkflow } from '../../src/utils/test-data';
 import { WorkflowState } from '../../src/workflow-state';
-
-let env: TestEnvironment;
 
 describe('testing Client creation workflow step', () => {
   test('successful client creation', async function run() {

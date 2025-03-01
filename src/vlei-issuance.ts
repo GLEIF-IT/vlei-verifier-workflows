@@ -5,7 +5,6 @@ import signify, {
   randomNonce,
   Salter,
   HabState,
-  SignifyClient,
 } from 'signify-ts';
 import {
   resolveOobi,
@@ -24,7 +23,6 @@ import {
   admitSinglesig,
   waitAndMarkNotification,
   assertOperations,
-  Aid,
   sleep,
   revokeCredential,
 } from './utils/test-util';
@@ -56,15 +54,11 @@ import {
   MultisigIdentifierData,
   SinglesigIdentifierData,
 } from './utils/handle-json-config';
-const fs = require('fs');
-const path = require('path');
 import { buildTestData, EcrTestData } from './utils/generate-test-data';
 import { VleiUser } from './utils/test-data';
 import { WorkflowState } from './workflow-state';
 
 export class VleiIssuance {
-  constructor() {}
-
   // Create client for given AID
   public static async createClient(secret: string, agentName: string) {
     const workflow_state = WorkflowState.getInstance();
@@ -99,7 +93,7 @@ export class VleiIssuance {
   public static async fetchOobis() {
     console.log('Fetching OOBIs');
     const workflow_state = WorkflowState.getInstance();
-    for (const [name, aidInfo] of workflow_state.aidsInfo) {
+    for (const [, aidInfo] of workflow_state.aidsInfo) {
       await this.fetchOobi(aidInfo);
     }
   }
@@ -118,7 +112,7 @@ export class VleiIssuance {
     } else {
       const multisigIdentifierData = identifierData as MultisigIdentifierData;
       const oobis = [];
-      for (const identifierName of multisigIdentifierData.identifiers) {
+      for (const _ of multisigIdentifierData.identifiers) {
         const identifier = workflow_state.aidsInfo.get(
           multisigIdentifierData.identifiers[0]
         ) as SinglesigIdentifierData;
@@ -136,7 +130,7 @@ export class VleiIssuance {
   public static async createContacts(identifierData: IdentifierData) {
     console.log('Creating Contacts');
     const workflow_state = WorkflowState.getInstance();
-    for (const [nameA, contactIdentifierData] of workflow_state.aidsInfo) {
+    for (const [, contactIdentifierData] of workflow_state.aidsInfo) {
       if (
         contactIdentifierData.type === 'multisig' ||
         identifierData.type === 'multisig'
@@ -183,7 +177,7 @@ export class VleiIssuance {
     ];
     console.log('Resolving OOBIs');
     const workflow_state = WorkflowState.getInstance();
-    for (const [role, client] of workflow_state.clients) {
+    for (const [, client] of workflow_state.clients) {
       schemaUrls.forEach(async (schemaUrl) => {
         await resolveOobi(client!, schemaUrl);
       });
@@ -458,7 +452,7 @@ export class VleiIssuance {
           const queryOp1 = await delegatorclient!
             .keyStates()
             .query(delegatorMultisigAid.prefix, '1');
-          const kstor1 = await waitOperation(delegatorclient!, queryOp1);
+          await waitOperation(delegatorclient!, queryOp1);
         }
 
         for (const identifier of multisigIdentifierData.identifiers) {
@@ -471,7 +465,7 @@ export class VleiIssuance {
           const ksteetor1 = await delegateeclient!
             .keyStates()
             .query(delegatorMultisigAid.prefix, '1');
-          const teeTor1 = await waitOperation(delegateeclient!, ksteetor1);
+          await waitOperation(delegateeclient!, ksteetor1);
         }
       }
 
@@ -858,8 +852,8 @@ export class VleiIssuance {
     issuerAidKey: string,
     issueeAidKey: string,
     credSourceId?: string,
-    generateTestData = false,
-    testName = 'default_test'
+    _generateTestData = false,
+    _testName = 'default_test'
   ) {
     const workflow_state = WorkflowState.getInstance();
     const credInfo: CredentialInfo =
@@ -868,11 +862,8 @@ export class VleiIssuance {
       issuerAidKey
     )! as MultisigIdentifierData;
     const recipientAidInfo = workflow_state.aidsInfo.get(issueeAidKey)!;
-    const issuerAidIdentifierName = issuerAidInfo.name;
-    const recipientAidIdentifierName = recipientAidInfo.name;
     const issuerAIDMultisig = workflow_state.aids.get(issuerAidKey);
     const recipientAID = workflow_state.aids.get(issueeAidKey);
-    const credData = credInfo.attributes;
     const schema = workflow_state.schemas[credInfo.schema];
     let rules = workflow_state.rules[credInfo.rules!];
     const privacy = credInfo.privacy;
@@ -979,7 +970,7 @@ export class VleiIssuance {
       );
 
       creds = await Promise.all(
-        issuerAids.map((aid: any, index: any) => {
+        issuerAids.map((aid: any) => {
           const singlesigData = workflow_state.aidsInfo.get(
             aid.name
           ) as SinglesigIdentifierData;
@@ -1207,7 +1198,6 @@ export class VleiIssuance {
       issuerAidInfo.identifiers.map((identifier: any) =>
         workflow_state.aids.get(identifier)
       ) || [];
-    let revCred: any;
     let issuerclient!: any;
     const revOps = [];
     let i = 0;
@@ -1225,7 +1215,7 @@ export class VleiIssuance {
         console.log(
           `Multisig AID ${issuerAid.name} received exchange message to join the credential revocation event`
         );
-        const res = await issuerclient!.groups().getRequest(msgSaid);
+        await issuerclient!.groups().getRequest(msgSaid);
       }
       const revResult = await issuerclient!
         .credentials()
@@ -1244,7 +1234,7 @@ export class VleiIssuance {
     for (const [client, op] of revOps) {
       await waitOperation(client!, op);
     }
-    revCred = await issuerclient!.credentials().get(cred.sad.d);
+    const revCred = await issuerclient!.credentials().get(cred.sad.d);
     workflow_state.credentials.set(credId, revCred);
     if (generateTestData) {
       const tmpCred = revCred;
@@ -1292,7 +1282,7 @@ export class VleiIssuance {
           workflow_state.aids.get(identifier)
         ) || [];
       const creds = await Promise.all(
-        issuerAids.map((aid: any, index: any) => {
+        issuerAids.map((aid: any) => {
           const singlesigIdentifierData = workflow_state.aidsInfo.get(
             aid.name
           ) as SinglesigIdentifierData;
@@ -1393,7 +1383,7 @@ export class VleiIssuance {
         );
       }
       sleep(1000);
-      const credsReceived = await Promise.all(
+      await Promise.all(
         recepientAids.map((aid: any) => {
           const singlesigIdentifierData = workflow_state.aidsInfo.get(
             aid.name

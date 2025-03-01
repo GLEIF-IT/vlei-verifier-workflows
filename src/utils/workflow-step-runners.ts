@@ -1,6 +1,5 @@
 import { VleiIssuance } from '../vlei-issuance';
 import { CredentialVerification } from '../credential-verification';
-import { CESRProccessor } from './cesr-parser';
 import {
   VleiUser,
   credPresentationStatusMapping,
@@ -20,7 +19,7 @@ import { VerifierClient } from 'vlei-verifier-client';
 
 export abstract class StepRunner {
   type = '';
-  public abstract run(
+  public abstract run( // considering most overriden versions of this method do not use either stepName or configJson, this method signature should be reexamined
     stepName: string,
     step: any,
     configJson: any
@@ -30,7 +29,7 @@ export abstract class StepRunner {
 export class CreateClientStepRunner extends StepRunner {
   type = 'create_client';
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
     configJson: any = null
   ): Promise<any> {
@@ -44,7 +43,7 @@ export class CreateClientStepRunner extends StepRunner {
 export class CreateAidStepRunner extends StepRunner {
   type = 'create_aid';
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
     configJson: any = null
   ): Promise<any> {
@@ -60,7 +59,7 @@ export class CreateAidStepRunner extends StepRunner {
 export class CreateRegistryStepRunner extends StepRunner {
   type = 'create_registry';
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
     configJson: any = null
   ): Promise<any> {
@@ -78,7 +77,7 @@ export class IssueCredentialStepRunner extends StepRunner {
   public async run(
     stepName: string,
     step: any,
-    configJson: any = null
+    _configJson: any = null
   ): Promise<any> {
     const result = await VleiIssuance.getOrIssueCredential(
       stepName,
@@ -97,9 +96,9 @@ export class IssueCredentialStepRunner extends StepRunner {
 export class RevokeCredentialStepRunner extends StepRunner {
   type = 'revoke_credential';
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
-    configJson: any = null
+    _configJson: any = null
   ): Promise<any> {
     const result = await VleiIssuance.revokeCredential(
       step.credential,
@@ -115,9 +114,9 @@ export class RevokeCredentialStepRunner extends StepRunner {
 export class NotifyCredentialIssueeStepRunner extends StepRunner {
   type = 'notify_credential_issuee';
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
-    configJson: any = null
+    _configJson: any = null
   ): Promise<any> {
     const result = await VleiIssuance.notifyCredentialIssuee(
       step.credential,
@@ -131,30 +130,37 @@ export class NotifyCredentialIssueeStepRunner extends StepRunner {
 export class CredentialVerificationStepRunner extends StepRunner {
   type = 'credential_verification';
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
-    configJson: any = null
+    _configJson: any = null
   ): Promise<any> {
     const workflow_state = WorkflowState.getInstance();
     const credVerification = new CredentialVerification();
     const presenterAid = step.presenter_aid;
     const aid = workflow_state.aids.get(presenterAid);
-    const aidInfo = workflow_state.aidsInfo.get(presenterAid)!;
+    const aidInfo = workflow_state.aidsInfo.get(presenterAid);
     let client;
-    if (aidInfo.type == 'multisig') {
+    if (
+      aidInfo !== undefined &&
+      aidInfo.type !== undefined &&
+      aidInfo.type == 'multisig'
+    ) {
       const multisigIdentifierData = aidInfo as MultisigIdentifierData;
       const multisigMemberAidInfo = workflow_state.aidsInfo.get(
-        multisigIdentifierData.identifiers![0]
-      )! as SinglesigIdentifierData;
-      client = workflow_state.clients.get(multisigMemberAidInfo.agent!.name);
+        multisigIdentifierData.identifiers[0]
+      ) as SinglesigIdentifierData;
+      client = workflow_state.clients.get(multisigMemberAidInfo.agent.name);
     } else {
       const singlesigIdentifierData = aidInfo as SinglesigIdentifierData;
-      client = workflow_state.clients.get(singlesigIdentifierData.agent!.name);
+      client = workflow_state.clients.get(singlesigIdentifierData.agent.name);
     }
 
     const credId = step.credential;
     const cred = workflow_state.credentials.get(credId);
-    const credCesr = await client!.credentials().get(cred.sad.d, true);
+    const credCesr =
+      client !== undefined
+        ? await client.credentials().get(cred.sad.d, true)
+        : undefined;
     const vleiUser: VleiUser = {
       roleClient: client,
       ecrAid: aid,
@@ -189,7 +195,11 @@ export class CredentialVerificationStepRunner extends StepRunner {
 export class AddRootOfTrustStepRunner extends StepRunner {
   type = 'add_root_of_trust';
 
-  public async run(stepName: string, step: any, configJson: any): Promise<any> {
+  public async run(
+    _stepName: string,
+    step: any,
+    configJson: any
+  ): Promise<any> {
     const env = resolveEnvironment();
     const rot_aid = step.rot_aid;
     const rot_member_aid = step.rot_member_aid;

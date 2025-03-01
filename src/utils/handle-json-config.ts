@@ -67,7 +67,6 @@ export function buildCredentials(jsonConfig: any): Map<string, CredentialInfo> {
 }
 
 export async function buildAidData(jsonConfig: any): Promise<any> {
-  const users: User[] = new Array<User>();
   const identifiers = structuredClone(jsonConfig.identifiers);
   for (const key of Object.keys(identifiers)) {
     if (identifiers[key]['agent']) {

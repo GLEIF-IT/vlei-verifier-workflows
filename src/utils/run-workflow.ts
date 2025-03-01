@@ -1,4 +1,3 @@
-import { VleiIssuance } from '../vlei-issuance';
 import { WorkflowState } from '../workflow-state';
 
 import {
@@ -12,9 +11,6 @@ import {
   CreateRegistryStepRunner,
   AddRootOfTrustStepRunner,
 } from './workflow-step-runners';
-
-const fs = require('fs');
-const yaml = require('js-yaml');
 
 export class WorkflowRunner {
   stepRunners: Map<string, StepRunner> = new Map<string, StepRunner>();
