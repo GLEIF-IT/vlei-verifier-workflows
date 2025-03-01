@@ -365,8 +365,6 @@ export async function revokeCredential(
   issuerAid: Aid,
   credentialSaid: string
 ): Promise<any> {
-  const credentialList = await issuerClient.credentials().list();
-
   const revResult = await issuerClient
     .credentials()
     .revoke(issuerAid.name, credentialSaid);
@@ -550,7 +548,6 @@ export async function waitOperation<T = any>(
     op = await client.operations().get(op);
   }
 
-  const oplist = await client.operations().list();
   op = await client
     .operations()
     .wait(op, { signal: signal ?? AbortSignal.timeout(60000) });
@@ -601,10 +598,10 @@ export async function sendGrantMessage(
     datetime: createTimestamp(),
   });
 
-  let op = await senderClient
+  const op = await senderClient
     .ipex()
     .submitGrant(senderAid.name, grant, gsigs, gend, [recipientAid.prefix]);
-  op = await waitOperation(senderClient, op);
+  await waitOperation(senderClient, op);
 }
 
 export async function sendAdmitMessage(
@@ -627,10 +624,10 @@ export async function sendAdmitMessage(
     datetime: createTimestamp(),
   });
 
-  let op = await senderClient
+  const op = await senderClient
     .ipex()
     .submitAdmit(senderAid.name, admit, sigs, aend, [recipientAid.prefix]);
-  op = await waitOperation(senderClient, op);
+  await waitOperation(senderClient, op);
 
   await markAndRemoveNotification(senderClient, grantNotification);
 }

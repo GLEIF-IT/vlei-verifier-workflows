@@ -1,5 +1,4 @@
 import { SignifyClient } from 'signify-ts';
-import path = require('path');
 
 const fs = require('fs');
 const yaml = require('js-yaml');

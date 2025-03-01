@@ -9,7 +9,7 @@ import signify, {
   d,
   messagize,
 } from 'signify-ts';
-import { getStates, waitForNotifications, waitOperation } from './test-util';
+import { getStates, waitForNotifications } from './test-util';
 import assert = require('assert');
 
 export interface AcceptMultisigInceptArgs {
