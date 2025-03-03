@@ -1,5 +1,6 @@
 const testDataDir = 'test_data';
 import * as fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 
 export async function buildTestData(
@@ -21,12 +22,15 @@ export async function buildTestData(
   testData.credential['issueName'] = issueName;
   const testDataJson = JSON.stringify(testData);
   const fileName = `${fileNamePrefix}${testData.lei}_${testData.aid}_${testData.engagementContextRole}.json`;
-  await fs.writeFile(
-    `${testDataDirPrefixed}/${fileName}`,
-    testDataJson,
-    'utf8',
-    () => ({})
-  );
+  try {
+    await fsPromises.writeFile(
+      `${testDataDirPrefixed}/${fileName}`,
+      testDataJson,
+      'utf8'
+    );
+  } catch (err) {
+    throw err;
+  }
   return testDataDirPrefixed;
 }
 

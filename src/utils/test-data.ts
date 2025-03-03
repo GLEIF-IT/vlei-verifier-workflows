@@ -14,7 +14,7 @@ export function loadWorkflow(workflowFilePath: string) {
   }
 }
 
-export async function getConfig(configFilePath: string) {
+export function getConfig(configFilePath: string) {
   const configJson = JSON.parse(fs.readFileSync(configFilePath, 'utf-8'));
   return configJson;
 }
