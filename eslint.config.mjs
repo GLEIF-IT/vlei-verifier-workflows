@@ -28,7 +28,6 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
-      '@typescript-eslint/no-extraneous-class': 'off',
       '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
     },
   }
