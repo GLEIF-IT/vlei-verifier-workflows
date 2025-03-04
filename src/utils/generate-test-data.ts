@@ -29,7 +29,10 @@ export async function buildTestData(
       'utf8'
     );
   } catch (err) {
-    throw err;
+    if (!(err instanceof Error)) {
+      err = new Error(String(err)); // if it's not an error, make it one
+    }
+    throw new Error('Error writing test data: ' + err.message);
   }
   return testDataDirPrefixed;
 }
