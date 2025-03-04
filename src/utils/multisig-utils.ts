@@ -9,8 +9,7 @@ import signify, {
   d,
   messagize,
 } from 'signify-ts';
-import { getStates, waitForNotifications, waitOperation } from './test-util';
-import assert = require('assert');
+import { getStates, waitForNotifications } from './test-util';
 
 export interface AcceptMultisigInceptArgs {
   groupName: string;
@@ -305,8 +304,7 @@ export async function delegateMultisig(
     } with anchor ${JSON.stringify(anchor)}`
   );
 
-  assert.equal(
-    JSON.stringify(delResult.serder.ked.a[0]),
+  expect(JSON.stringify(delResult.serder.ked.a[0])).toEqual(
     JSON.stringify(anchor)
   );
 
@@ -412,8 +410,8 @@ export async function issueCredentialMultisig(
   const op = credResult.op;
 
   const multisigAID = await client.identifiers().get(multisigAIDName);
-  const keeper = client.manager!.get(multisigAID);
-  const sigs = await keeper.sign(signify.b(credResult.anc.raw));
+  const keeper = client.manager?.get(multisigAID) ?? undefined;
+  const sigs = (await keeper?.sign(signify.b(credResult.anc.raw))) ?? [];
   const sigers = sigs.map((sig: string) => new signify.Siger({ qb64: sig }));
   const ims = signify.d(signify.messagize(credResult.anc, sigers));
   const atc = ims.substring(credResult.anc.size);
@@ -450,8 +448,8 @@ export async function multisigRevoke(
   const groupHab = await client.identifiers().get(groupName);
   const members = await client.identifiers().members(groupName);
 
-  const keeper = client.manager!.get(groupHab);
-  const sigs = await keeper.sign(signify.b(anc.raw));
+  const keeper = client.manager?.get(groupHab) ?? undefined;
+  const sigs = (await keeper?.sign(signify.b(anc.raw))) ?? [];
   const sigers = sigs.map((sig: string) => new signify.Siger({ qb64: sig }));
   const ims = signify.d(signify.messagize(anc, sigers));
   const atc = ims.substring(anc.size);

@@ -11,7 +11,6 @@ import signify, {
   Tier,
 } from 'signify-ts';
 import { RetryOptions, retry } from './retry';
-import assert = require('assert');
 import { resolveEnvironment } from './resolve-env';
 import { WorkflowState } from '../workflow-state';
 import {
@@ -134,7 +133,7 @@ export async function getGrantedCredential(
   });
   let credential: any;
   if (credentialList.length > 0) {
-    assert.equal(credentialList.length, 1);
+    expect(credentialList.length).toEqual(1);
     credential = credentialList[0];
   }
   return credential;
@@ -153,7 +152,7 @@ export async function getIssuedCredential(
       '-a-i': recipientAID.prefix,
     },
   });
-  assert(credentialList.length <= 1);
+  expect(credentialList.length).toBeLessThanOrEqual(1);
   return credentialList[0];
 }
 
@@ -176,7 +175,7 @@ export async function getOrCreateAID(
 
     const op = await client
       .identifiers()
-      .addEndRole(name, 'agent', client!.agent!.pre);
+      .addEndRole(name, 'agent', client?.agent?.pre ?? undefined);
     await waitOperation(client, await op.op());
     console.log(name, 'AID:', aid.prefix);
     return aid;
@@ -300,7 +299,7 @@ export async function getOrCreateIdentifier(
     // console.log("identifiers.create", op);
     id = op.response.i;
   }
-  const eid = client.agent?.pre!;
+  const eid = client.agent?.pre ?? ''; // considering this used to be a non-null assertion, presumably it will never end up being ''
   if (!(await hasEndRole(client, name, 'agent', eid))) {
     const result: EventResult = await client
       .identifiers()
@@ -335,7 +334,7 @@ export async function getOrIssueCredential(
         cred.sad.s === schema &&
         cred.sad.i === issuerAid.prefix &&
         cred.sad.a.i === recipientAid.prefix &&
-        cred.sad.a.AID === credData.AID! &&
+        cred.sad.a.AID === credData.AID &&
         cred.status.et != 'rev'
     );
     if (credential) return credential;
@@ -365,8 +364,6 @@ export async function revokeCredential(
   issuerAid: Aid,
   credentialSaid: string
 ): Promise<any> {
-  const credentialList = await issuerClient.credentials().list();
-
   const revResult = await issuerClient
     .credentials()
     .revoke(issuerAid.name, credentialSaid);
@@ -444,7 +441,7 @@ export async function getReceivedCredential(
   });
   let credential: any;
   if (credentialList.length > 0) {
-    assert.equal(credentialList.length, 1);
+    expect(credentialList.length).toEqual(1);
     credential = credentialList[0];
   }
   return credential;
@@ -550,7 +547,6 @@ export async function waitOperation<T = any>(
     op = await client.operations().get(op);
   }
 
-  const oplist = await client.operations().list();
   op = await client
     .operations()
     .wait(op, { signal: signal ?? AbortSignal.timeout(60000) });
@@ -569,7 +565,7 @@ export async function getOrCreateRegistry(
     (reg: { name: string }) => reg.name == registryName
   );
   if (registries.length > 0) {
-    assert.equal(registries.length, 1);
+    expect(registries.length).toEqual(1);
   } else {
     const regResult = await client
       .registries()
@@ -601,10 +597,10 @@ export async function sendGrantMessage(
     datetime: createTimestamp(),
   });
 
-  let op = await senderClient
+  const op = await senderClient
     .ipex()
     .submitGrant(senderAid.name, grant, gsigs, gend, [recipientAid.prefix]);
-  op = await waitOperation(senderClient, op);
+  await waitOperation(senderClient, op);
 }
 
 export async function sendAdmitMessage(
@@ -616,21 +612,21 @@ export async function sendAdmitMessage(
     senderClient,
     '/exn/ipex/grant'
   );
-  assert.equal(notifications.length, 1);
+  expect(notifications.length).toEqual(1);
   const grantNotification = notifications[0];
 
   const [admit, sigs, aend] = await senderClient.ipex().admit({
     senderName: senderAid.name,
     message: '',
-    grantSaid: grantNotification.a.d!,
+    grantSaid: grantNotification.a.d ?? '', // presumably, since this was originally a non-null assertion, it will never be ''
     recipient: recipientAid.prefix,
     datetime: createTimestamp(),
   });
 
-  let op = await senderClient
+  const op = await senderClient
     .ipex()
     .submitAdmit(senderAid.name, admit, sigs, aend, [recipientAid.prefix]);
-  op = await waitOperation(senderClient, op);
+  await waitOperation(senderClient, op);
 
   await markAndRemoveNotification(senderClient, grantNotification);
 }
