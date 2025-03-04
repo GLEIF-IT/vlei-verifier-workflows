@@ -534,13 +534,13 @@ export class VleiIssuance {
         );
 
         // Wait for all role operations to complete for each client!
-        for (let i = 0; i < roleOps.length; i++) {
-          for (let j = 0; j < roleOps[i].length; j++) {
+        for (const [i, roleOpGroup] of roleOps.entries()) {
+          for (const roleOp of roleOpGroup) {
             const tmpAidData = workflow_state.aidsInfo.get(
               issuerAids[i].name
             ) as SinglesigIdentifierData;
             const client = workflow_state.clients.get(tmpAidData.agent.name);
-            await waitOperation(client!, roleOps[i][j]);
+            await waitOperation(client!, roleOp);
           }
         }
 
