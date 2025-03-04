@@ -1,0 +1,266 @@
+workflow:
+  steps:
+    gleif_client:
+      id: 'gleif_client'
+      type: 'create_client'
+      agent_name: 'gleif-agent-1'
+      description: 'Creating client for gleif-agent-1'
+    qvi_client:
+      id: 'qvi_client'
+      type: 'create_client'
+      agent_name: 'qvi-agent-1'
+      description: 'Creating client for qvi-agent-1'
+    le_client:
+      id: 'le_client'
+      type: 'create_client'
+      agent_name: 'le-agent-1'
+      description: 'Creating client for le-agent-1'
+    ecr_client1:
+      id: 'ecr_client1'
+      type: 'create_client'
+      agent_name: 'ecr-agent-1'
+      description: 'Creating client for ecr-agent-1'    
+    ecr_client2:
+      id: 'ecr_client2'
+      type: 'create_client'
+      agent_name: 'ecr-agent-2'
+      description: 'Creating client for ecr-agent-2'
+    ecr_client3:
+      id: 'ecr_client3'
+      type: 'create_client'
+      agent_name: 'ecr-agent-3'
+      description: 'Creating client for ecr-agent-3'
+    ecr_client4:
+      id: 'ecr_client4'
+      type: 'create_client'
+      agent_name: 'ecr-agent-4'
+      description: 'Creating client for ecr-agent-4'
+    ecr_client5:
+      id: 'ecr_client5'
+      type: 'create_client'
+      agent_name: 'ecr-agent-5'
+      description: 'Creating client for ecr-agent-5'
+    gleif_aid:
+      id: 'gleif_aid'
+      type: 'create_aid'
+      aid: 'gleif-aid-1'
+      description: 'Creating AID: gleif-aid-1'
+    qvi_aid:
+      id: 'qvi_aid'
+      type: 'create_aid'
+      aid: 'qvi-aid-1'
+      description: 'Creating AID: qvi-aid-1'
+    le_aid:
+      id: 'le_aid'
+      type: 'create_aid'
+      aid: 'le-aid-1'
+      description: 'Creating AID: le-aid-1'
+    ecr_aid1:
+      id: 'ecr_aid1'
+      type: 'create_aid'
+      aid: 'ecr-aid-1'
+      description: 'Creating AID: ecr-aid-1'
+    ecr_aid2:
+      id: 'ecr_aid2'
+      type: 'create_aid'
+      aid: 'ecr-aid-2'
+      description: 'Creating AID: ecr-aid-2'
+    ecr_aid3:
+      id: 'ecr_aid3'
+      type: 'create_aid'
+      aid: 'ecr-aid-3'
+      description: 'Creating AID: ecr-aid-3'
+    ecr_aid4:
+      id: 'ecr_aid4'
+      type: 'create_aid'
+      aid: 'ecr-aid-4'
+      description: 'Creating AID: ecr-aid-4'
+    ecr_aid5:
+      id: 'ecr_aid5'
+      type: 'create_aid'
+      aid: 'ecr-aid-5'
+      description: 'Creating AID: ecr-aid-5'
+    gleif_registry:
+      id: 'gleif_registry'
+      type: 'create_registry'
+      aid: 'gleif-aid-1'
+      description: 'Creating registry for gleif-aid-1'
+    qvi_registry:
+      id: 'qvi_registry'
+      type: 'create_registry'
+      aid: 'qvi-aid-1'
+      description: 'Creating registry for qvi-aid-1'
+    le_registry:
+      id: 'le_registry'
+      type: 'create_registry'
+      aid: 'le-aid-1'
+      description: 'Creating registry for le-aid-1'
+    ecr_registry1:
+      id: 'ecr_registry1'
+      type: 'create_registry'
+      aid: 'ecr-aid-1'
+      description: 'Creating registry for ecr-aid-1'
+    ecr_registry2:
+      id: 'ecr_registry2'
+      type: 'create_registry'
+      aid: 'ecr-aid-2'
+      description: 'Creating registry for ecr-aid-2'
+    ecr_registry3:
+      id: 'ecr_registry3'
+      type: 'create_registry'
+      aid: 'ecr-aid-3'
+      description: 'Creating registry for ecr-aid-3'
+    ecr_registry4:
+      id: 'ecr_registry4'
+      type: 'create_registry'
+      aid: 'ecr-aid-4'
+      description: 'Creating registry for ecr-aid-4'
+    ecr_registry5:
+      id: 'ecr_registry5'
+      type: 'create_registry'
+      aid: 'ecr-aid-5'
+      description: 'Creating registry for ecr-aid-5'
+    qvi_cred:
+      id: 'qvi_cred'
+      type: 'issue_credential'
+      attributes:
+        LEI: '254900OPPU84GM83MG36'
+      issuer_aid: 'gleif-aid-1'
+      issuee_aid: 'qvi-aid-1'
+      description: 'GLEIF issues QVI vLEI credential'
+      credential: 'gleif_to_qvi_vlei_cred'
+    le_cred:
+      id: 'le_cred'
+      type: 'issue_credential'
+      attributes:
+        LEI: '875500ELOZEL05BVXV37'
+      issuer_aid: 'qvi-aid-1'
+      issuee_aid: 'le-aid-1'
+      description: 'QVI issues LE vLEI credential'
+      credential: 'qvi_to_le_vlei_cred'
+      credential_source: 'qvi_cred'    
+    ecr_cred1:
+      id: 'ecr_cred1'
+      type: 'issue_credential'
+      attributes:
+        personLegalName: 'John Doe'
+        LEI: '875500ELOZEL05BVXV37'
+      issuer_aid: 'le-aid-1'
+      issuee_aid: 'ecr-aid-1'
+      description: 'LE issues ECR vLEI credential'
+      credential: 'le_to_ecr_vlei_cred'
+      credential_source: 'le_cred'
+    ecr_cred2:
+      id: 'ecr_cred2'
+      type: 'issue_credential'
+      attributes:
+        personLegalName: 'John Doe 2'
+        LEI: '875500ELOZEL05BVXV37'
+      issuer_aid: 'le-aid-1'
+      issuee_aid: 'ecr-aid-2'
+      description: 'LE issues ECR vLEI credential'
+      credential: 'le_to_ecr_vlei_cred'
+      credential_source: 'le_cred'
+    ecr_cred3:
+      id: 'ecr_cred3'
+      type: 'issue_credential'
+      attributes:
+        personLegalName: 'John Doe 3'
+        LEI: '875500ELOZEL05BVXV37'
+      issuer_aid: 'le-aid-1'
+      issuee_aid: 'ecr-aid-3'
+      description: 'LE issues ECR vLEI credential'
+      credential: 'le_to_ecr_vlei_cred'
+      credential_source: 'le_cred'
+    ecr_cred4:
+      id: 'ecr_cred4'
+      type: 'issue_credential'
+      attributes:
+        personLegalName: 'John Doe 4'
+        LEI: '875500ELOZEL05BVXV37'
+      issuer_aid: 'le-aid-1'
+      issuee_aid: 'ecr-aid-4'
+      description: 'LE issues ECR vLEI credential'
+      credential: 'le_to_ecr_vlei_cred'
+      credential_source: 'le_cred'
+    ecr_cred5:
+      id: 'ecr_cred5'
+      type: 'issue_credential'
+      attributes:
+        personLegalName: 'John Doe 5'
+        LEI: '875500ELOZEL05BVXV37'
+      issuer_aid: 'le-aid-1'
+      issuee_aid: 'ecr-aid-5'
+      description: 'LE issues ECR vLEI credential'
+      credential: 'le_to_ecr_vlei_cred'
+      credential_source: 'le_cred'    
+    add_root_of_trust:
+      id: 'add_root_of_trust'
+      type: 'add_root_of_trust'
+      rot_aid: 'gleif-aid-1'
+      description: 'Adding Root of Trust'
+    credential_verification_valid_verified1:
+      id: 'credential_verification_valid_verified1'
+      type: 'credential_verification'
+      presenter_aid: 'ecr-aid-1'
+      description: 'Running Credential Verification for ecr-aid-1'
+      credential: 'ecr_cred1'
+      actions:
+        present:
+          type: 'presentation'
+          expected_status: 'cred_crypt_valid'
+        authorize:
+          type: 'authorization'
+          expected_status: 'cred_verified'
+    credential_verification_valid_verified2:
+      id: 'credential_verification_valid_verified2'
+      type: 'credential_verification'
+      presenter_aid: 'ecr-aid-2'
+      description: 'Running Credential Verification for ecr-aid-2'
+      credential: 'ecr_cred2'
+      actions:
+        present:
+          type: 'presentation'
+          expected_status: 'cred_crypt_valid'
+        authorize:
+          type: 'authorization'
+          expected_status: 'cred_verified'
+    credential_verification_valid_verified3:
+      id: 'credential_verification_valid_verified3'
+      type: 'credential_verification'
+      presenter_aid: 'ecr-aid-3'
+      description: 'Running Credential Verification for ecr-aid-3'
+      credential: 'ecr_cred3'
+      actions:
+        present:
+          type: 'presentation'
+          expected_status: 'cred_crypt_valid'
+        authorize:
+          type: 'authorization'
+          expected_status: 'cred_verified'
+    credential_verification_valid_verified4:
+      id: 'credential_verification_valid_verified4'
+      type: 'credential_verification'
+      presenter_aid: 'ecr-aid-4'
+      description: 'Running Credential Verification for ecr-aid-4'
+      credential: 'ecr_cred4'
+      actions:
+        present:
+          type: 'presentation'
+          expected_status: 'cred_crypt_valid'
+        authorize:
+          type: 'authorization'
+          expected_status: 'cred_verified'
+    credential_verification_valid_verified5:
+      id: 'credential_verification_valid_verified5'
+      type: 'credential_verification'
+      presenter_aid: 'ecr-aid-5'
+      description: 'Running Credential Verification for ecr-aid-5'
+      credential: 'ecr_cred5'
+      actions:
+        present:
+          type: 'presentation'
+          expected_status: 'cred_crypt_valid'
+        authorize:
+          type: 'authorization'
+          expected_status: 'cred_verified'
