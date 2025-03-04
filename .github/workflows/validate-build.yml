@@ -45,6 +45,9 @@ jobs:
       - name: Run Prettier
         run: npm run pretty:check
 
+      - name: Run dependency check
+        run: npm run dependency-check
+
       - name: Build
         run: npm run build
 

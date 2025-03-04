@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer/index.js';
 import { createHash } from 'crypto';
 
 export function generateFileDigest(buffer: Buffer): string {
