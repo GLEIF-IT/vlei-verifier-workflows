@@ -39,7 +39,7 @@ export async function buildTestData(
 
 export interface EcrTestData {
   aid: string;
-  credential: any;
+  credential: { raw: string; cesr: string; issueName?: string };
   lei: string;
   engagementContextRole: string;
 }
