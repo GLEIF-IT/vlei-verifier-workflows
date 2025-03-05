@@ -1,6 +1,6 @@
 {
   "name": "vlei-verifier-workflows",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "MIT",
   "type": "module",

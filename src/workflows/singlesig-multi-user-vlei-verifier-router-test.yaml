@@ -19,7 +19,7 @@ workflow:
       id: 'ecr_client1'
       type: 'create_client'
       agent_name: 'ecr-agent-1'
-      description: 'Creating client for ecr-agent-1'    
+      description: 'Creating client for ecr-agent-1'
     ecr_client2:
       id: 'ecr_client2'
       type: 'create_client'
@@ -138,7 +138,7 @@ workflow:
       issuee_aid: 'le-aid-1'
       description: 'QVI issues LE vLEI credential'
       credential: 'qvi_to_le_vlei_cred'
-      credential_source: 'qvi_cred'    
+      credential_source: 'qvi_cred'
     ecr_cred1:
       id: 'ecr_cred1'
       type: 'issue_credential'
@@ -193,7 +193,7 @@ workflow:
       issuee_aid: 'ecr-aid-5'
       description: 'LE issues ECR vLEI credential'
       credential: 'le_to_ecr_vlei_cred'
-      credential_source: 'le_cred'    
+      credential_source: 'le_cred'
     add_root_of_trust:
       id: 'add_root_of_trust'
       type: 'add_root_of_trust'

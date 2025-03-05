@@ -23,8 +23,8 @@ export {
   CreateRegistryStepRunner,
   AddRootOfTrustStepRunner,
   NotifyCredentialIssueeStepRunner,
-  CredentialVerificationStepRunner
+  CredentialVerificationStepRunner,
 } from './utils/workflow-step-runners';
-export { WorkflowState } from './workflow-state'
+export { WorkflowState } from './workflow-state';
 export { VleiIssuance } from './vlei-issuance';
 export { getOrCreateClients } from './utils/test-util';
