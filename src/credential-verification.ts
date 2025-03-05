@@ -1,4 +1,4 @@
-import { resolveEnvironment } from './utils/resolve-env';
+import { resolveEnvironment, TestEnvironment } from './utils/resolve-env';
 import {
   CREDENTIAL_CRYPT_VALID,
   CREDENTIAL_VERIFIED,
@@ -10,7 +10,7 @@ import { strict as assert } from 'assert';
 import { VerifierClient } from 'vlei-verifier-client';
 
 export class CredentialVerification {
-  private env: any;
+  private env: TestEnvironment;
   private verifierClient: VerifierClient;
   constructor() {
     this.env = resolveEnvironment();
@@ -46,8 +46,8 @@ export class CredentialVerification {
   }
 
   private async presentCredential(
-    cred: any,
-    credCesr: any,
+    cred: { sad: { d: string } },
+    credCesr: string,
     expected_status_code: number
   ) {
     const verifierResponse = await this.verifierClient.login(
