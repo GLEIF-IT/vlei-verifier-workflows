@@ -61,16 +61,17 @@ const path = require('path');
 import { buildTestData, EcrTestData } from './utils/generate-test-data';
 import { VleiUser } from './utils/test-data';
 import { WorkflowState } from './workflow-state';
+import { TestKeria } from './utils/test-keria';
 
 export class VleiIssuance {
   constructor() {}
 
   // Create client for given AID
-  public static async createClient(secret: string, agentName: string) {
+  public static async createClient(testKeria: TestKeria, secret: string, agentName: string) {
     const workflow_state = WorkflowState.getInstance();
     console.log(`Creating client for secret: ${secret}`);
 
-    const client = await getOrCreateClients(1, [secret], false);
+    const client = await getOrCreateClients(testKeria, 1, [secret], false);
     workflow_state.clients.set(agentName, client![0]);
     return true;
   }

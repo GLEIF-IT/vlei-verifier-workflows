@@ -4,16 +4,18 @@ import * as os from 'os';
 import { TestPaths } from './test-paths';
 import { URL } from 'url';
 import { runDockerCompose, stopDockerCompose } from './test-docker';
-import axios from 'axios';
 import minimist = require('minimist');
 import * as dockerode from 'dockerode';
 import Dockerode = require('dockerode');
 import { DockerLock } from './docker-lock';
+import { Workflow } from '../types/workflow';
 
 export const ARG_KERIA_ADMIN_PORT = 'keria-admin-port';
 export const ARG_KERIA_HTTP_PORT = 'keria-http-port';
 export const ARG_KERIA_BOOT_PORT = 'keria-boot-port';
 export const ARG_KERIA_START_PORT = 'keria-start-port';
+
+const keriaImage = `weboftrust/keria:0.2.0-dev4`;
 
 export interface KeriaConfig {
   dt?: string;
@@ -25,7 +27,7 @@ export interface KeriaConfig {
   durls?: string[];
 }
 export class TestKeria {
-  private static instance: TestKeria;
+  private static instances: Map<string, TestKeria> = new Map<string, TestKeria>();
   public testPaths: TestPaths;
   public keriaAdminPort: number;
   public keriaAdminUrl: URL;
@@ -43,7 +45,6 @@ export class TestKeria {
   >();
   public docker = new Dockerode();
   private dockerLock = DockerLock.getInstance();
-  private static readonly SERVICE_NAME = 'keria';
 
   private constructor(
     testPaths: TestPaths,
@@ -80,29 +81,35 @@ export class TestKeria {
       ],
     };
   }
-  public static getInstance(
+  public static async getInstance(
+    instanceName: string,
     testPaths?: TestPaths,
     domain?: string,
     host?: string,
     containerLocalhost?: string,
-    baseAdminPort?: number,
-    baseHttpPort?: number,
-    baseBootPort?: number,
+    basePort?: number,
     offset?: number
-  ): TestKeria {
-    if (!TestKeria.instance) {
+  ): Promise<TestKeria> {
+    if (!TestKeria.instances) {
+      TestKeria.instances = new Map<string, TestKeria>();
+    }
+    
+    if (!instanceName) {
+      throw new Error('TestKeria.getInstance(instanceName) must be called with an instanceName');
+    }
+
+    if (!TestKeria.instances.get(instanceName)) {
       if (testPaths === undefined) {
         throw new Error(
-          'TestKeria.getInstance() called without arguments means we expected it to be initialized earlier. This must be done with great care to avoid unexpected side effects.'
+          `TestKeria.getInstance() called for agent "${instanceName}" without required parameters. You must initialize it with all parameters first.`
         );
       } else {
         const args = TestKeria.processKeriaArgs(
-          baseAdminPort!,
-          baseHttpPort!,
-          baseBootPort!,
-          offset
+          basePort!+1+offset!,
+          basePort!+2+offset!,
+          basePort!+3+offset!,
         );
-        TestKeria.instance = new TestKeria(
+        TestKeria.instances.set(instanceName, new TestKeria(
           testPaths!,
           domain!,
           host!,
@@ -110,21 +117,22 @@ export class TestKeria {
           parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
           parseInt(args[ARG_KERIA_HTTP_PORT], 10),
           parseInt(args[ARG_KERIA_BOOT_PORT], 10)
-        );
+        ));
+        const keria = TestKeria.instances.get(instanceName);
+        await keria.beforeAll(keriaImage, instanceName, false);
       }
     } else if (testPaths !== undefined) {
       console.warn(
-        'TestEnvironment.getInstance() called with arguments, but instance already exists. Overriding original config. This must be done with great care to avoid unexpected side effects.'
+        `TestKeria.getInstance() called with arguments for "${instanceName}", but instance already exists. Overriding original config. This must be done with great care to avoid unexpected side effects.`
       );
     }
-    return TestKeria.instance;
+    return TestKeria.instances.get(instanceName)!;
   }
 
   public static processKeriaArgs(
     baseAdminPort: number,
     baseHttpPort: number,
     baseBootPort: number,
-    offset = 0
   ): minimist.ParsedArgs {
     // Parse command-line arguments using minimist
     const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
@@ -136,13 +144,13 @@ export class TestKeria {
       default: {
         [ARG_KERIA_ADMIN_PORT]: process.env.KERIA_ADMIN_PORT
           ? parseInt(process.env.KERIA_ADMIN_PORT)
-          : baseAdminPort + offset,
+          : baseAdminPort,
         [ARG_KERIA_HTTP_PORT]: process.env.KERIA_HTTP_PORT
           ? parseInt(process.env.KERIA_HTTP_PORT)
-          : baseHttpPort + offset,
+          : baseHttpPort,
         [ARG_KERIA_BOOT_PORT]: process.env.KERIA_BOOT_PORT
           ? parseInt(process.env.KERIA_BOOT_PORT)
-          : baseBootPort + offset,
+          : baseBootPort,
       },
       '--': true,
       unknown: (arg) => {
@@ -154,37 +162,23 @@ export class TestKeria {
     return args;
   }
 
-  public async beforeAll(
-    imageName: string,
-    containerName: string = 'keria',
-    pullImage: boolean = false
-  ) {
-    runDockerCompose(this.testPaths.dockerComposeFile, 'up', 'verify');
-
+  async beforeAll(keriaImage: string, containerPostfix: string, refresh: boolean) {
     console.log('Starting beforeAll execution...');
-    await this.dockerLock.acquireForService(TestKeria.SERVICE_NAME);
-
-    console.log(`Checking if service ${TestKeria.SERVICE_NAME} is running...`);
-    const isRunning = this.dockerLock.isServiceRunning(TestKeria.SERVICE_NAME);
-    console.log(`Service running status: ${isRunning}`);
-
-    // Force container creation regardless of service status
-    console.log(
-      `Starting Keria container ${containerName} with image ${imageName}`
-    );
     try {
-      await this.startContainer(imageName, containerName, pullImage);
+      // Check if service is running
+      console.log('Checking if service keria is running...');
+      const isRunning = await this.checkServiceRunning();
+      console.log('Service running status:', isRunning);
 
-      // Wait for container to be ready
-      await this.waitForContainer(containerName);
-
-      // Store container reference
-      const container = await this.docker.getContainer(containerName);
-      this.containers.set(containerName, container);
-
-      console.log(`Keria container ${containerName} started successfully`);
+      if (!isRunning) {
+        const containerName = `keria-${containerPostfix}`;
+        console.log(`Starting Keria container ${containerName} with image ${keriaImage}`);
+        await this.startContainer(keriaImage, containerName, refresh);
+        await this.waitForContainer(containerName);
+        console.log(`Keria container ${containerName} started successfully`);
+      }
     } catch (error) {
-      console.error('Error starting Keria container:', error);
+      console.error('Error in beforeAll:', error);
       throw error;
     }
   }
@@ -244,11 +238,11 @@ export class TestKeria {
           '--loglevel',
           'DEBUG',
           '-a',
-          '20001',
+          `${this.keriaAdminPort}`,
           '-H',
-          '20002',
+          `${this.keriaHttpPort}`,
           '-B',
-          '20003',
+          `${this.keriaBootPort}`,
         ];
       }
 
@@ -281,10 +275,8 @@ export class TestKeria {
     const startTime = Date.now();
     while (Date.now() - startTime < timeout) {
       try {
-        const response = await fetch(
-          `http://${this.host}:${this.keriaHttpPort}/spec.yaml`
-        );
-        if (response.ok) {
+        const response = await this.checkServiceRunning();
+        if (response) {
           console.log(`Container ${containerName} is ready`);
           return;
         }
@@ -298,135 +290,54 @@ export class TestKeria {
     );
   }
 
-  async afterAll(clean = true) {
-    const shouldStop = await this.dockerLock.releaseService(
-      TestKeria.SERVICE_NAME
-    );
+  async afterAll(containerName: string) {
+    console.log('Starting afterAll cleanup...');
+    try {
+      // Clean up test data
+      console.log('Cleaning up test data');
 
-    if (shouldStop && clean) {
-      console.log('Starting afterAll cleanup...');
-      try {
-        console.log('Cleaning up test data');
-
-        // Clean up containers with force option
-        for (const [name, container] of this.containers) {
-          try {
-            console.log(`Stopping container ${name}...`);
-            try {
-              await Promise.race([
-                container.stop(),
-                new Promise((_, reject) =>
-                  setTimeout(
-                    () => reject(new Error('Container stop timeout')),
-                    5000
-                  )
-                ),
-              ]);
-            } catch (error) {
-              const stopError = error as Error;
-              console.log(
-                `Warning: Error stopping container ${name}, proceeding with force remove:`,
-                stopError?.message || 'Unknown error'
-              );
-            }
-
-            console.log(`Force removing container ${name}...`);
-            await Promise.race([
-              container.remove({ force: true }), // Add force: true option
-              new Promise((_, reject) =>
-                setTimeout(
-                  () => reject(new Error('Container remove timeout')),
-                  5000
-                )
-              ),
-            ]).catch(async (error) => {
-              const removeError = error as Error;
-              console.log(
-                `Warning: Error removing container ${name}:`,
-                removeError?.message || 'Unknown error'
-              );
-              // Try one more time with force and v option
-              try {
-                await container.remove({ force: true, v: true });
-              } catch (error) {
-                const finalError = error as Error;
-                console.log(
-                  `Final attempt to remove container ${name} failed:`,
-                  finalError?.message || 'Unknown error'
-                );
-              }
-            });
-
-            console.log(`Container ${name} cleanup attempted`);
-          } catch (error) {
-            console.error(
-              `Error in container cleanup for ${name}:`,
-              (error as Error)?.message || 'Unknown error'
-            );
-          }
-        }
-        this.containers.clear();
-
-        // Clean up docker compose with force
-        console.log(
-          `Stopping local services using ${this.testPaths.dockerComposeFile}`
-        );
+      // Stop and remove container
+      if (containerName) {
+        console.log(`Stopping container ${containerName}...`);
         try {
-          await Promise.race([
-            stopDockerCompose(
-              this.testPaths.dockerComposeFile,
-              'down -v --remove-orphans -f',
-              'verify'
-            ),
-            new Promise((_, reject) =>
-              setTimeout(
-                () => reject(new Error('Docker compose stop timeout')),
-                10000
-              )
-            ),
-          ]);
-        } catch (composeError) {
-          console.error('Error stopping docker compose:', composeError);
-        }
-
-        // Release lock
-        if (this.dockerLock) {
-          console.log('Releasing docker lock...');
-          this.dockerLock.release();
-        }
-
-        // Clean up Docker connection
-        if (this.docker) {
-          console.log('Closing Docker connection...');
-          try {
-            const modem = (this.docker as any).modem;
-            if (modem) {
-              if (modem.socket) {
-                modem.socket.destroy();
-              }
-              if (modem.agents) {
-                Object.values(modem.agents).forEach((agent: any) => {
-                  if (agent && typeof agent.destroy === 'function') {
-                    agent.destroy();
-                  }
-                });
-              }
-            }
-          } catch (error) {
-            console.log('Error cleaning up Docker connection:', error);
+          await this.docker.getContainer(containerName).stop({ t: 10 });
+        } catch (error) {
+          if (error instanceof Error) {
+            console.log(`Warning: Error stopping container ${containerName}, proceeding with force remove: ${error.message}`);
+          } else {
+            console.log(`Warning: Error stopping container ${containerName}, proceeding with force remove`);
           }
         }
 
-        // Force cleanup any remaining handles
-        process.removeAllListeners();
-      } catch (error) {
-        console.error(
-          'Error in afterAll:',
-          (error as Error)?.message || 'Unknown error'
-        );
-      } finally {
-        console.log('afterAll cleanup completed');
+        console.log(`Force removing container ${containerName}...`);
+        try {
+          await this.docker.getContainer(containerName).remove({ force: true });
+        } catch (error) {
+          if (error instanceof Error) {
+            console.log(`Warning: Error removing container ${containerName}: ${error.message}`);
+          } else {
+            console.log(`Warning: Error removing container ${containerName}`);
+          }
+        }
+        
+        console.log(`Container ${containerName} cleanup attempted`);
       }
+
+      // Stop local services
+      console.log(`Stopping local services using ${this.testPaths.dockerComposeFile}`);
+      try {
+        await stopDockerCompose(this.testPaths.dockerComposeFile);
+      } catch (error) {
+        console.error('Error stopping docker compose:', error);
+      }
+
+      // Close Docker connection
+      console.log('Closing Docker connection...');
+
+      console.log('afterAll cleanup completed');
+    } catch (error) {
+      console.error('Error in afterAll:', error);
+      throw error;
     }
   }
 
@@ -515,5 +426,29 @@ export class TestKeria {
       this.dockerLock.release();
       console.log('Docker lock released');
     }
+  }
+
+  private async checkServiceRunning(): Promise<boolean> {
+    try {
+      const response = await fetch(
+        `http://${this.host}:${this.keriaHttpPort}/spec.yaml`
+      );
+      return response.ok;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Add a helper method to get all instances
+  public static getAllInstances(): Map<string, TestKeria> {
+    if (!TestKeria.instances) {
+      TestKeria.instances = new Map<string, TestKeria>();
+    }
+    return TestKeria.instances;
+  }
+
+  public static calcOffset(keriaNum: number): number {
+    const offset = 10 * (keriaNum - 1);
+    return offset;
   }
 }

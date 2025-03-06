@@ -15,10 +15,7 @@ import assert = require('assert');
 import { resolveEnvironment } from './resolve-env';
 import { TestKeria } from './test-keria';
 import { WorkflowState } from '../workflow-state';
-import {
-  getIdentifierData,
-  SinglesigIdentifierData,
-} from './handle-json-config';
+import { getIdentifierData, SinglesigIdentifierData } from './handle-json-config';
 
 export interface Aid {
   name: string;
@@ -185,10 +182,10 @@ export async function getOrCreateAID(
  * Connect or boot a SignifyClient instance
  */
 export async function getOrCreateClient(
+  testKeria: TestKeria,
   bran: string | undefined = undefined,
   getOnly: boolean = false
 ): Promise<SignifyClient> {
-  const testKeria = TestKeria.getInstance();
   await ready();
   bran ??= randomPasscode();
   bran = bran.padEnd(21, '_');
@@ -230,13 +227,14 @@ export async function getOrCreateClient(
  * <caption>Launch jest from shell with pre-defined secrets</caption>
  */
 export async function getOrCreateClients(
+  testKeria: TestKeria,
   count: number,
   brans: string[] | undefined = undefined,
   getOnly: boolean = false
 ): Promise<SignifyClient[]> {
   const tasks: Promise<SignifyClient>[] = [];
   for (let i = 0; i < count; i++) {
-    tasks.push(getOrCreateClient(brans?.at(i) ?? undefined, getOnly));
+    tasks.push(getOrCreateClient(testKeria, brans?.at(i) ?? undefined, getOnly));
   }
   const clients: SignifyClient[] = await Promise.all(tasks);
   console.log(`secrets="${clients.map((i) => i.bran).join(',')}"`);
@@ -639,7 +637,7 @@ export async function sendAdmitMessage(
 }
 
 export async function getRootOfTrust(
-  configJson: any,
+  config: any,
   rot_aid: string,
   rot_member_aid?: string
 ): Promise<any> {
@@ -649,7 +647,7 @@ export async function getRootOfTrust(
   const identifierToUse = rot_member_aid || rot_aid;
 
   const identifierData = getIdentifierData(
-    configJson,
+    config,
     identifierToUse
   ) as SinglesigIdentifierData;
 

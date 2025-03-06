@@ -1,53 +1,54 @@
-import { VleiIssuance } from '../vlei-issuance';
+import { Workflow } from '../types/workflow';
 import { WorkflowState } from '../workflow-state';
 
 import {
-  IssueCredentialStepRunner,
-  NotifyCredentialIssueeStepRunner,
-  RevokeCredentialStepRunner,
   StepRunner,
+  ISSUE_CREDENTIAL,
+  REVOKE_CREDENTIAL,
+  NOTIFY_CREDENTIAL_ISSUEE,
+  CREDENTIAL_VERIFICATION,
+  CREATE_CLIENT,
+  CREATE_AID,
+  CREATE_REGISTRY,
+  ADD_ROOT_OF_TRUST,
+  IssueCredentialStepRunner,
+  RevokeCredentialStepRunner,
+  NotifyCredentialIssueeStepRunner,
   CredentialVerificationStepRunner,
   CreateClientStepRunner,
   CreateAidStepRunner,
   CreateRegistryStepRunner,
   AddRootOfTrustStepRunner,
-} from './workflow-step-runners';
-
-const fs = require('fs');
-const yaml = require('js-yaml');
+} from './step-runners';
 
 export class WorkflowRunner {
   stepRunners: Map<string, StepRunner> = new Map<string, StepRunner>();
-  configJson: any;
-  workflow: any;
-  executedSteps = new Set();
+  config: any;
+  workflow: Workflow;
+  context: any;
+  executedSteps = new Set<string>();
 
-  constructor(workflow: any, configJson: any) {
-    this.configJson = configJson;
+  constructor(workflow: Workflow, config: any, context: any) {
+    this.config = config;
     this.workflow = workflow;
-    WorkflowState.getInstance(this.configJson);
+    this.context = context;
+    WorkflowState.getInstance(this.config);
     this.registerPredefinedRunners();
   }
 
-  private registerPredefinedRunners() {
-    this.registerRunner('create_client', new CreateClientStepRunner());
-    this.registerRunner('create_aid', new CreateAidStepRunner());
-    this.registerRunner('create_registry', new CreateRegistryStepRunner());
-    this.registerRunner('issue_credential', new IssueCredentialStepRunner());
-    this.registerRunner('revoke_credential', new RevokeCredentialStepRunner());
-    this.registerRunner('add_root_of_trust', new AddRootOfTrustStepRunner());
-    this.registerRunner(
-      'notify_credential_issuee',
-      new NotifyCredentialIssueeStepRunner()
-    );
-    this.registerRunner(
-      'credential_verification',
-      new CredentialVerificationStepRunner()
-    );
+  private registerPredefinedRunners(): void {
+    this.registerRunner(CREATE_CLIENT, new CreateClientStepRunner());
+    this.registerRunner(CREATE_AID, new CreateAidStepRunner());
+    this.registerRunner(CREATE_REGISTRY, new CreateRegistryStepRunner());
+    this.registerRunner(ISSUE_CREDENTIAL, new IssueCredentialStepRunner());
+    this.registerRunner(REVOKE_CREDENTIAL, new RevokeCredentialStepRunner());
+    this.registerRunner(ADD_ROOT_OF_TRUST, new AddRootOfTrustStepRunner());
+    this.registerRunner(NOTIFY_CREDENTIAL_ISSUEE, new NotifyCredentialIssueeStepRunner());
+    this.registerRunner(CREDENTIAL_VERIFICATION, new CredentialVerificationStepRunner());
   }
 
-  public registerRunner(name: string, runner: StepRunner) {
-    this.stepRunners.set(name, runner);
+  public registerRunner(type: string, runner: StepRunner): void {
+    this.stepRunners.set(type, runner);
   }
 
   public async runWorkflow() {
@@ -60,7 +61,7 @@ export class WorkflowRunner {
         console.log(`No step runner was registered for step '${step.type}'`);
         return false;
       }
-      await runner.run(stepName, step, this.configJson);
+      await runner.run(stepName, step, this.config);
       this.executedSteps.add(step.id);
     }
     console.log(`Workflow steps execution finished successfully`);

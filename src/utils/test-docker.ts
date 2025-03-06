@@ -159,7 +159,7 @@ export async function startDockerServices(file: string, maxRetries = 3): Promise
   while (attempt < maxRetries) {
     try {
       // Clean up any existing containers first
-      await stopDockerCompose(file, 'down', 'verify');
+      await stopDockerCompose(file);
       
       // Start services with health check
       console.log(`Starting Docker services (attempt ${attempt + 1}/${maxRetries})...`);
@@ -200,34 +200,18 @@ async function waitForHealthyServices(timeout = 60000): Promise<void> {
   throw new Error('Timeout waiting for services to be healthy');
 }
 
-export async function stopDockerCompose(
-  file: string,
-  command: string,
-  service: string
-): Promise<boolean> {
-  const running = await isDockerComposeRunning(file);
-  if (running) {
-    console.log(
-      `Stopping docker compose command: ${file} ${command} ${service}`
-    );
-    return new Promise((resolve, reject) => {
-      const cmd = `docker compose -f ${file} ${command} ${service} -v --remove-orphans`;
-      exec(cmd, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error stopping docker compose command: ${stderr}`);
-          return reject(error);
-        }
-        DockerComposeState.getInstance().stop();
-        console.log(stdout);
-        resolve(true);
-      });
+export function stopDockerCompose(composePath: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const cmd = `docker compose -f ${composePath} down -v --remove-orphans`;
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error stopping docker compose command: ${stderr}`);
+        return reject(error);
+      }
+      DockerComposeState.getInstance().stop();
+      resolve();
     });
-  } else {
-    console.log(
-      `Docker compose is already stopped: ${file} ${command} ${service}`
-    );
-    return running;
-  }
+  });
 }
 
 function isPortInUse(port: number): Promise<boolean> {

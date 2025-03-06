@@ -1,11 +1,5 @@
 export { generateFileDigest } from './utils/generate-digest';
 export { buildTestData, EcrTestData } from './utils/generate-test-data';
-export {
-  buildCredentials,
-  buildAidData,
-  User,
-  CredentialInfo,
-} from './utils/handle-json-config';
 export { WorkflowRunner } from './utils/run-workflow';
 export {
   getConfig,
@@ -18,6 +12,15 @@ export {
   StepRunner,
   IssueCredentialStepRunner,
   RevokeCredentialStepRunner,
-} from './utils/workflow-step-runners';
+  NotifyCredentialIssueeStepRunner,
+  CredentialVerificationStepRunner,
+  CreateClientStepRunner,
+  CreateAidStepRunner,
+  CreateRegistryStepRunner,
+  AddRootOfTrustStepRunner,
+} from './utils/step-runners';
+
+export { Workflow, WorkflowStep } from './types/workflow';
+export { WorkflowState } from './workflow-state';
 export { VleiIssuance } from './vlei-issuance';
 export { getOrCreateClients } from './utils/test-util';
