@@ -4,10 +4,23 @@
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "MIT",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "access": "public",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/types/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/types/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
+  "types": "./dist/cjs/types/index.d.ts",
+  "main": "./dist/cjs/index.js",
   "files": [
-    "/dist"
+    "dist/**/*"
   ],
   "scripts": {
     "clean": "del-cli ./dist",
