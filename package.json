@@ -1,13 +1,14 @@
 {
   "name": "vlei-verifier-workflows",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist"
+    "/dist",
+    "/src/workflows"
   ],
   "scripts": {
     "vlei-issuance-workflow:singlesig-single_aid": "ts-node ./src/run-vlei-issuance-workflow.ts",

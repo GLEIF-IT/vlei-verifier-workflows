@@ -119,7 +119,7 @@ export class TestKeria {
           parseInt(args[ARG_KERIA_BOOT_PORT], 10)
         ));
         const keria = TestKeria.instances.get(instanceName);
-        await keria.beforeAll(keriaImage, instanceName, false);
+        await keria!.beforeAll(keriaImage, instanceName, false);
       }
     } else if (testPaths !== undefined) {
       console.warn(

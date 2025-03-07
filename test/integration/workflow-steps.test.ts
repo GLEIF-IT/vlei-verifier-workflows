@@ -68,34 +68,32 @@ beforeAll(async () => {
 
 afterAll(async () => {
   console.log('Running global test cleanup...');
-
   try {
-    // for (const [instanceId, instance] of Object.entries(testKerias)) {
-    // First cleanup attempt with TestKeria
-    // await TestKeria.afterAll(instance.);
-
-    // Force cleanup any remaining handles
+    // Clean up all created TestKeria instances
+    const keriaPromises = Object.entries(testKerias).map(async ([instanceId, instance]) => {
+      const keriaContainer = instanceId;
+      await instance.afterAll(keriaContainer);
+    });
+    await Promise.all(keriaPromises);
+    
     await Promise.all([
-      // Close any open Docker connections
+      DockerComposeState.getInstance().stop(),
       DockerLock.getInstance().forceRelease(),
-
-      // Add a small delay to ensure cleanup completes
       new Promise((resolve) => {
         const timeout = setTimeout(() => {
           clearTimeout(timeout);
           resolve(null);
         }, 2000);
-        // Ensure the timer doesn't keep the process alive
         timeout.unref();
       }),
     ]);
-
+    
     console.log('Cleanup completed successfully');
   } catch (error) {
     console.error('Error during cleanup:', error);
     throw error;
   }
-}, 30000); // Increased timeout to ensure cleanup completes
+}, 30000);
 
 describe('testing Client creation workflow step', () => {
   it('successful client creation', async () => {
@@ -260,32 +258,3 @@ describe('testing Registry creation workflow step', () => {
     } else throw 'Invalid workflow of configuration';
   }, 3600000);
 });
-
-afterAll(async () => {
-  console.log('Running global test cleanup...');
-  try {
-    // Clean up all created TestKeria instances
-    const keriaPromises = Object.entries(testKerias).map(async ([instanceId, instance]) => {
-      const keriaContainer = instanceId;
-      await instance.afterAll(keriaContainer);
-    });
-    await Promise.all(keriaPromises);
-    
-    await Promise.all([
-      DockerComposeState.getInstance().stop(),
-      DockerLock.getInstance().forceRelease(),
-      new Promise((resolve) => {
-        const timeout = setTimeout(() => {
-          clearTimeout(timeout);
-          resolve(null);
-        }, 2000);
-        timeout.unref();
-      }),
-    ]);
-    
-    console.log('Cleanup completed successfully');
-  } catch (error) {
-    console.error('Error during cleanup:', error);
-    throw error;
-  }
-}, 30000);

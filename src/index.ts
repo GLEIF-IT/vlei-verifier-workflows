@@ -24,3 +24,9 @@ export { Workflow, WorkflowStep } from './types/workflow';
 export { WorkflowState } from './workflow-state';
 export { VleiIssuance } from './vlei-issuance';
 export { getOrCreateClients } from './utils/test-util';
+
+export { 
+  getWorkflowPath, 
+  loadPackagedWorkflow, 
+  listPackagedWorkflows 
+} from './utils/workflow-helpers';
