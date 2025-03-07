@@ -1,8 +1,9 @@
 import path from 'path';
-import { getConfig } from '../../src/utils/test-data';
-import { WorkflowRunner } from '../../src/utils/run-workflow';
-import { loadWorkflow } from '../../src/utils/test-data';
-import { WorkflowState } from '../../src/workflow-state';
+
+import { getConfig } from '../../src/utils/test-data.js';
+import { WorkflowRunner } from '../../src/utils/run-workflow.js';
+import { loadWorkflow } from '../../src/utils/test-data.js';
+import { WorkflowState } from '../../src/workflow-state.js';
 
 describe('testing Client creation workflow step', () => {
   test('successful client creation', async function run() {

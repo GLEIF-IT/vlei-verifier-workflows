@@ -40,16 +40,13 @@ jobs:
           npm ci
 
       - name: Run ESLint
-        run: npm run lint
+        run: npm run linter
 
       - name: Run Prettier
-        run: npm run pretty:check
+        run: npm run formatter
 
       - name: Run dependency check
-        run: npm run dependency-check
-
-      - name: Build
-        run: npm run build
+        run: npm run dependency-checker
 
       - name: Run unit tests
         run: npm test -- --runInBand --watchAll=false --runTestsByPath ./test/unit/utils.test.ts

@@ -1,5 +1,5 @@
-import { Saider } from 'signify-ts';
-import { resolveEnvironment } from './utils/resolve-env';
+import SignifyClient from 'signify-ts';
+import { resolveEnvironment } from './utils/resolve-env.js';
 
 export const { vleiServerUrl, witnessIds } = resolveEnvironment();
 
@@ -20,7 +20,7 @@ export const ECR_SCHEMA_URL = `${vLEIServerHostUrl}/${ECR_SCHEMA_SAID}`;
 export const OOR_AUTH_SCHEMA_URL = `${vLEIServerHostUrl}/${OOR_AUTH_SCHEMA_SAID}`;
 export const OOR_SCHEMA_URL = `${vLEIServerHostUrl}/${OOR_SCHEMA_SAID}`;
 
-export const LE_RULES = Saider.saidify({
+export const LE_RULES = SignifyClient.Saider.saidify({
   d: '',
   usageDisclaimer: {
     l: 'Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled.',
@@ -30,7 +30,7 @@ export const LE_RULES = Saider.saidify({
   },
 })[1];
 
-export const ECR_RULES = Saider.saidify({
+export const ECR_RULES = SignifyClient.Saider.saidify({
   d: '',
   usageDisclaimer: {
     l: 'Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled.',
@@ -43,7 +43,7 @@ export const ECR_RULES = Saider.saidify({
   },
 })[1];
 
-export const ECR_AUTH_RULES = Saider.saidify({
+export const ECR_AUTH_RULES = SignifyClient.Saider.saidify({
   d: '',
   usageDisclaimer: {
     l: 'Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled.',

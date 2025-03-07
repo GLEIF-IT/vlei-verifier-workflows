@@ -1,18 +1,18 @@
-export { generateFileDigest } from './utils/generate-digest';
-export { buildTestData, EcrTestData } from './utils/generate-test-data';
+export { generateFileDigest } from './utils/generate-digest.js';
+export { buildTestData, EcrTestData } from './utils/generate-test-data.js';
 export {
   buildCredentials,
   buildAidData,
   User,
   CredentialInfo,
-} from './utils/handle-json-config';
-export { WorkflowRunner } from './utils/run-workflow';
+} from './utils/handle-json-config.js';
+export { WorkflowRunner } from './utils/run-workflow.js';
 export {
   getConfig,
   getGrantedCredential,
   VleiUser,
   loadWorkflow,
-} from './utils/test-data';
+} from './utils/test-data.js';
 
 export {
   StepRunner,
@@ -24,7 +24,7 @@ export {
   AddRootOfTrustStepRunner,
   NotifyCredentialIssueeStepRunner,
   CredentialVerificationStepRunner,
-} from './utils/workflow-step-runners';
-export { WorkflowState } from './workflow-state';
-export { VleiIssuance } from './vlei-issuance';
-export { getOrCreateClients } from './utils/test-util';
+} from './utils/workflow-step-runners.js';
+export { WorkflowState } from './workflow-state.js';
+export { VleiIssuance } from './vlei-issuance.js';
+export { getOrCreateClients } from './utils/test-util.js';

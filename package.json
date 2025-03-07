@@ -10,25 +10,23 @@
     "/dist"
   ],
   "scripts": {
-    "vlei-issuance-workflow:singlesig-single_aid": "ts-node ./src/run-vlei-issuance-workflow.ts",
-    "start": "npm run build:esm -- --watch",
-    "build:types": "tsc -p tsconfig.build.json",
-    "build": "npm run build:types",
-    "build:clean": "del-cli dist && del-cli node_modules && npm install",
+    "clean": "del-cli ./dist",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p ./build/configs/tsconfig.esm.json && npx echo-cli '{\"type\": \"module\"}' > dist/esm/package.json",
+    "build:cjs": "tsc -p ./build/configs/tsconfig.cjs.json && npx echo-cli '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
     "test": "jest test/",
-    "test:full": "npm run build:clean && docker compose down && docker compose up -d && jest test/ && docker compose down",
-    "lint": "npx eslint src test",
-    "prepare": "npm run build",
+    "test:full": "npm install && npm run formatter && npm run linter && npm run dependency-checker && npm run build && docker compose down && docker compose up -d && npm test && docker compose down",
+    "linter": "npx eslint src test",
     "generate-docs": "jsdoc --configure .jsdoc.json --verbose",
-    "pretty": "prettier --write .",
-    "pretty:check": "prettier --check .",
-    "dependency-check": "npx depcheck --ignores='buffer, @typescript-eslint/eslint-plugin, @typescript-eslint/parser'"
+    "formatter:fix": "prettier --write .",
+    "formatter": "prettier --check .",
+    "dependency-checker": "npx depcheck --ignores='buffer, @typescript-eslint/eslint-plugin, @typescript-eslint/parser'"
   },
   "dependencies": {
     "buffer": "^6.0.3",
     "js-yaml": "^4.1.0",
     "mathjs": "^12.4.0",
-    "signify-ts": "github:weboftrust/signify-ts#main",
+    "signify-ts": "^0.3.0-rc1",
     "vlei-verifier-client": "0.0.1"
   },
   "devDependencies": {
@@ -40,13 +38,13 @@
     "@typescript-eslint/parser": "^6.10.0",
     "del-cli": "^6.0.0",
     "depcheck": "^1.4.7",
+    "echo-cli": "^2.0.0",
     "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "jest": "^29.7.0",
     "jsdoc": "^4.0.2",
     "prettier": "^3.3.3",
     "ts-jest": "^29.1.1",
-    "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.24.1"
   }

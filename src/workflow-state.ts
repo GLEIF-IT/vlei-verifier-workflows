@@ -1,17 +1,17 @@
-import { SignifyClient } from 'signify-ts';
+import SignifyClient from 'signify-ts';
 import {
   buildCredentials,
   CredentialInfo,
   IdentifierData,
-} from './utils/handle-json-config';
-import { RULES, SCHEMAS, witnessIds } from './constants';
+} from './utils/handle-json-config.js';
+import { RULES, SCHEMAS, witnessIds } from './constants.js';
 
 export class WorkflowState {
   private static instance: WorkflowState;
   configJson: any;
   schemas: any = SCHEMAS;
   rules: any = RULES;
-  clients = new Map<string, SignifyClient>();
+  clients = new Map<string, SignifyClient.SignifyClient>();
   aids = new Map<string, any>();
   oobis = new Map<string, any[]>();
   credentialsInfo = new Map<string, CredentialInfo>();
