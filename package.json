@@ -35,7 +35,7 @@
     "generate-docs": "jsdoc --configure .jsdoc.json --verbose",
     "formatter:fix": "prettier --write .",
     "formatter": "prettier --check .",
-    "dependency-checker": "npx depcheck --ignores='buffer, @typescript-eslint/eslint-plugin, @typescript-eslint/parser, uuid'",
+    "dependency-checker": "npx depcheck --ignores='buffer, @typescript-eslint/eslint-plugin, @typescript-eslint/parser'",
     "project-checker": "npm install && npm run formatter && npm run linter && npm run dependency-checker",
     "compatibility-checker": "./build/test/package/check-compatibility.sh"
   },
@@ -63,8 +63,7 @@
     "prettier": "^3.3.3",
     "ts-jest": "^29.2.6",
     "typescript": "^5.2.2",
-    "typescript-eslint": "^8.24.1",
-    "uuid": "^11.1.0"
+    "typescript-eslint": "^8.24.1"
   },
   "overrides": {
     "glob": "^9.0.0"

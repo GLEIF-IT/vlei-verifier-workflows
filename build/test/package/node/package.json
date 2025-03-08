@@ -1,14 +1,15 @@
 {
-  "name": "module-dependent-on-vlei-verifier-workflows",
+  "name": "some-module-dependent-on-vlei-verifier-workflows",
   "version": "1.0.0",
   "main": "script.js",
   "scripts": {
-    "node-test": "node ./esm/script.js && node ./cjs/script.js"
+    "node-test": "npm run linker && node ./esm/script.js && node ./cjs/script.js",
+    "linker": "npx link \"$(npm prefix)/../../../../\""
   },
   "author": "",
   "license": "",
   "description": "",
   "dependencies": {
-    "uuid": "^11.1.0"
+    "vlei-verifier-workflows": "~0.0.1"
   }
 }
