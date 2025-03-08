@@ -1,4 +1,4 @@
-import * as workflow from 'vlei-verifier-workflows';
+import * as workflow from '@simple-ssi/vlei-verifier-workflows';
 
 // just make sure the imports are working
 const workflowRunnerCtor = workflow.WorkflowRunner;

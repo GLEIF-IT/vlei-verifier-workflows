@@ -1,4 +1,4 @@
-const workflow = require('vlei-verifier-workflows');
+const workflow = require('@simple-ssi/vlei-verifier-workflows');
 
 // just make sure the imports are working
 const workflowRunnerCtor = workflow.WorkflowRunner;

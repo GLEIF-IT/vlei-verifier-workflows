@@ -1,5 +1,5 @@
 {
-  "name": "vlei-verifier-workflows",
+  "name": "@simple-ssi/vlei-verifier-workflows",
   "version": "0.0.5",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "MIT",
@@ -37,7 +37,8 @@
     "formatter": "prettier --check .",
     "dependency-checker": "npx depcheck --ignores='buffer, @typescript-eslint/eslint-plugin, @typescript-eslint/parser'",
     "project-checker": "npm install && npm run formatter && npm run linter && npm run dependency-checker",
-    "compatibility-checker": "./build/test/package/check-compatibility.sh"
+    "compatibility-checker": "./build/test/package/check-compatibility.sh",
+    "prepublishOnly": "npm run test:full"
   },
   "dependencies": {
     "buffer": "^6.0.3",
