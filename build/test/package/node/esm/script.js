@@ -6,6 +6,10 @@ import {
   loadWorkflow,
 } from '@simple-ssi/vlei-verifier-workflows';
 
+console.log('\n\x1b[34m**************');
+console.log('* EcmaScript *');
+console.log('**************\x1b[0m\n\n');
+
 // make sure namespace imports are working
 let workflowRunnerCtor = workflow.WorkflowRunner;
 let stepRunnnerCtor = workflow.StepRunner;
@@ -18,4 +22,4 @@ stepRunnnerCtor = StepRunner;
 getConfigFunc = getConfig;
 loadWorkflowFunc = loadWorkflow;
 
-console.log('\nesm ok');
+console.log('\x1b[32m[x] OK\x1b[0m');
