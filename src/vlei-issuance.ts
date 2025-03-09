@@ -1,11 +1,7 @@
 import { strict as assert } from 'assert';
-import signify, {
-  Saider,
-  CreateIdentiferArgs,
-  randomNonce,
-  Salter,
-  HabState,
-} from 'signify-ts';
+import { boolean } from 'mathjs';
+import SignifyClient from 'signify-ts';
+
 import {
   resolveOobi,
   waitOperation,
@@ -25,7 +21,7 @@ import {
   assertOperations,
   sleep,
   revokeCredential,
-} from './utils/test-util';
+} from './utils/test-util.js';
 import {
   addEndRoleMultisig,
   admitMultisig,
@@ -35,9 +31,8 @@ import {
   grantMultisig,
   issueCredentialMultisig,
   multisigRevoke,
-} from './utils/multisig-utils';
-import { boolean } from 'mathjs';
-import { retry } from './utils/retry';
+} from './utils/multisig-utils.js';
+import { retry } from './utils/retry.js';
 import {
   QVI_SCHEMA_URL,
   LE_SCHEMA_URL,
@@ -46,17 +41,17 @@ import {
   OOR_AUTH_SCHEMA_URL,
   OOR_SCHEMA_URL,
   CRED_RETRY_DEFAULTS,
-} from './constants';
+} from './constants.js';
 
 import {
   CredentialInfo,
   IdentifierData,
   MultisigIdentifierData,
   SinglesigIdentifierData,
-} from './utils/handle-json-config';
-import { buildTestData, EcrTestData } from './utils/generate-test-data';
-import { VleiUser } from './utils/test-data';
-import { WorkflowState } from './workflow-state';
+} from './utils/handle-json-config.js';
+import { buildTestData, EcrTestData } from './utils/generate-test-data.js';
+import { VleiUser } from './utils/test-data.js';
+import { WorkflowState } from './workflow-state.js';
 
 export const VleiIssuance = {
   // Create client for given AID
@@ -227,7 +222,7 @@ export const VleiIssuance = {
   createAidSinglesig: async (identifierData: IdentifierData) => {
     const workflow_state = WorkflowState.getInstance();
     const delegator = identifierData.delegator;
-    const kargsSinglesigAID: CreateIdentiferArgs = {
+    const kargsSinglesigAID: SignifyClient.CreateIdentiferArgs = {
       toad: workflow_state.kargsAID.toad,
       wits: workflow_state.kargsAID.wits,
     };
@@ -314,7 +309,7 @@ export const VleiIssuance = {
   createAidMultisig: async (identifierData: IdentifierData) => {
     const workflow_state = WorkflowState.getInstance();
     const multisigIdentifierData = identifierData as MultisigIdentifierData;
-    let multisigAids: HabState[] = [];
+    let multisigAids: SignifyClient.HabState[] = [];
     const aidIdentifierNames: string[] = multisigIdentifierData.identifiers;
 
     const issuerAids =
@@ -342,8 +337,8 @@ export const VleiIssuance = {
       const rstates = issuerAids.map((aid) => aid.state);
       const states = rstates;
 
-      const kargsMultisigAID: CreateIdentiferArgs = {
-        algo: signify.Algos.group,
+      const kargsMultisigAID: SignifyClient.CreateIdentiferArgs = {
+        algo: SignifyClient.Algos.group,
         isith: multisigIdentifierData.isith,
         nsith: multisigIdentifierData.nsith,
         toad: workflow_state.kargsAID.toad,
@@ -586,7 +581,9 @@ export const VleiIssuance = {
   createRegistryMultisig: async (identifierData: IdentifierData) => {
     const multisigIdentifierData = identifierData as MultisigIdentifierData;
     const workflow_state = WorkflowState.getInstance();
-    const multisigAid: HabState = workflow_state.aids.get(identifierData.name);
+    const multisigAid: SignifyClient.HabState = workflow_state.aids.get(
+      identifierData.name
+    );
     const registryIdentifierName = `${identifierData.name}Registry`;
     const aidIdentifierNames: string[] = multisigIdentifierData.identifiers;
     const registries: any[] = new Array<any>();
@@ -613,7 +610,7 @@ export const VleiIssuance = {
     const allEmpty = registries.every((registry) => registry.length === 0);
 
     if (allEmpty) {
-      const nonce = randomNonce();
+      const nonce = SignifyClient.randomNonce();
       const registryOps = issuerAids!.map((aid, index) => {
         const tmpAidData = workflow_state.aidsInfo.get(
           aid.name
@@ -912,7 +909,7 @@ export const VleiIssuance = {
       const kargsSub = {
         i: recipientAID.prefix,
         dt: createTimestamp(),
-        u: privacy ? new Salter({}).qb64 : undefined,
+        u: privacy ? new SignifyClient.Salter({}).qb64 : undefined,
         ...credData,
       };
 
@@ -921,7 +918,7 @@ export const VleiIssuance = {
         ri: issuerRegistry.regk,
         s: schema,
         a: kargsSub,
-        u: privacy ? new Salter({}).qb64 : undefined,
+        u: privacy ? new SignifyClient.Salter({}).qb64 : undefined,
         ...credSource!,
         ...rules!,
       };
@@ -1404,7 +1401,7 @@ export const VleiIssuance = {
     if (o != null) {
       credDict['o'] = o;
     }
-    const credSource = Saider.saidify({
+    const credSource = SignifyClient.Saider.saidify({
       d: '',
       [credType]: credDict,
     })[1];

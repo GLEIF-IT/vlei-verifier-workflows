@@ -1,5 +1,4 @@
-import { SignifyClient } from 'signify-ts';
-
+import SignifyClient from 'signify-ts';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
@@ -20,7 +19,7 @@ export function getConfig(configFilePath: string) {
 }
 
 export async function getGrantedCredential(
-  client: SignifyClient,
+  client: SignifyClient.SignifyClient,
   credId: string
 ): Promise<any> {
   const credentialList = await client.credentials().list({

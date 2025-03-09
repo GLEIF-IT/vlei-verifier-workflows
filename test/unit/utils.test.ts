@@ -3,7 +3,7 @@ import {
   getAgentSecret,
   buildCredentials,
   buildAidData,
-} from '../../src/utils/handle-json-config';
+} from '../../src/utils/handle-json-config.js';
 
 const sampleConfig = {
   identifiers: {

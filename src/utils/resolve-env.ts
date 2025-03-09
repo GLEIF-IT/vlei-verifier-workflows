@@ -141,6 +141,8 @@ export function resolveEnvironment(
     default:
       throw new Error(`Unknown test environment preset '${preset}'`);
   }
-  console.log('Test environment preset: ', JSON.stringify(env));
+  // this is an unwanted side effect.
+  // it results in output to the console as a result of simply importing the vlei-verifier-workflow package.
+  // console.log('Test environment preset: ', JSON.stringify(env));
   return env;
 }

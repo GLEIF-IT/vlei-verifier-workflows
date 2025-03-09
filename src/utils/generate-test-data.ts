@@ -1,7 +1,8 @@
-const testDataDir = 'test_data';
 import * as fs from 'fs';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
+
+const testDataDir = 'test_data';
 
 export async function buildTestData(
   testData: EcrTestData,

@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer/index.js';
+import { Buffer } from 'buffer/index.js'; // this is the proper way to import the Buffer class from 'buffer'. It's needed to run Buffer in the browser.
 import { createHash } from 'crypto';
 
 export function generateFileDigest(buffer: Buffer): string {

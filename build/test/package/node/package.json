@@ -1,0 +1,15 @@
+{
+  "name": "some-module-dependent-on-vlei-verifier-workflows",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "node-test": "npm run linker && node ./esm/script.js && node ./cjs/script.js",
+    "linker": "npx link \"$(npm prefix)/../../../../\""
+  },
+  "author": "",
+  "license": "",
+  "description": "",
+  "dependencies": {
+    "@simple-ssi/vlei-verifier-workflows": "~0.0.1"
+  }
+}
