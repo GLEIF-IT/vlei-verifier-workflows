@@ -48,8 +48,11 @@ jobs:
       - name: Run dependency check
         run: npm run dependency-checker
 
-      - name: Run compatibility check
-        run: bash ./build/test/package/check-compatibility.sh
-
       - name: Run unit tests
         run: npm test -- --runInBand --watchAll=false --runTestsByPath ./test/unit/utils.test.ts
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Run compatibility check
+        run: bash ./build/test/package/check-compatibility.sh
