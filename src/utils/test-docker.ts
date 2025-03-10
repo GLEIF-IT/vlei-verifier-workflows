@@ -225,22 +225,16 @@ export async function startDockerServices(
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
-      if (await isHealthyServices()) {
-        console.log('All services started successfully');
-        return true;
-      } else {
-        console.log(
-          'Services are not healthy, waiting 3 seconds before retrying...'
-        );
         // Start services with health check
         console.log(
           `Starting Docker services (attempt ${attempt + 1}/${maxRetries})...`
         );
-        if (attempt === 0) {
-          await runDockerCompose(file, 'up', 'verify', ['-d']);
-          await new Promise((resolve) => setTimeout(resolve, 3000));
+        await runDockerCompose(file, 'up', 'verify', ['-d']);
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        if (await isHealthyServices()) {
+          console.log('All services started successfully');
+          return true;
         }
-      }
     } catch (error) {
       attempt++;
       console.error(`Attempt ${attempt} failed:`, error);
@@ -307,15 +301,12 @@ export async function isDockerComposeRunning(
   file: string,
   vleiServerPort: number = 7723,
   witnessPort: number = 5642,
-  verifierPort: number = 7676,
-  apiPort: number = 8000
+  verifierPort: number = 7676
 ): Promise<boolean> {
   const ports = [
     { name: 'vleiServerPort', port: vleiServerPort },
     { name: 'witnessPort', port: witnessPort },
     { name: 'verifierPort', port: verifierPort },
-    // { name: 'filerPort', port: filerPort },
-    { name: 'apiPort', port: apiPort },
   ];
 
   const portsInUse = await Promise.all(
