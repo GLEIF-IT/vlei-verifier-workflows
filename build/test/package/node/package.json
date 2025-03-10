@@ -10,6 +10,6 @@
   "license": "",
   "description": "",
   "dependencies": {
-    "@simple-ssi/vlei-verifier-workflows": "~0.0.1"
+    "@gleif-it/vlei-verifier-workflows": "~0.0.1"
   }
 }

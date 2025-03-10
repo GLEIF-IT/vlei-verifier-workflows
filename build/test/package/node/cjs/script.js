@@ -1,4 +1,4 @@
-const workflow = require('@simple-ssi/vlei-verifier-workflows');
+const workflow = require('@gleif-it/vlei-verifier-workflows');
 
 console.log('\n\x1b[34m************');
 console.log('* CommonJS *');

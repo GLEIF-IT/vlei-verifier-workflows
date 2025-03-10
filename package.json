@@ -1,5 +1,5 @@
 {
-  "name": "@simple-ssi/vlei-verifier-workflows",
+  "name": "@gleif-it/vlei-verifier-workflows",
   "version": "0.0.5",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "MIT",
