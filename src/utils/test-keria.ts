@@ -25,7 +25,10 @@ export interface KeriaConfig {
   durls?: string[];
 }
 export class TestKeria {
-  public static instances: Map<string, TestKeria> = new Map<string, TestKeria>();
+  public static instances: Map<string, TestKeria> = new Map<
+    string,
+    TestKeria
+  >();
   public testPaths: TestPaths;
   public keriaAdminPort: number;
   public keriaAdminUrl: URL;
@@ -50,7 +53,7 @@ export class TestKeria {
     witnessHost: string,
     kAdminPort: number,
     kHttpPort: number,
-    kBootPort: number,
+    kBootPort: number
   ) {
     this.testPaths = testPaths;
     this.domain = domain;
@@ -90,9 +93,11 @@ export class TestKeria {
     if (!TestKeria.instances) {
       TestKeria.instances = new Map<string, TestKeria>();
     }
-    
+
     if (!instanceName) {
-      throw new Error('TestKeria.getInstance(instanceName) must be called with an instanceName');
+      throw new Error(
+        'TestKeria.getInstance(instanceName) must be called with an instanceName'
+      );
     }
 
     if (!TestKeria.instances.get(instanceName)) {
@@ -101,24 +106,27 @@ export class TestKeria {
           `TestKeria.getInstance() called for agent "${instanceName}" without required parameters. You must initialize it with all parameters first.`
         );
       } else {
-        if(!instanceOffset) {
+        if (!instanceOffset) {
           instanceOffset = TestKeria.getUniqueOffsetForInstance(instanceName);
         }
-        
+
         const args = TestKeria.processKeriaArgs(
-          basePort!+1+instanceOffset,
-          basePort!+2+instanceOffset,
-          basePort!+3+instanceOffset,
+          basePort! + 1 + instanceOffset,
+          basePort! + 2 + instanceOffset,
+          basePort! + 3 + instanceOffset
         );
-        TestKeria.instances.set(instanceName, new TestKeria(
-          testPaths!,
-          domain!,
-          host!,
-          containerLocalhost!,
-          parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
-          parseInt(args[ARG_KERIA_HTTP_PORT], 10),
-          parseInt(args[ARG_KERIA_BOOT_PORT], 10)
-        ));
+        TestKeria.instances.set(
+          instanceName,
+          new TestKeria(
+            testPaths!,
+            domain!,
+            host!,
+            containerLocalhost!,
+            parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
+            parseInt(args[ARG_KERIA_HTTP_PORT], 10),
+            parseInt(args[ARG_KERIA_BOOT_PORT], 10)
+          )
+        );
         const keria = TestKeria.instances.get(instanceName);
         await keria!.startupInstance(keriaImage, instanceName, false);
       }
@@ -133,7 +141,7 @@ export class TestKeria {
   public static processKeriaArgs(
     baseAdminPort: number,
     baseHttpPort: number,
-    baseBootPort: number,
+    baseBootPort: number
   ): minimist.ParsedArgs {
     // Parse command-line arguments using minimist
     const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
@@ -163,7 +171,11 @@ export class TestKeria {
     return args;
   }
 
-  async startupInstance(keriaImage: string, containerPostfix: string, refresh: boolean) {
+  async startupInstance(
+    keriaImage: string,
+    containerPostfix: string,
+    refresh: boolean
+  ) {
     console.log('Starting keria instance...');
     try {
       // Check if service is running
@@ -173,7 +185,9 @@ export class TestKeria {
 
       if (!isRunning) {
         const containerName = `keria-${containerPostfix}`;
-        console.log(`Starting Keria container ${containerName} with image ${keriaImage}`);
+        console.log(
+          `Starting Keria container ${containerName} with image ${keriaImage}`
+        );
         await this.startContainer(keriaImage, containerName, refresh);
         await this.waitForContainer(containerName);
         console.log(`Keria container ${containerName} started successfully`);
@@ -264,10 +278,10 @@ export class TestKeria {
       const container = await this.docker.createContainer(containerOptions);
       console.log(`Starting container ${containerName}...`);
       await container.start();
-      
+
       // Add container to the containers map for cleanup
       this.containers.set(containerName, container);
-      
+
       return container;
     } catch (error) {
       console.error('Error in startContainer:', error);
@@ -298,19 +312,24 @@ export class TestKeria {
     console.log('Running workflow-steps test cleanup...');
     try {
       // Use Promise.all to wait for all cleanup operations to complete
-      await Promise.all(testContexts.map(async (contextId) => {
-        try {
-          console.log('Cleaning up Keria instance', contextId);
-          const testKeria = await TestKeria.getInstance(contextId);
-          if (testKeria) {
-            await testKeria.cleanupInstance(contextId);
-            console.log('Successfully cleaned up Keria instance', contextId);
+      await Promise.all(
+        testContexts.map(async (contextId) => {
+          try {
+            console.log('Cleaning up Keria instance', contextId);
+            const testKeria = await TestKeria.getInstance(contextId);
+            if (testKeria) {
+              await testKeria.cleanupInstance(contextId);
+              console.log('Successfully cleaned up Keria instance', contextId);
+            }
+          } catch (error) {
+            console.warn(
+              `Warning: Failed to clean up Keria instance ${contextId}:`,
+              error
+            );
           }
-        } catch (error) {
-          console.warn(`Warning: Failed to clean up Keria instance ${contextId}:`, error);
-        }
-      }));
-      
+        })
+      );
+
       console.log('Cleanup completed successfully');
     } catch (error) {
       console.error('Error during cleanup:', error);
@@ -336,7 +355,9 @@ export class TestKeria {
         try {
           await this.containers!.get(containerName)!.stop({ t: 10 });
         } catch (error) {
-          console.log(`Warning: Error stopping container ${containerName}, proceeding with force remove: ${error instanceof Error ? error.message : 'unknown error'}`);
+          console.log(
+            `Warning: Error stopping container ${containerName}, proceeding with force remove: ${error instanceof Error ? error.message : 'unknown error'}`
+          );
         }
 
         console.log(`Force removing container ${containerName}...`);
@@ -345,9 +366,11 @@ export class TestKeria {
           // Remove from containers map after successful removal
           this.containers.delete(containerName);
         } catch (error) {
-          console.log(`Warning: Error removing container ${containerName}: ${error instanceof Error ? error.message : 'unknown error'}`);
+          console.log(
+            `Warning: Error removing container ${containerName}: ${error instanceof Error ? error.message : 'unknown error'}`
+          );
         }
-        
+
         console.log(`Container ${containerName} cleanup attempted`);
       } else {
         console.log(`No container found for instance ${instanceId}`);
@@ -415,10 +438,10 @@ export class TestKeria {
    */
   public static async cleanupAllInstances(): Promise<void> {
     console.log('Cleanup of all Keria instances...');
-    
+
     // Create a copy of the instances to avoid modification during iteration
     const instanceNames = Array.from(TestKeria.instances.keys());
-    
+
     // Clean up each instance
     for (const instanceName of instanceNames) {
       try {
@@ -430,41 +453,52 @@ export class TestKeria {
         console.error(`Error cleaning up instance ${instanceName}:`, error);
       }
     }
-    
+
     // Force cleanup any containers that might have been missed
     try {
       const docker = new Dockerode();
-      
+
       // Get all containers
       const containers = await docker.listContainers({ all: true });
-      
+
       // Find any keria containers that might have been missed
       for (const containerInfo of containers) {
         const containerName = containerInfo.Names[0].substring(1); // Remove leading slash
         if (containerName.startsWith('keria-')) {
-          console.log(`Found leftover container ${containerName}, cleaning up...`);
+          console.log(
+            `Found leftover container ${containerName}, cleaning up...`
+          );
           try {
             const container = docker.getContainer(containerInfo.Id);
             await container.stop({ t: 5 }).catch(() => {}); // Ignore errors if already stopped
             await container.remove({ force: true });
-            console.log(`Successfully removed leftover container ${containerName}`);
+            console.log(
+              `Successfully removed leftover container ${containerName}`
+            );
           } catch (error) {
-            console.error(`Error removing leftover container ${containerName}:`, error);
+            console.error(
+              `Error removing leftover container ${containerName}:`,
+              error
+            );
           }
         }
       }
-      
+
       // If all instances are cleaned up, shut down Docker Compose
       if (TestKeria.instances.size === 0) {
-        console.log('All Keria instances cleaned up, shutting down Docker Compose...');
-        
+        console.log(
+          'All Keria instances cleaned up, shutting down Docker Compose...'
+        );
+
         // Get the Docker Compose file path from TestPaths
         const testPaths = TestPaths.getInstance();
         const dockerComposeFile = testPaths.dockerComposeFile;
-        
+
         if (dockerComposeFile) {
           try {
-            console.log(`Running docker-compose down with file: ${dockerComposeFile}`);
+            console.log(
+              `Running docker-compose down with file: ${dockerComposeFile}`
+            );
             await stopDockerComposeServices(dockerComposeFile);
             console.log('Docker Compose services successfully shut down');
           } catch (error) {
@@ -474,12 +508,14 @@ export class TestKeria {
           console.log('No Docker Compose file found, skipping shutdown');
         }
       } else {
-        console.log(`Skipping Docker Compose shutdown as ${TestKeria.instances.size} instances are still running`);
+        console.log(
+          `Skipping Docker Compose shutdown as ${TestKeria.instances.size} instances are still running`
+        );
       }
     } catch (error) {
       console.error('Error during force cleanup:', error);
     }
-    
+
     console.log('All Keria instances cleanup completed');
   }
 
@@ -487,12 +523,12 @@ export class TestKeria {
     if (!TestKeria._instanceOffsets) {
       TestKeria._instanceOffsets = new Map<string, number>();
     }
-    
+
     if (!TestKeria._instanceOffsets.has(instanceName)) {
       const nextOffset = TestKeria._instanceOffsets.size * 10;
       TestKeria._instanceOffsets.set(instanceName, nextOffset);
     }
-    
+
     return TestKeria._instanceOffsets.get(instanceName)!;
   }
 
@@ -502,11 +538,13 @@ export class TestKeria {
 /**
  * Helper function to stop Docker Compose services
  */
-async function stopDockerComposeServices(dockerComposeFile: string): Promise<void> {
+async function stopDockerComposeServices(
+  dockerComposeFile: string
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const command = `docker-compose -f ${dockerComposeFile} down`;
     console.log(`Executing: ${command}`);
-    
+
     exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing docker-compose down: ${error.message}`);
@@ -514,7 +552,7 @@ async function stopDockerComposeServices(dockerComposeFile: string): Promise<voi
         reject(error);
         return;
       }
-      
+
       console.log(`docker-compose down output: ${stdout}`);
       resolve();
     });

@@ -24,7 +24,7 @@ export interface WorkflowStep {
 export function loadWorkflow(path: string): Workflow | null {
   const fs = require('fs');
   const yaml = require('js-yaml');
-  
+
   try {
     const fileContents = fs.readFileSync(path, 'utf8');
     return yaml.load(fileContents) as Workflow;
@@ -40,15 +40,16 @@ export function loadWorkflow(path: string): Workflow | null {
 export function getAvailableWorkflows(): string[] {
   const fs = require('fs');
   const path = require('path');
-  
+
   const workflowsDir = path.join(process.cwd(), 'src', 'workflows');
-  
+
   try {
-    return fs.readdirSync(workflowsDir)
+    return fs
+      .readdirSync(workflowsDir)
       .filter((file: string) => file.endsWith('.yaml') || file.endsWith('.yml'))
       .map((file: string) => path.join(workflowsDir, file));
   } catch (error) {
     console.error(`Failed to read workflows directory: ${error}`);
     return [];
   }
-} 
+}

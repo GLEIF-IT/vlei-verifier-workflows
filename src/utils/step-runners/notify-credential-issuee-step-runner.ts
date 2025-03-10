@@ -18,4 +18,4 @@ export class NotifyCredentialIssueeStepRunner extends StepRunner {
     );
     return result;
   }
-} 
+}

@@ -7,7 +7,11 @@ import { strict as assert } from 'assert';
 import { loadWorkflow } from '../src/utils/test-data';
 import { ARG_KERIA_START_PORT, TestKeria } from '../src/utils/test-keria';
 import { TestPaths } from '../src/utils/test-paths';
-import { DockerComposeState, startDockerServices, stopDockerCompose } from '../src/utils/test-docker';
+import {
+  DockerComposeState,
+  startDockerServices,
+  stopDockerCompose,
+} from '../src/utils/test-docker';
 
 let testPaths: TestPaths;
 let env: TestEnvironment;
@@ -52,27 +56,38 @@ beforeAll(async () => {
     env = resolveEnvironment();
     testPaths = TestPaths.getInstance();
 
-    const dockerStarted = await startDockerServices(testPaths.dockerComposeFile);
-    if(dockerStarted) {    
+    const dockerStarted = await startDockerServices(
+      testPaths.dockerComposeFile
+    );
+    if (dockerStarted) {
       // Initialize all Keria instances upfront
-      await Promise.all(Object.values(TEST_CONTEXTS).map(async (contextId, index) => {
-        try {
-          console.log(`Initializing Keria instance for context: ${contextId}`);
-          const keriaInstance = await TestKeria.getInstance(
-            contextId,
-            testPaths,
-            args[ARG_KERIA_DOMAIN],
-            args[ARG_KERIA_HOST],
-            args[ARG_WITNESS_HOST],
-            BASE_PORT
-          );
+      await Promise.all(
+        Object.values(TEST_CONTEXTS).map(async (contextId, index) => {
+          try {
+            console.log(
+              `Initializing Keria instance for context: ${contextId}`
+            );
+            const keriaInstance = await TestKeria.getInstance(
+              contextId,
+              testPaths,
+              args[ARG_KERIA_DOMAIN],
+              args[ARG_KERIA_HOST],
+              args[ARG_WITNESS_HOST],
+              BASE_PORT
+            );
 
-          console.log(`Successfully initialized Keria instance for context: ${contextId}`);
-        } catch (error) {
-          console.error(`Failed to initialize Keria instance for context ${contextId}:`, error);
-          throw error;
-        }
-      }));
+            console.log(
+              `Successfully initialized Keria instance for context: ${contextId}`
+            );
+          } catch (error) {
+            console.error(
+              `Failed to initialize Keria instance for context ${contextId}:`,
+              error
+            );
+            throw error;
+          }
+        })
+      );
     }
   } catch (error) {
     console.error('Error in beforeAll:', error);
@@ -83,29 +98,36 @@ beforeAll(async () => {
 afterAll(async () => {
   console.log('Running run-workflow test cleanup...');
   await TestKeria.cleanupInstances(Object.values(TEST_CONTEXTS));
-  // if(TestKeria.instances.size <= 0) {
+  // if (TestKeria.instances.size <= 0) {
   //   await stopDockerCompose(testPaths.dockerComposeFile);
   // }
 }, 60000);
 
 describe('Workflow Tests', () => {
+  test(
+    TEST_CONTEXTS.ISSUANCE_TEST,
+    async () => {
+      const workflowsDir = '../src/workflows/';
+      const workflowFile = env.workflow;
+      const workflow = loadWorkflow(
+        path.join(__dirname, `${workflowsDir}${workflowFile}`)
+      );
+      const configFileName = env.configuration;
+      let dirPath = '../src/config/';
+      const configFilePath = path.join(__dirname, dirPath) + configFileName;
+      const configJson = await getConfig(configFilePath);
+      configJson['context'] = TEST_CONTEXTS.ISSUANCE_TEST;
 
-  test(TEST_CONTEXTS.ISSUANCE_TEST, async () => {
-    const workflowsDir = '../src/workflows/';
-    const workflowFile = env.workflow;
-    const workflow = loadWorkflow(
-      path.join(__dirname, `${workflowsDir}${workflowFile}`)
-    );
-    const configFileName = env.configuration;
-    let dirPath = '../src/config/';
-    const configFilePath = path.join(__dirname, dirPath) + configFileName;
-    const configJson = await getConfig(configFilePath);
-    configJson['context'] = TEST_CONTEXTS.ISSUANCE_TEST;
-
-    if (workflow && configJson) {
-      const wr = new WorkflowRunner(workflow, configJson, configJson['context']);
-      const workflowRunResult = await wr.runWorkflow();
-      assert.equal(workflowRunResult, true);
-    }
-  }, 3600000); // Match the global timeout for the test itself
+      if (workflow && configJson) {
+        const wr = new WorkflowRunner(
+          workflow,
+          configJson,
+          configJson['context']
+        );
+        const workflowRunResult = await wr.runWorkflow();
+        assert.equal(workflowRunResult, true);
+      }
+    },
+    3600000
+  ); // Match the global timeout for the test itself
 });

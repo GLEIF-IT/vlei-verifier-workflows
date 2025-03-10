@@ -1,14 +1,14 @@
 import { StepRunner } from '../../types/step-runner';
 import { CredentialVerification } from '../../credential-verification';
 import { WorkflowState } from '../../workflow-state';
-import { 
-  VleiUser, 
-  credPresentationStatusMapping, 
-  credAuthorizationStatusMapping 
+import {
+  VleiUser,
+  credPresentationStatusMapping,
+  credAuthorizationStatusMapping,
 } from '../test-data';
-import { 
-  MultisigIdentifierData, 
-  SinglesigIdentifierData 
+import {
+  MultisigIdentifierData,
+  SinglesigIdentifierData,
 } from '../handle-json-config';
 
 export const CREDENTIAL_VERIFICATION = 'credential_verification';
@@ -71,4 +71,4 @@ export class CredentialVerificationStepRunner extends StepRunner {
     }
     return true;
   }
-} 
+}

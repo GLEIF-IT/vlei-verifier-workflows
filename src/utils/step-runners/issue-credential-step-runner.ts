@@ -23,4 +23,4 @@ export class IssueCredentialStepRunner extends StepRunner {
     );
     return result;
   }
-} 
+}

@@ -15,7 +15,10 @@ import assert = require('assert');
 import { resolveEnvironment } from './resolve-env';
 import { TestKeria } from './test-keria';
 import { WorkflowState } from '../workflow-state';
-import { getIdentifierData, SinglesigIdentifierData } from './handle-json-config';
+import {
+  getIdentifierData,
+  SinglesigIdentifierData,
+} from './handle-json-config';
 
 export interface Aid {
   name: string;
@@ -234,7 +237,9 @@ export async function getOrCreateClients(
 ): Promise<SignifyClient[]> {
   const tasks: Promise<SignifyClient>[] = [];
   for (let i = 0; i < count; i++) {
-    tasks.push(getOrCreateClient(testKeria, brans?.at(i) ?? undefined, getOnly));
+    tasks.push(
+      getOrCreateClient(testKeria, brans?.at(i) ?? undefined, getOnly)
+    );
   }
   const clients: SignifyClient[] = await Promise.all(tasks);
   console.log(`secrets="${clients.map((i) => i.bran).join(',')}"`);

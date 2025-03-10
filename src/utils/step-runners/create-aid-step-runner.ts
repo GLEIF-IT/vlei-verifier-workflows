@@ -9,13 +9,10 @@ export class CreateAidStepRunner extends StepRunner {
   public async run(
     stepName: string,
     step: any,
-    config: any = null,
+    config: any = null
   ): Promise<any> {
-    const identifierData: IdentifierData = getIdentifierData(
-      config,
-      step.aid
-    );
+    const identifierData: IdentifierData = getIdentifierData(config, step.aid);
     const result = await VleiIssuance.createAid(identifierData);
     return result;
   }
-} 
+}

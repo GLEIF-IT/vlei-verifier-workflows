@@ -20,4 +20,4 @@ export class RevokeCredentialStepRunner extends StepRunner {
     );
     return result;
   }
-} 
+}

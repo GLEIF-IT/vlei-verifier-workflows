@@ -26,10 +26,9 @@ export class WorkflowState {
     this.credentialsInfo = buildCredentials(config);
   }
 
-  static getInstance(config=null): WorkflowState {
+  static getInstance(config = null): WorkflowState {
     if (!WorkflowState.instance) {
-      if (!config)
-        throw 'WorkflowState.getInstance: no config was provided';
+      if (!config) throw 'WorkflowState.getInstance: no config was provided';
       WorkflowState.instance = new WorkflowState(config);
     }
     return WorkflowState.instance;
@@ -37,9 +36,7 @@ export class WorkflowState {
 
   static resetInstance() {
     if (WorkflowState.instance) {
-      WorkflowState.instance = new WorkflowState(
-        WorkflowState.instance.config
-      );
+      WorkflowState.instance = new WorkflowState(WorkflowState.instance.config);
     }
   }
 

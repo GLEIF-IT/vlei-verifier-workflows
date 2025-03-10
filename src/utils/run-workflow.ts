@@ -43,8 +43,14 @@ export class WorkflowRunner {
     this.registerRunner(ISSUE_CREDENTIAL, new IssueCredentialStepRunner());
     this.registerRunner(REVOKE_CREDENTIAL, new RevokeCredentialStepRunner());
     this.registerRunner(ADD_ROOT_OF_TRUST, new AddRootOfTrustStepRunner());
-    this.registerRunner(NOTIFY_CREDENTIAL_ISSUEE, new NotifyCredentialIssueeStepRunner());
-    this.registerRunner(CREDENTIAL_VERIFICATION, new CredentialVerificationStepRunner());
+    this.registerRunner(
+      NOTIFY_CREDENTIAL_ISSUEE,
+      new NotifyCredentialIssueeStepRunner()
+    );
+    this.registerRunner(
+      CREDENTIAL_VERIFICATION,
+      new CredentialVerificationStepRunner()
+    );
   }
 
   public registerRunner(type: string, runner: StepRunner): void {

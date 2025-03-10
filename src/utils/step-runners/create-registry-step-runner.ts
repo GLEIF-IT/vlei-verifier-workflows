@@ -12,11 +12,8 @@ export class CreateRegistryStepRunner extends StepRunner {
     config: any = null,
     workflowObject?: any
   ): Promise<any> {
-    const identifierData: IdentifierData = getIdentifierData(
-      config,
-      step.aid
-    );
+    const identifierData: IdentifierData = getIdentifierData(config, step.aid);
     const result = await VleiIssuance.createRegistry(identifierData);
     return result;
   }
-} 
+}

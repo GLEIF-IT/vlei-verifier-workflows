@@ -67,7 +67,11 @@ export class VleiIssuance {
   constructor() {}
 
   // Create client for given AID
-  public static async createClient(testKeria: TestKeria, secret: string, agentName: string) {
+  public static async createClient(
+    testKeria: TestKeria,
+    secret: string,
+    agentName: string
+  ) {
     const workflow_state = WorkflowState.getInstance();
     console.log(`Creating client for secret: ${secret}`);
 

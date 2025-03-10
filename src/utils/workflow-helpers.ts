@@ -8,7 +8,9 @@ import { Workflow, loadWorkflow } from '../types/workflow';
  * @returns The full path to the workflow file
  */
 export function getWorkflowPath(workflowName: string): string {
-  const fileName = workflowName.endsWith('.yaml') ? workflowName : `${workflowName}.yaml`;
+  const fileName = workflowName.endsWith('.yaml')
+    ? workflowName
+    : `${workflowName}.yaml`;
   return path.join(__dirname, '../../src/workflows', fileName);
 }
 
@@ -28,8 +30,9 @@ export function loadPackagedWorkflow(workflowName: string): Workflow | null {
 export function listPackagedWorkflows(): string[] {
   const workflowsDir = path.join(__dirname, '../../src/workflows');
   try {
-    return fs.readdirSync(workflowsDir)
-      .filter(file => file.endsWith('.yaml') || file.endsWith('.yml'));
+    return fs
+      .readdirSync(workflowsDir)
+      .filter((file) => file.endsWith('.yaml') || file.endsWith('.yml'));
   } catch (error) {
     console.error(`Failed to read workflows directory: ${error}`);
     return [];

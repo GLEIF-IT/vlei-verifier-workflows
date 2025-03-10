@@ -7,17 +7,21 @@ export const CREATE_CLIENT = 'create_client';
 
 export class CreateClientStepRunner extends StepRunner {
   type: string = CREATE_CLIENT;
-  
+
   public async run(
     stepName: string,
     step: any,
     config: any = null,
-    workflow?: any,
+    workflow?: any
   ): Promise<any> {
     const agentName = step.agent_name;
     const secret = getAgentSecret(config, agentName);
     const testKeria = await TestKeria.getInstance(config['context']);
-    const result = await VleiIssuance.createClient(testKeria, secret, agentName);
+    const result = await VleiIssuance.createClient(
+      testKeria,
+      secret,
+      agentName
+    );
     return result;
   }
-} 
+}
