@@ -204,14 +204,14 @@ export async function startDockerServices(file: string, maxRetries = 3): Promise
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
+      if (await waitForHealthyServices()) {
+        return true;
+      } 
       // Start services with health check
       console.log(`Starting Docker services (attempt ${attempt + 1}/${maxRetries})...`);
       await runDockerCompose(file, 'up', 'verify', ['-d']);
-      
-      // Wait for services to be healthy
-      await waitForHealthyServices();
+
       console.log('All services started successfully');
-      return true;
     } catch (error) {
       attempt++;
       console.error(`Attempt ${attempt} failed:`, error);
@@ -225,7 +225,7 @@ export async function startDockerServices(file: string, maxRetries = 3): Promise
   return false;
 }
 
-async function waitForHealthyServices(timeout = 60000): Promise<void> {
+async function waitForHealthyServices(timeout = 60000): Promise<boolean> {
   const startTime = Date.now();
   while (Date.now() - startTime < timeout) {
     try {
@@ -234,14 +234,14 @@ async function waitForHealthyServices(timeout = 60000): Promise<void> {
       console.log('Current container statuses:', output);
       
       if (!output.includes('unhealthy') && !output.includes('starting')) {
-        return;
+        return true;
       }
     } catch (error) {
       console.error('Error checking container health:', error);
     }
     await new Promise(resolve => setTimeout(resolve, 2000));
   }
-  throw new Error('Timeout waiting for services to be healthy');
+  return false;
 }
 
 export function stopDockerCompose(composePath: string): Promise<void> {
