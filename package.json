@@ -1,10 +1,28 @@
 {
   "name": "@gleif-it/vlei-verifier-workflows",
-  "version": "0.0.5",
+  "version": "0.0.6-dev.0",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "access": "public",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GLEIF-IT/vlei-verifier-workflows.git"
+  },
+  "keywords": [
+    "GLEIF",
+    "LEI",
+    "vLEI",
+    "vLEI-verifier",
+    "vLEI-verifier-workflows"
+  ],
+  "bugs": {
+    "url": "https://github.com/GLEIF-IT/vlei-verifier-workflows/issues"
+  },
+  "homepage": "https://github.com/GLEIF-IT/vlei-verifier-workflows#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "exports": {
     ".": {
       "import": {
