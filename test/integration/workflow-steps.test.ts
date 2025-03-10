@@ -12,11 +12,9 @@ import minimist from 'minimist';
 
 import { ARG_KERIA_START_PORT, TestKeria } from '../../src/utils/test-keria';
 import { TestPaths } from '../../src/utils/test-paths';
-import { DockerComposeState } from '../../src/utils/test-docker';
-import { DockerLock } from '../../src/utils/docker-lock';
+import { DockerComposeState, startDockerServices, stopDockerCompose } from '../../src/utils/test-docker';
 
 let testPaths: TestPaths;
-let testKerias: Record<string, TestKeria>;
 let env: TestEnvironment;
 
 const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
@@ -24,7 +22,15 @@ const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
 const ARG_KERIA_HOST = 'keria_host'; //docker domain for witness
 const ARG_KERIA_NUM = 'keria_num';
 const ARG_REFRESH = 'refresh';
-const TEST_FILE_NAME = 'workflow-steps';
+
+// Test context constants - use these for test names, configJson['context'], and keria instance IDs
+const TEST_CONTEXTS = {
+  CLIENT_CREATION: 'successful_client_creation',
+  AID_CREATION_SUCCESS: 'successful_aid_creation',
+  AID_CREATION_FAILURE: 'aid_creation_failed',
+  REGISTRY_CREATION_SUCCESS: 'successful_registry_creation',
+  REGISTRY_CREATION_FAILURE: 'registry_creation_failed_aid_not_created'
+};
 
 // Parse command-line arguments using minimist
 const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
@@ -42,7 +48,7 @@ const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
   },
   '--': true,
   unknown: (arg: any) => {
-    console.info(`Unknown run-workflow-bank argument, Skipping: ${arg}`);
+    // console.info(`Unknown run-workflow-bank argument, Skipping: ${arg}`);
     // throw new Error(`Unknown argument: ${arg}`);
     return false;
   },
@@ -50,55 +56,51 @@ const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
 
 const BASE_PORT = parseInt(args[ARG_KERIA_START_PORT], 10) || 20000;
 const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : false;
-const keriaInstances: string[] = [];
 
 beforeAll(async () => {
   try {
-    console.log('Starting beforeAll setup...');
     env = resolveEnvironment();
     testPaths = TestPaths.getInstance();
 
-    // First try to clean up any existing containers to avoid conflicts
-    try {
-      await DockerComposeState.getInstance().initialize(testPaths.dockerComposeFile, 'down', '');
-      console.log('Successfully cleaned up existing containers');
-    } catch (cleanupError) {
-      console.warn('Warning: Failed to clean up existing containers:', cleanupError);
-    }
+    const dockerStarted = await startDockerServices(testPaths.dockerComposeFile);
+    if(dockerStarted) {    
+    
+      // Initialize all Keria instances upfront
+      await Promise.all(Object.values(TEST_CONTEXTS).map(async (contextId, index) => {
+        try {
+          console.log(`Initializing Keria instance for context: ${contextId}`);
+          const keriaInstance = await TestKeria.getInstance(
+            contextId,
+            testPaths,
+            args[ARG_KERIA_DOMAIN],
+            args[ARG_KERIA_HOST],
+            args[ARG_WITNESS_HOST],
+            BASE_PORT
+          );
 
-    // Now start docker-compose services
-    await DockerComposeState.getInstance().initialize(testPaths.dockerComposeFile, 'up', 'verify');
+          console.log(`Successfully initialized Keria instance for context: ${contextId}`);
+        } catch (error) {
+          console.error(`Failed to initialize Keria instance for context ${contextId}:`, error);
+          throw error;
+        }
+      }));
+    }
   } catch (error) {
     console.error('Error in beforeAll:', error);
     throw error;
   }
-}, 30000);
+}, 60000);
 
 afterAll(async () => {
   console.log('Running workflow-steps test cleanup...');
-  try {
-    // Create a copy of the array to avoid modification during iteration
-    const instancesArray = [...keriaInstances];
-    
-    // Use Promise.all to wait for all cleanup operations to complete
-    await Promise.all(instancesArray.map(async (instanceId) => {
-      try {
-        const testKeria = await TestKeria.getInstance(instanceId);
-        await testKeria.afterAll(instanceId);
-      } catch (error) {
-        console.warn(`Warning: Failed to clean up Keria instance ${instanceId}:`, error);
-      }
-    }));
-    
-    console.log('Cleanup completed successfully');
-  } catch (error) {
-    console.error('Error during cleanup:', error);
-    throw error;
-  }
-}, 30000);
+  await TestKeria.cleanupInstances(Object.values(TEST_CONTEXTS));
+  // if(TestKeria.instances.size <= 0) {
+  //   await stopDockerCompose(testPaths.dockerComposeFile);
+  // }
+}, 60000);
 
 describe('testing Client creation workflow step', () => {
-  it('successful client creation', async () => {
+  it(TEST_CONTEXTS.CLIENT_CREATION, async () => {
     const workflowsDir = './workflows/';
     const workflowFile = 'create-client.yaml';
     const workflowObj = loadWorkflow(
@@ -109,19 +111,7 @@ describe('testing Client creation workflow step', () => {
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
     const agentName = 'client-agent-1';
-    configJson['context'] = 'successful_client_creation';
-    keriaInstances.push(configJson['context']);
-
-    // Create Keria instance with unique ID based on workflow and config
-    await TestKeria.getInstance(
-      configJson['context'],
-      testPaths,
-      args[ARG_KERIA_DOMAIN],
-      args[ARG_KERIA_HOST],
-      args[ARG_WITNESS_HOST],
-      BASE_PORT,
-      TestKeria.calcOffset(1),
-    );
+    configJson['context'] = TEST_CONTEXTS.CLIENT_CREATION;
 
     if (workflowObj && configJson) {
       const wr = new WorkflowRunner(workflowObj, configJson, configJson['context']);
@@ -137,7 +127,7 @@ describe('testing AID creation workflow step', () => {
   beforeEach(() => {
     WorkflowState.resetInstance();
   });
-  test('successful AID creation', async function run() {
+  test(TEST_CONTEXTS.AID_CREATION_SUCCESS, async function run() {
     const workflowsDir = './workflows/';
     const workflowFile = 'create-aid-valid.yaml';
     const workflow = loadWorkflow(
@@ -148,21 +138,10 @@ describe('testing AID creation workflow step', () => {
     const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
-    configJson['context'] = 'successful_aid_creation';
-    
-    // Create Keria instance for this agent
-    await TestKeria.getInstance(
-      configJson['context'],
-      testPaths,
-      args[ARG_KERIA_DOMAIN],
-      args[ARG_KERIA_HOST],
-      args[ARG_WITNESS_HOST],
-      BASE_PORT,
-      TestKeria.calcOffset(2),
-    );
+    configJson['context'] = TEST_CONTEXTS.AID_CREATION_SUCCESS;
     
     if (workflow && configJson) {
-      const wr = new WorkflowRunner(workflow, configJson, 'successful AID creation');
+      const wr = new WorkflowRunner(workflow, configJson, configJson['context']);
       const workflowRunResult = await wr.runWorkflow();
       const workflowState = WorkflowState.getInstance();
       expect(workflowRunResult).toEqual(true);
@@ -170,7 +149,7 @@ describe('testing AID creation workflow step', () => {
     } else throw 'Invalid workflow of configuration';
   }, 3600000);
 
-  test('AID creation failed. Client was not created', async function run() {
+  test(TEST_CONTEXTS.AID_CREATION_FAILURE, async function run() {
     const workflowsDir = './workflows/';
     const workflowFile = 'create-aid-invalid.yaml';
     const workflow = loadWorkflow(
@@ -180,19 +159,10 @@ describe('testing AID creation workflow step', () => {
     const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
-    configJson['context'] = 'aid_creation_failed';
-    // Create Keria instance for this agent
-    await TestKeria.getInstance(configJson['context'],
-    testPaths,
-    args[ARG_KERIA_DOMAIN],
-    args[ARG_KERIA_HOST],
-    args[ARG_WITNESS_HOST],
-    BASE_PORT,
-    TestKeria.calcOffset(3),
-  );
+    configJson['context'] = TEST_CONTEXTS.AID_CREATION_FAILURE;
     
     if (workflow && configJson) {
-      const wr = new WorkflowRunner(workflow, configJson, 'AID creation failed. Client was not created');
+      const wr = new WorkflowRunner(workflow, configJson, configJson['context']);
       await expect(wr.runWorkflow()).rejects.toThrow(Error);
     } else throw 'Invalid workflow of configuration';
   }, 3600000);
@@ -202,7 +172,7 @@ describe('testing Registry creation workflow step', () => {
   beforeEach(() => {
     WorkflowState.resetInstance();
   });
-  test('successful Registry creation', async function run() {
+  test(TEST_CONTEXTS.REGISTRY_CREATION_SUCCESS, async function run() {
     const workflowsDir = './workflows/';
     const workflowFile = 'create-registry-valid.yaml';
     const workflow = loadWorkflow(
@@ -213,16 +183,7 @@ describe('testing Registry creation workflow step', () => {
     const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
-    configJson['context'] = 'successful_registry_creation';
-    // Create Keria instance for this agent
-    await TestKeria.getInstance(configJson['context'],
-      testPaths,
-      args[ARG_KERIA_DOMAIN],
-      args[ARG_KERIA_HOST],
-      args[ARG_WITNESS_HOST],
-      BASE_PORT,
-      TestKeria.calcOffset(4),
-    );
+    configJson['context'] = TEST_CONTEXTS.REGISTRY_CREATION_SUCCESS;
     
     if (workflow && configJson) {
       const wr = new WorkflowRunner(workflow, configJson, configJson['context']);
@@ -233,7 +194,7 @@ describe('testing Registry creation workflow step', () => {
     } else throw 'Invalid workflow of configuration';
   }, 3600000);
 
-  test('Registry creation failed. AID was not created', async function run() {
+  test(TEST_CONTEXTS.REGISTRY_CREATION_FAILURE, async function run() {
     const workflowsDir = './workflows/';
     const workflowFile = 'create-registry-invalid-no-aid.yaml';
     const workflow = loadWorkflow(
@@ -243,18 +204,8 @@ describe('testing Registry creation workflow step', () => {
     const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
-    configJson['context'] = 'registry-creation-failed-AID-not-created';
-    
-    // Create Keria instance for this agent
-    await TestKeria.getInstance(configJson['context'],
-      testPaths,
-      args[ARG_KERIA_DOMAIN],
-      args[ARG_KERIA_HOST],
-      args[ARG_WITNESS_HOST],
-      BASE_PORT,
-      TestKeria.calcOffset(5),
-    );
-    
+    configJson['context'] = TEST_CONTEXTS.REGISTRY_CREATION_FAILURE;
+        
     if (workflow && configJson) {
       const wr = new WorkflowRunner(workflow, configJson, configJson['context']);
       await expect(wr.runWorkflow()).rejects.toThrow(Error);

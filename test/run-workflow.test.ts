@@ -7,11 +7,9 @@ import { strict as assert } from 'assert';
 import { loadWorkflow } from '../src/utils/test-data';
 import { ARG_KERIA_START_PORT, TestKeria } from '../src/utils/test-keria';
 import { TestPaths } from '../src/utils/test-paths';
-import { DockerLock } from '../src/utils/docker-lock';
-import { DockerComposeState } from '../src/utils/test-docker';
+import { DockerComposeState, startDockerServices, stopDockerCompose } from '../src/utils/test-docker';
 
 let testPaths: TestPaths;
-let testKeria: TestKeria;
 let env: TestEnvironment;
 
 const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
@@ -19,6 +17,11 @@ const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
 const ARG_KERIA_HOST = 'keria_host'; //docker domain for witness
 const ARG_KERIA_NUM = 'keria_num';
 const ARG_REFRESH = 'refresh';
+
+// Test context constants - use these for test names, configJson['context'], and keria instance IDs
+const TEST_CONTEXTS = {
+  ISSUANCE_TEST: 'issuance_workflow_test',
+};
 
 // Parse command-line arguments using minimist
 const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
@@ -36,117 +39,58 @@ const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
   },
   '--': true,
   unknown: (arg: any) => {
-    console.info(`Unknown run-workflow-bank argument, Skipping: ${arg}`);
+    // console.info(`Unknown run-workflow-bank argument, Skipping: ${arg}`);
     // throw new Error(`Unknown argument: ${arg}`);
     return false;
   },
 });
 
-const keriaImage = `weboftrust/keria:0.2.0-dev4`;
-const keriaNum = parseInt(args[ARG_KERIA_NUM], 10) || 0;
-
-const offset = 10 * (keriaNum - 1);
-const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : false;
-
-let testKerias: Record<string, TestKeria> = {};
 const BASE_PORT = parseInt(args[ARG_KERIA_START_PORT], 10) || 20000;
 
 beforeAll(async () => {
   try {
-    console.log('Starting beforeAll setup...');
     env = resolveEnvironment();
     testPaths = TestPaths.getInstance();
 
-    // Start docker-compose services first
-    await DockerComposeState.getInstance().initialize(testPaths.dockerComposeFile, 'up', 'verify');
+    const dockerStarted = await startDockerServices(testPaths.dockerComposeFile);
+    if(dockerStarted) {    
+      // Initialize all Keria instances upfront
+      await Promise.all(Object.values(TEST_CONTEXTS).map(async (contextId, index) => {
+        try {
+          console.log(`Initializing Keria instance for context: ${contextId}`);
+          const keriaInstance = await TestKeria.getInstance(
+            contextId,
+            testPaths,
+            args[ARG_KERIA_DOMAIN],
+            args[ARG_KERIA_HOST],
+            args[ARG_WITNESS_HOST],
+            BASE_PORT
+          );
+
+          console.log(`Successfully initialized Keria instance for context: ${contextId}`);
+        } catch (error) {
+          console.error(`Failed to initialize Keria instance for context ${contextId}:`, error);
+          throw error;
+        }
+      }));
+    }
   } catch (error) {
     console.error('Error in beforeAll:', error);
     throw error;
   }
-}, 30000);
+}, 60000);
+
+afterAll(async () => {
+  console.log('Running run-workflow test cleanup...');
+  await TestKeria.cleanupInstances(Object.values(TEST_CONTEXTS));
+  // if(TestKeria.instances.size <= 0) {
+  //   await stopDockerCompose(testPaths.dockerComposeFile);
+  // }
+}, 60000);
 
 describe('Workflow Tests', () => {
-  // beforeAll(async () => {
-  //   try {
-  //     console.log('Starting beforeAll setup...');
-  //     env = resolveEnvironment();
-  //     testPaths = TestPaths.getInstance();
 
-  //     console.log(
-  //       `Setting up Keria with image: ${keriaImage}`
-  //     );
-
-  //     console.log('About to call testKeria.beforeAll()...');
-  //     const beforeAllPromise = testKeria.beforeAll(
-  //       keriaImage,
-  //       keriaContainer,
-  //       refresh
-  //     );
-
-  //     // Add timeout to prevent infinite hanging
-  //     const timeout = 180000; // 180 seconds
-  //     let timeoutId: NodeJS.Timeout;
-  //     const timeoutPromise = new Promise((_, reject) => {
-  //       timeoutId = setTimeout(
-  //         () => reject(new Error('beforeAll timeout')),
-  //         timeout
-  //       );
-  //       timeoutId.unref(); // Prevent keeping process alive
-  //     });
-
-  //     try {
-  //       await Promise.race([beforeAllPromise, timeoutPromise]);
-  //     } finally {
-  //       clearTimeout(timeoutId!); // Clean up the timeout
-  //     }
-
-  //     console.log('Verifying container is running...');
-  //     // Wait a moment for container to fully start
-  //     await new Promise((resolve) => {
-  //       const startupDelay = setTimeout(resolve, 5000);
-  //       startupDelay.unref(); // Prevent keeping process alive
-  //     });
-  //   } catch (error) {
-  //     console.error('Error in beforeAll:', error);
-  //     console.error(
-  //       'Full error details:',
-  //       error instanceof Error ? error.stack : error
-  //     );
-  //     throw error;
-  //   }
-  // }, 30000);
-
-  // afterAll(async () => {
-  //   console.log('Running global test cleanup...');
-
-  //   try {
-  //     // First cleanup attempt with TestKeria
-  //     await testKeria.afterAll(keriaContainer);
-
-  //     // Force cleanup any remaining handles
-  //     await Promise.all([
-  //       // Close any open Docker connections
-  //       DockerLock.getInstance().forceRelease(),
-
-  //       // Add a small delay to ensure cleanup completes
-  //       new Promise((resolve) => {
-  //         const timeout = setTimeout(() => {
-  //           clearTimeout(timeout);
-  //           resolve(null);
-  //         }, 2000);
-  //         // Ensure the timer doesn't keep the process alive
-  //         timeout.unref();
-  //       }),
-  //     ]);
-
-  //     console.log('Cleanup completed successfully');
-  //   } catch (error) {
-  //     console.error('Error during cleanup:', error);
-  //     throw error;
-  //   }
-  // }, 30000); // Increased timeout to ensure cleanup completes
-
-  test('workflow', async () => {
+  test(TEST_CONTEXTS.ISSUANCE_TEST, async () => {
     const workflowsDir = '../src/workflows/';
     const workflowFile = env.workflow;
     const workflow = loadWorkflow(
@@ -156,21 +100,12 @@ describe('Workflow Tests', () => {
     let dirPath = '../src/config/';
     const configFilePath = path.join(__dirname, dirPath) + configFileName;
     const configJson = await getConfig(configFilePath);
-    configJson['context'] = 'workflow_test';
+    configJson['context'] = TEST_CONTEXTS.ISSUANCE_TEST;
 
     if (workflow && configJson) {
-      await TestKeria.getInstance(configJson['context'],
-        testPaths,
-        args[ARG_KERIA_DOMAIN],
-        args[ARG_KERIA_HOST],
-        args[ARG_WITNESS_HOST],
-        BASE_PORT,
-        TestKeria.calcOffset(6),
-      );
-
       const wr = new WorkflowRunner(workflow, configJson, configJson['context']);
       const workflowRunResult = await wr.runWorkflow();
       assert.equal(workflowRunResult, true);
     }
-  }, 90000); // Match the global timeout for the test itself
+  }, 3600000); // Match the global timeout for the test itself
 });

@@ -25,7 +25,7 @@ export interface KeriaConfig {
   durls?: string[];
 }
 export class TestKeria {
-  private static instances: Map<string, TestKeria> = new Map<string, TestKeria>();
+  public static instances: Map<string, TestKeria> = new Map<string, TestKeria>();
   public testPaths: TestPaths;
   public keriaAdminPort: number;
   public keriaAdminUrl: URL;
@@ -85,7 +85,7 @@ export class TestKeria {
     host?: string,
     containerLocalhost?: string,
     basePort?: number,
-    offset?: number
+    instanceOffset?: number
   ): Promise<TestKeria> {
     if (!TestKeria.instances) {
       TestKeria.instances = new Map<string, TestKeria>();
@@ -101,10 +101,14 @@ export class TestKeria {
           `TestKeria.getInstance() called for agent "${instanceName}" without required parameters. You must initialize it with all parameters first.`
         );
       } else {
+        if(!instanceOffset) {
+          instanceOffset = TestKeria.getUniqueOffsetForInstance(instanceName);
+        }
+        
         const args = TestKeria.processKeriaArgs(
-          basePort!+1+offset!,
-          basePort!+2+offset!,
-          basePort!+3+offset!,
+          basePort!+1+instanceOffset,
+          basePort!+2+instanceOffset,
+          basePort!+3+instanceOffset,
         );
         TestKeria.instances.set(instanceName, new TestKeria(
           testPaths!,
@@ -116,7 +120,7 @@ export class TestKeria {
           parseInt(args[ARG_KERIA_BOOT_PORT], 10)
         ));
         const keria = TestKeria.instances.get(instanceName);
-        await keria!.beforeAll(keriaImage, instanceName, false);
+        await keria!.startupInstance(keriaImage, instanceName, false);
       }
     } else if (testPaths !== undefined) {
       console.warn(
@@ -151,7 +155,7 @@ export class TestKeria {
       },
       '--': true,
       unknown: (arg) => {
-        console.info(`Unknown keria argument, skipping: ${arg}`);
+        // console.info(`Unknown keria argument, skipping: ${arg}`);
         return false;
       },
     });
@@ -159,13 +163,13 @@ export class TestKeria {
     return args;
   }
 
-  async beforeAll(keriaImage: string, containerPostfix: string, refresh: boolean) {
-    console.log('Starting beforeAll execution...');
+  async startupInstance(keriaImage: string, containerPostfix: string, refresh: boolean) {
+    console.log('Starting keria instance...');
     try {
       // Check if service is running
       console.log('Checking if service keria is running...');
       const isRunning = await this.checkServiceRunning();
-      console.log('Service running status:', isRunning);
+      console.log('Is keria service running?', isRunning);
 
       if (!isRunning) {
         const containerName = `keria-${containerPostfix}`;
@@ -290,11 +294,35 @@ export class TestKeria {
     );
   }
 
+  static async cleanupInstances(testContexts: string[]): Promise<void> {
+    console.log('Running workflow-steps test cleanup...');
+    try {
+      // Use Promise.all to wait for all cleanup operations to complete
+      await Promise.all(testContexts.map(async (contextId) => {
+        try {
+          console.log('Cleaning up Keria instance', contextId);
+          const testKeria = await TestKeria.getInstance(contextId);
+          if (testKeria) {
+            await testKeria.cleanupInstance(contextId);
+            console.log('Successfully cleaned up Keria instance', contextId);
+          }
+        } catch (error) {
+          console.warn(`Warning: Failed to clean up Keria instance ${contextId}:`, error);
+        }
+      }));
+      
+      console.log('Cleanup completed successfully');
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+      throw error;
+    }
+  }
+
   /**
    * Cleans up a specific instance
    */
-  async afterAll(instanceId: string): Promise<void> {
-    console.log(`Starting afterAll cleanup for instance ${instanceId}...`);
+  async cleanupInstance(instanceId: string): Promise<void> {
+    console.log(`Cleanup for keria instance ${instanceId}...`);
     try {
       // Clean up test data
       console.log(`Cleaning up keria test instance ${instanceId}`);
@@ -306,14 +334,14 @@ export class TestKeria {
       if (containerName && this.containers.has(containerName)) {
         console.log(`Stopping container ${containerName}...`);
         try {
-          await this.containers.get(containerName).stop({ t: 10 });
+          await this.containers!.get(containerName)!.stop({ t: 10 });
         } catch (error) {
           console.log(`Warning: Error stopping container ${containerName}, proceeding with force remove: ${error instanceof Error ? error.message : 'unknown error'}`);
         }
 
         console.log(`Force removing container ${containerName}...`);
         try {
-          await this.containers.get(containerName).remove({ force: true });
+          await this.containers!.get(containerName)!.remove({ force: true });
           // Remove from containers map after successful removal
           this.containers.delete(containerName);
         } catch (error) {
@@ -337,7 +365,7 @@ export class TestKeria {
   }
 
   async createTempKeriaConfigFile(kConfig: KeriaConfig): Promise<string> {
-    console.log('Starting temp config file creation...');
+    console.log('Create temp config file...');
     try {
       const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'keria-config-'));
       console.log('Created temp directory:', tempDir);
@@ -386,7 +414,7 @@ export class TestKeria {
    * Static method to clean up all Keria instances and shut down Docker Compose
    */
   public static async cleanupAllInstances(): Promise<void> {
-    console.log('Starting cleanup of all Keria instances...');
+    console.log('Cleanup of all Keria instances...');
     
     // Create a copy of the instances to avoid modification during iteration
     const instanceNames = Array.from(TestKeria.instances.keys());
@@ -396,7 +424,7 @@ export class TestKeria {
       try {
         const instance = TestKeria.instances.get(instanceName);
         if (instance) {
-          await instance.afterAll(instanceName);
+          await instance.cleanupInstance(instanceName);
         }
       } catch (error) {
         console.error(`Error cleaning up instance ${instanceName}:`, error);
@@ -454,6 +482,21 @@ export class TestKeria {
     
     console.log('All Keria instances cleanup completed');
   }
+
+  private static getUniqueOffsetForInstance(instanceName: string): number {
+    if (!TestKeria._instanceOffsets) {
+      TestKeria._instanceOffsets = new Map<string, number>();
+    }
+    
+    if (!TestKeria._instanceOffsets.has(instanceName)) {
+      const nextOffset = TestKeria._instanceOffsets.size * 10;
+      TestKeria._instanceOffsets.set(instanceName, nextOffset);
+    }
+    
+    return TestKeria._instanceOffsets.get(instanceName)!;
+  }
+
+  private static _instanceOffsets: Map<string, number>;
 }
 
 /**
