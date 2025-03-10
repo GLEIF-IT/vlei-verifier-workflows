@@ -3,12 +3,10 @@ import * as path from 'path';
 import * as os from 'os';
 import { TestPaths } from './test-paths';
 import { URL } from 'url';
-import { runDockerCompose, stopDockerCompose } from './test-docker';
 import minimist = require('minimist');
 import * as dockerode from 'dockerode';
 import Dockerode = require('dockerode');
-import { DockerLock } from './docker-lock';
-import { Workflow } from '../types/workflow';
+import { exec } from 'child_process';
 
 export const ARG_KERIA_ADMIN_PORT = 'keria-admin-port';
 export const ARG_KERIA_HTTP_PORT = 'keria-http-port';
@@ -39,12 +37,11 @@ export class TestKeria {
   public domain: string;
   public witnessHost: string;
   public host: string;
-  public containers: Map<string, dockerode.Container> = new Map<
+  private containers: Map<string, dockerode.Container> = new Map<
     string,
     dockerode.Container
   >();
-  public docker = new Dockerode();
-  private dockerLock = DockerLock.getInstance();
+  private docker = new Dockerode();
 
   private constructor(
     testPaths: TestPaths,
@@ -53,7 +50,7 @@ export class TestKeria {
     witnessHost: string,
     kAdminPort: number,
     kHttpPort: number,
-    kBootPort: number
+    kBootPort: number,
   ) {
     this.testPaths = testPaths;
     this.domain = domain;
@@ -263,7 +260,10 @@ export class TestKeria {
       const container = await this.docker.createContainer(containerOptions);
       console.log(`Starting container ${containerName}...`);
       await container.start();
-
+      
+      // Add container to the containers map for cleanup
+      this.containers.set(containerName, container);
+      
       return container;
     } catch (error) {
       console.error('Error in startContainer:', error);
@@ -290,53 +290,48 @@ export class TestKeria {
     );
   }
 
-  async afterAll(containerName: string) {
-    console.log('Starting afterAll cleanup...');
+  /**
+   * Cleans up a specific instance
+   */
+  async afterAll(instanceId: string): Promise<void> {
+    console.log(`Starting afterAll cleanup for instance ${instanceId}...`);
     try {
       // Clean up test data
-      console.log('Cleaning up test data');
+      console.log(`Cleaning up keria test instance ${instanceId}`);
+
+      // Get the container name based on the instance ID
+      const containerName = `keria-${instanceId}`;
 
       // Stop and remove container
-      if (containerName) {
+      if (containerName && this.containers.has(containerName)) {
         console.log(`Stopping container ${containerName}...`);
         try {
-          await this.docker.getContainer(containerName).stop({ t: 10 });
+          await this.containers.get(containerName).stop({ t: 10 });
         } catch (error) {
-          if (error instanceof Error) {
-            console.log(`Warning: Error stopping container ${containerName}, proceeding with force remove: ${error.message}`);
-          } else {
-            console.log(`Warning: Error stopping container ${containerName}, proceeding with force remove`);
-          }
+          console.log(`Warning: Error stopping container ${containerName}, proceeding with force remove: ${error instanceof Error ? error.message : 'unknown error'}`);
         }
 
         console.log(`Force removing container ${containerName}...`);
         try {
-          await this.docker.getContainer(containerName).remove({ force: true });
+          await this.containers.get(containerName).remove({ force: true });
+          // Remove from containers map after successful removal
+          this.containers.delete(containerName);
         } catch (error) {
-          if (error instanceof Error) {
-            console.log(`Warning: Error removing container ${containerName}: ${error.message}`);
-          } else {
-            console.log(`Warning: Error removing container ${containerName}`);
-          }
+          console.log(`Warning: Error removing container ${containerName}: ${error instanceof Error ? error.message : 'unknown error'}`);
         }
         
         console.log(`Container ${containerName} cleanup attempted`);
+      } else {
+        console.log(`No container found for instance ${instanceId}`);
       }
 
-      // Stop local services
-      console.log(`Stopping local services using ${this.testPaths.dockerComposeFile}`);
-      try {
-        await stopDockerCompose(this.testPaths.dockerComposeFile);
-      } catch (error) {
-        console.error('Error stopping docker compose:', error);
-      }
+      // Remove this instance from the instances map
+      TestKeria.instances.delete(instanceId);
+      console.log(`Removed instance ${instanceId} from instances map`);
 
-      // Close Docker connection
-      console.log('Closing Docker connection...');
-
-      console.log('afterAll cleanup completed');
+      console.log(`afterAll cleanup for instance ${instanceId} completed`);
     } catch (error) {
-      console.error('Error in afterAll:', error);
+      console.error(`Error in afterAll for instance ${instanceId}:`, error);
       throw error;
     }
   }
@@ -363,71 +358,6 @@ export class TestKeria {
     }
   }
 
-  async startContainerWithConfig(
-    imageName: string,
-    containerName: string,
-    alreadyLocked: boolean = false
-  ): Promise<dockerode.Container> {
-    if (!alreadyLocked) {
-      await this.dockerLock.acquire();
-    }
-
-    try {
-      return await this.startContainer(imageName, containerName, false, true);
-    } finally {
-      if (!alreadyLocked) {
-        this.dockerLock.release();
-      }
-    }
-  }
-
-  public async launchTestKeria(
-    kimageName: string,
-    kontainerName: string,
-    pullImage: boolean = false
-  ): Promise<dockerode.Container> {
-    console.log(
-      `Starting launchTestKeria for ${kontainerName} with image ${kimageName}`
-    );
-
-    // Check if container exists and is running (no lock needed)
-    try {
-      console.log(`Checking for existing container ${kontainerName}`);
-      const container = await this.docker.getContainer(kontainerName);
-      const containerInfo = await container.inspect();
-
-      if (containerInfo.State.Running) {
-        console.log(`Found running container ${kontainerName}, reusing it`);
-        return container;
-      }
-    } catch (containerError: any) {
-      console.log(`No existing container found: ${containerError.message}`);
-    }
-
-    // If we get here, we need to create a new container
-    console.log(`Creating new container ${kontainerName}`);
-    await this.dockerLock.acquire();
-    try {
-      if (pullImage) {
-        console.log(`Pulling image ${kimageName}`);
-        await this.docker.pull(kimageName);
-      }
-
-      const container = await this.startContainerWithConfig(
-        kimageName,
-        kontainerName,
-        true
-      );
-      console.log(
-        `Successfully created and started new container ${kontainerName}`
-      );
-      return container;
-    } finally {
-      this.dockerLock.release();
-      console.log('Docker lock released');
-    }
-  }
-
   private async checkServiceRunning(): Promise<boolean> {
     try {
       const response = await fetch(
@@ -451,4 +381,99 @@ export class TestKeria {
     const offset = 10 * (keriaNum - 1);
     return offset;
   }
+
+  /**
+   * Static method to clean up all Keria instances and shut down Docker Compose
+   */
+  public static async cleanupAllInstances(): Promise<void> {
+    console.log('Starting cleanup of all Keria instances...');
+    
+    // Create a copy of the instances to avoid modification during iteration
+    const instanceNames = Array.from(TestKeria.instances.keys());
+    
+    // Clean up each instance
+    for (const instanceName of instanceNames) {
+      try {
+        const instance = TestKeria.instances.get(instanceName);
+        if (instance) {
+          await instance.afterAll(instanceName);
+        }
+      } catch (error) {
+        console.error(`Error cleaning up instance ${instanceName}:`, error);
+      }
+    }
+    
+    // Force cleanup any containers that might have been missed
+    try {
+      const docker = new Dockerode();
+      
+      // Get all containers
+      const containers = await docker.listContainers({ all: true });
+      
+      // Find any keria containers that might have been missed
+      for (const containerInfo of containers) {
+        const containerName = containerInfo.Names[0].substring(1); // Remove leading slash
+        if (containerName.startsWith('keria-')) {
+          console.log(`Found leftover container ${containerName}, cleaning up...`);
+          try {
+            const container = docker.getContainer(containerInfo.Id);
+            await container.stop({ t: 5 }).catch(() => {}); // Ignore errors if already stopped
+            await container.remove({ force: true });
+            console.log(`Successfully removed leftover container ${containerName}`);
+          } catch (error) {
+            console.error(`Error removing leftover container ${containerName}:`, error);
+          }
+        }
+      }
+      
+      // If all instances are cleaned up, shut down Docker Compose
+      if (TestKeria.instances.size === 0) {
+        console.log('All Keria instances cleaned up, shutting down Docker Compose...');
+        
+        // Get the Docker Compose file path from TestPaths
+        const testPaths = TestPaths.getInstance();
+        const dockerComposeFile = testPaths.dockerComposeFile;
+        
+        if (dockerComposeFile) {
+          try {
+            console.log(`Running docker-compose down with file: ${dockerComposeFile}`);
+            await stopDockerComposeServices(dockerComposeFile);
+            console.log('Docker Compose services successfully shut down');
+          } catch (error) {
+            console.error('Error shutting down Docker Compose:', error);
+          }
+        } else {
+          console.log('No Docker Compose file found, skipping shutdown');
+        }
+      } else {
+        console.log(`Skipping Docker Compose shutdown as ${TestKeria.instances.size} instances are still running`);
+      }
+    } catch (error) {
+      console.error('Error during force cleanup:', error);
+    }
+    
+    console.log('All Keria instances cleanup completed');
+  }
+}
+
+/**
+ * Helper function to stop Docker Compose services
+ */
+async function stopDockerComposeServices(dockerComposeFile: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const command = `docker-compose -f ${dockerComposeFile} down`;
+    console.log(`Executing: ${command}`);
+    
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing docker-compose down: ${error.message}`);
+        console.error(`stderr: ${stderr}`);
+        reject(error);
+        return;
+      }
+      
+      console.log(`docker-compose down output: ${stdout}`);
+      resolve();
+    });
+  });
 }

@@ -40,18 +40,23 @@ export class DockerComposeState {
     command: string,
     service?: string
   ): Promise<void> {
-    if (this.isRunning) {
+    if (this.isRunning && command === 'up') {
       return;
     }
-
+  
     if (this.initializationPromise) {
       return this.initializationPromise;
     }
-
+  
     this.initializationPromise = this._initialize(file, command, service);
     try {
       await this.initializationPromise;
-      this.isRunning = true;
+      // Only set isRunning to true if the command is 'up'
+      if (command === 'up') {
+        this.isRunning = true;
+      } else if (command === 'down') {
+        this.isRunning = false;
+      }
     } finally {
       this.initializationPromise = null;
     }
@@ -66,7 +71,7 @@ export class DockerComposeState {
     const cmd = service
       ? `docker compose -f ${file} ${command} ${service}`
       : `docker compose -f ${file} ${command}`;
-
+  
     return new Promise((resolve, reject) => {
       const process = exec(cmd, (error, stdout, stderr) => {
         if (error) {
@@ -76,7 +81,7 @@ export class DockerComposeState {
         console.log(stdout);
         resolve();
       });
-
+  
       // Track active process
       this.activeProcesses.add(process);
       process.on('exit', () => {

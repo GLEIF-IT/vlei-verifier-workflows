@@ -50,15 +50,23 @@ const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
 
 const BASE_PORT = parseInt(args[ARG_KERIA_START_PORT], 10) || 20000;
 const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : false;
+const keriaInstances: string[] = [];
 
 beforeAll(async () => {
   try {
     console.log('Starting beforeAll setup...');
     env = resolveEnvironment();
     testPaths = TestPaths.getInstance();
-    testKerias = {};
 
-    // Start docker-compose services first
+    // First try to clean up any existing containers to avoid conflicts
+    try {
+      await DockerComposeState.getInstance().initialize(testPaths.dockerComposeFile, 'down', '');
+      console.log('Successfully cleaned up existing containers');
+    } catch (cleanupError) {
+      console.warn('Warning: Failed to clean up existing containers:', cleanupError);
+    }
+
+    // Now start docker-compose services
     await DockerComposeState.getInstance().initialize(testPaths.dockerComposeFile, 'up', 'verify');
   } catch (error) {
     console.error('Error in beforeAll:', error);
@@ -67,26 +75,20 @@ beforeAll(async () => {
 }, 30000);
 
 afterAll(async () => {
-  console.log('Running global test cleanup...');
+  console.log('Running workflow-steps test cleanup...');
   try {
-    // Clean up all created TestKeria instances
-    const keriaPromises = Object.entries(testKerias).map(async ([instanceId, instance]) => {
-      const keriaContainer = instanceId;
-      await instance.afterAll(keriaContainer);
-    });
-    await Promise.all(keriaPromises);
+    // Create a copy of the array to avoid modification during iteration
+    const instancesArray = [...keriaInstances];
     
-    await Promise.all([
-      DockerComposeState.getInstance().stop(),
-      DockerLock.getInstance().forceRelease(),
-      new Promise((resolve) => {
-        const timeout = setTimeout(() => {
-          clearTimeout(timeout);
-          resolve(null);
-        }, 2000);
-        timeout.unref();
-      }),
-    ]);
+    // Use Promise.all to wait for all cleanup operations to complete
+    await Promise.all(instancesArray.map(async (instanceId) => {
+      try {
+        const testKeria = await TestKeria.getInstance(instanceId);
+        await testKeria.afterAll(instanceId);
+      } catch (error) {
+        console.warn(`Warning: Failed to clean up Keria instance ${instanceId}:`, error);
+      }
+    }));
     
     console.log('Cleanup completed successfully');
   } catch (error) {
@@ -108,6 +110,7 @@ describe('testing Client creation workflow step', () => {
     const configJson = await getConfig(configFilePath);
     const agentName = 'client-agent-1';
     configJson['context'] = 'successful_client_creation';
+    keriaInstances.push(configJson['context']);
 
     // Create Keria instance with unique ID based on workflow and config
     await TestKeria.getInstance(
