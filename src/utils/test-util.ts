@@ -1,4 +1,6 @@
+import assert from 'assert';
 import SignifyClient from 'signify-ts';
+
 import { RetryOptions, retry } from './retry.js';
 import { resolveEnvironment } from './resolve-env.js';
 import { WorkflowState } from '../workflow-state.js';
@@ -55,7 +57,7 @@ export async function assertOperations(
 ): Promise<void> {
   for (const client of clients) {
     const operations = await client.operations().list();
-    expect(operations).toHaveLength(0);
+    assert(operations.length === 0);
   }
 }
 
@@ -71,7 +73,7 @@ export async function assertNotifications(
   for (const client of clients) {
     const res = await client.notifications().list();
     const notes = res.notes.filter((i: { r: boolean }) => i.r === false);
-    expect(notes).toHaveLength(0);
+    assert(notes.length === 0);
   }
 }
 
@@ -125,7 +127,7 @@ export async function getGrantedCredential(
   });
   let credential: any;
   if (credentialList.length > 0) {
-    expect(credentialList.length).toEqual(1);
+    assert(credentialList.length === 1);
     credential = credentialList[0];
   }
   return credential;
@@ -144,7 +146,7 @@ export async function getIssuedCredential(
       '-a-i': recipientAID.prefix,
     },
   });
-  expect(credentialList.length).toBeLessThanOrEqual(1);
+  assert(credentialList.length <= 1);
   return credentialList[0];
 }
 
@@ -420,7 +422,7 @@ export async function warnNotifications(
       console.warn('notifications', notes);
     }
   }
-  expect(count).toBeGreaterThan(0); // replace warnNotifications with assertNotifications
+  assert(count > 0);
 }
 
 export async function deleteOperations<T = any>(
@@ -445,7 +447,7 @@ export async function getReceivedCredential(
   });
   let credential: any;
   if (credentialList.length > 0) {
-    expect(credentialList.length).toEqual(1);
+    assert(credentialList.length === 1);
     credential = credentialList[0];
   }
   return credential;
@@ -569,7 +571,7 @@ export async function getOrCreateRegistry(
     (reg: { name: string }) => reg.name == registryName
   );
   if (registries.length > 0) {
-    expect(registries.length).toEqual(1);
+    assert(registries.length === 1);
   } else {
     const regResult = await client
       .registries()
@@ -616,7 +618,7 @@ export async function sendAdmitMessage(
     senderClient,
     '/exn/ipex/grant'
   );
-  expect(notifications.length).toEqual(1);
+  assert(notifications.length > 0);
   const grantNotification = notifications[0];
 
   const [admit, sigs, aend] = await senderClient.ipex().admit({

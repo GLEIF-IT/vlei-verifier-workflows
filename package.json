@@ -47,8 +47,8 @@
     "build:cjs": "tsc -p ./build/configs/tsconfig.cjs.json && npx echo-cli '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
     "test": "jest test/",
     "test:full": "npm run project-checker && npm run build && npm run docker:up && npm test && npm run compatibility-checker && npm run package-checker && npm run docker:down",
-    "docker:up": "docker compose down && docker compose up -d",
-    "docker:down": "docker compose down",
+    "docker:up": "npm run docker:down && docker compose up -d",
+    "docker:down": "docker compose down -v",
     "linter": "npx eslint src test",
     "generate-docs": "jsdoc --configure .jsdoc.json --verbose",
     "formatter:fix": "prettier --write .",
@@ -57,7 +57,8 @@
     "project-checker": "npm install && npm run formatter && npm run linter && npm run dependency-checker",
     "compatibility-checker": "./build/test/package/check-compatibility.sh",
     "package-checker": "npm pack --dry-run",
-    "prepublishOnly": "npm run test:full"
+    "prepublishOnly": "npm run test:full",
+    "publish:dev": "npm version prerelease --preid=dev && npm publish --access public --tag dev"
   },
   "dependencies": {
     "buffer": "^6.0.3",
