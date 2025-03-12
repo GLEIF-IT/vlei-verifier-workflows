@@ -8,12 +8,16 @@ import * as dockerode from 'dockerode';
 import Dockerode = require('dockerode');
 import { exec } from 'child_process';
 
+export const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
+export const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
+export const ARG_KERIA_HOST = 'keria_host'; //docker domain for witness
+export const ARG_KERIA_NUM = 'keria_num';
+export const ARG_REFRESH = 'refresh';
+
 export const ARG_KERIA_ADMIN_PORT = 'keria-admin-port';
 export const ARG_KERIA_HTTP_PORT = 'keria-http-port';
 export const ARG_KERIA_BOOT_PORT = 'keria-boot-port';
 export const ARG_KERIA_START_PORT = 'keria-start-port';
-
-const keriaImage = `weboftrust/keria:0.2.0-dev4`;
 
 export interface KeriaConfig {
   dt?: string;
@@ -40,6 +44,7 @@ export class TestKeria {
   public domain: string;
   public witnessHost: string;
   public host: string;
+  public keriaImage: string;
   private containers: Map<string, dockerode.Container> = new Map<
     string,
     dockerode.Container
@@ -53,7 +58,8 @@ export class TestKeria {
     witnessHost: string,
     kAdminPort: number,
     kHttpPort: number,
-    kBootPort: number
+    kBootPort: number,
+    keriaImage: string,
   ) {
     this.testPaths = testPaths;
     this.domain = domain;
@@ -65,6 +71,7 @@ export class TestKeria {
     this.keriaHttpUrl = new URL(`http://${host}:${kHttpPort}`);
     this.keriaBootPort = kBootPort;
     this.keriaBootUrl = new URL(`http://${host}:${kBootPort}`);
+    this.keriaImage = keriaImage;
     this.keriaConfig = {
       dt: '2023-12-01T10:05:25.062609+00:00',
       keria: {
@@ -88,7 +95,9 @@ export class TestKeria {
     host?: string,
     containerLocalhost?: string,
     basePort?: number,
-    instanceOffset?: number
+    instanceOffset?: number,
+    keriaImage = `weboftrust/keria:0.2.0-dev4`,
+    platform = 'linux/amd64'
   ): Promise<TestKeria> {
     if (!TestKeria.instances) {
       TestKeria.instances = new Map<string, TestKeria>();
@@ -124,11 +133,12 @@ export class TestKeria {
             containerLocalhost!,
             parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
             parseInt(args[ARG_KERIA_HTTP_PORT], 10),
-            parseInt(args[ARG_KERIA_BOOT_PORT], 10)
+            parseInt(args[ARG_KERIA_BOOT_PORT], 10),
+            keriaImage
           )
         );
         const keria = TestKeria.instances.get(instanceName);
-        await keria!.startupInstance(keriaImage, instanceName, false);
+        await keria!.startupInstance(keriaImage, instanceName, false, platform);
       }
     } else if (testPaths !== undefined) {
       console.warn(
@@ -174,7 +184,8 @@ export class TestKeria {
   async startupInstance(
     keriaImage: string,
     containerPostfix: string,
-    refresh: boolean
+    refresh: boolean,
+    platform: string
   ) {
     console.log('Starting keria instance...');
     try {
@@ -188,7 +199,7 @@ export class TestKeria {
         console.log(
           `Starting Keria container ${containerName} with image ${keriaImage}`
         );
-        await this.startContainer(keriaImage, containerName, refresh);
+        await this.startContainer(keriaImage, containerName, refresh, platform);
         await this.waitForContainer(containerName);
         console.log(`Keria container ${containerName} started successfully`);
       }
@@ -202,6 +213,7 @@ export class TestKeria {
     imageName: string,
     containerName: string,
     pullImage: boolean,
+    platform = 'linux/amd64',
     useHostNetwork: boolean = true
   ): Promise<dockerode.Container> {
     try {
@@ -209,7 +221,7 @@ export class TestKeria {
       const containerOptions: dockerode.ContainerCreateOptions = {
         Image: imageName,
         name: containerName,
-        platform: 'linux/amd64',
+        platform: platform,
         ExposedPorts: {
           [`${this.keriaAdminPort}/tcp`]: {},
           [`${this.keriaHttpPort}/tcp`]: {},
@@ -308,7 +320,7 @@ export class TestKeria {
     );
   }
 
-  static async cleanupInstances(testContexts: string[]): Promise<void> {
+  public static async cleanupInstances(testContexts: string[]): Promise<void> {
     console.log('Running workflow-steps test cleanup...');
     try {
       // Use Promise.all to wait for all cleanup operations to complete

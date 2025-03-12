@@ -5,7 +5,7 @@ import { getConfig } from '../src/utils/test-data';
 import { WorkflowRunner } from '../src/utils/run-workflow';
 import { strict as assert } from 'assert';
 import { loadWorkflow } from '../src/utils/test-data';
-import { ARG_KERIA_START_PORT, TestKeria } from '../src/utils/test-keria';
+import { ARG_KERIA_DOMAIN, ARG_KERIA_HOST, ARG_KERIA_NUM, ARG_KERIA_START_PORT, ARG_REFRESH, ARG_WITNESS_HOST, TestKeria } from '../src/utils/test-keria';
 import { TestPaths } from '../src/utils/test-paths';
 import {
   DockerComposeState,
@@ -15,12 +15,6 @@ import {
 
 let testPaths: TestPaths;
 let env: TestEnvironment;
-
-const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
-const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
-const ARG_KERIA_HOST = 'keria_host'; //docker domain for witness
-const ARG_KERIA_NUM = 'keria_num';
-const ARG_REFRESH = 'refresh';
 
 // Test context constants - use these for test names, configJson['context'], and keria instance IDs
 const TEST_CONTEXTS = {

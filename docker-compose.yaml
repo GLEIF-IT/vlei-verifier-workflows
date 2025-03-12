@@ -152,7 +152,7 @@ services:
       - 'localhost:127.0.0.1'
 
   vlei-verifier:
-    image: gleif/vlei-verifier:latest
+    image: gleif/vlei-verifier:0.0.3
     platform: linux/amd64
     network_mode: host
     environment:
