@@ -35,8 +35,21 @@
       }
     }
   },
-  "types": "./dist/cjs/types/index.d.ts",
+  "module": "./dist/esm/index.js",
   "main": "./dist/cjs/index.js",
+  "types": "./dist/esm/types/index.d.ts",
+  "typesVersions": {
+    "<=4.9": {
+      "*": [
+        "dist/cjs/types/*"
+      ]
+    },
+    ">=5.0": {
+      "*": [
+        "dist/esm/types/*"
+      ]
+    }
+  },
   "files": [
     "dist/**/*"
   ],
@@ -58,7 +71,7 @@
     "compatibility-checker": "./build/test/package/check-compatibility.sh",
     "package-checker": "npm pack --dry-run",
     "prepublishOnly": "npm run test:full",
-    "publish:dev": "npm version prerelease --preid=dev && npm publish --access public --tag dev"
+    "publish:dev": "npm version prerelease --preid=dev && npm publish --access public --tag dev && npm dist-tag add $(node -p \"require('./package.json').name + '@' + require('./package.json').version\") latest"
   },
   "dependencies": {
     "buffer": "^6.0.3",
