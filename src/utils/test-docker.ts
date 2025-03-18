@@ -225,16 +225,16 @@ export async function startDockerServices(
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
-        // Start services with health check
-        console.log(
-          `Starting Docker services (attempt ${attempt + 1}/${maxRetries})...`
-        );
-        await runDockerCompose(file, 'up', 'verify', ['-d']);
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        if (await isHealthyServices()) {
-          console.log('All services started successfully');
-          return true;
-        }
+      // Start services with health check
+      console.log(
+        `Starting Docker services (attempt ${attempt + 1}/${maxRetries})...`
+      );
+      await runDockerCompose(file, 'up', 'verify', ['-d']);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      if (await isHealthyServices()) {
+        console.log('All services started successfully');
+        return true;
+      }
     } catch (error) {
       attempt++;
       console.error(`Attempt ${attempt} failed:`, error);

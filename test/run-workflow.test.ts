@@ -5,7 +5,15 @@ import { getConfig } from '../src/utils/test-data';
 import { WorkflowRunner } from '../src/utils/run-workflow';
 import { strict as assert } from 'assert';
 import { loadWorkflow } from '../src/utils/test-data';
-import { ARG_KERIA_DOMAIN, ARG_KERIA_HOST, ARG_KERIA_NUM, ARG_KERIA_START_PORT, ARG_REFRESH, ARG_WITNESS_HOST, TestKeria } from '../src/utils/test-keria';
+import {
+  ARG_KERIA_DOMAIN,
+  ARG_KERIA_HOST,
+  ARG_KERIA_NUM,
+  ARG_KERIA_START_PORT,
+  ARG_REFRESH,
+  ARG_WITNESS_HOST,
+  TestKeria,
+} from '../src/utils/test-keria';
 import { TestPaths } from '../src/utils/test-paths';
 import {
   DockerComposeState,

@@ -59,7 +59,7 @@ export class TestKeria {
     kAdminPort: number,
     kHttpPort: number,
     kBootPort: number,
-    keriaImage: string,
+    keriaImage: string
   ) {
     this.testPaths = testPaths;
     this.domain = domain;

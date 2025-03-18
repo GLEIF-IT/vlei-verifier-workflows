@@ -29,7 +29,7 @@ export class EnvironmentRegistry {
 
   private constructor() {
     this.environments = new Map();
-    
+
     // Register default environments
     this.register('docker', (overrides?: Partial<TestEnvironment>) => ({
       preset: 'docker',
@@ -76,14 +76,14 @@ export class EnvironmentRegistry {
       verifierBaseUrl: process.env.VLEI_VERIFIER || 'http://localhost:7676',
       workflow: process.env.WORKFLOW || 'singlesig-single-user.yaml',
       configuration:
-        process.env.CONFIGURATION ||
-        'configuration-singlesig-single-user.json',
+        process.env.CONFIGURATION || 'configuration-singlesig-single-user.json',
       ...overrides,
     }));
 
     this.register('rootsid_dev', (overrides?: Partial<TestEnvironment>) => ({
       preset: 'rootsid_dev',
-      keriaAdminUrl: process.env.KERIA || 'https://keria-dev.rootsid.cloud/admin',
+      keriaAdminUrl:
+        process.env.KERIA || 'https://keria-dev.rootsid.cloud/admin',
       keriaBootUrl: process.env.KERIA_BOOT || 'https://keria-dev.rootsid.cloud',
       witnessUrls:
         process.env.WITNESS_URLS === ''
@@ -97,8 +97,7 @@ export class EnvironmentRegistry {
         process.env.WITNESS_IDS === ''
           ? []
           : process.env.WITNESS_IDS?.split(',') || [WAN, WIL, WES],
-      vleiServerUrl:
-        process.env.VLEI_SERVER || 'http://schemas.rootsid.cloud',
+      vleiServerUrl: process.env.VLEI_SERVER || 'http://schemas.rootsid.cloud',
       verifierBaseUrl:
         process.env.VLEI_VERIFIER || 'RootsID dev verifier not set',
       workflow: process.env.WORKFLOW || 'singlesig-single-user-light.yaml',
@@ -110,8 +109,10 @@ export class EnvironmentRegistry {
 
     this.register('rootsid_test', (overrides?: Partial<TestEnvironment>) => ({
       preset: 'rootsid_test',
-      keriaAdminUrl: process.env.KERIA || 'https://keria-test.rootsid.cloud/admin',
-      keriaBootUrl: process.env.KERIA_BOOT || 'https://keria-test.rootsid.cloud',
+      keriaAdminUrl:
+        process.env.KERIA || 'https://keria-test.rootsid.cloud/admin',
+      keriaBootUrl:
+        process.env.KERIA_BOOT || 'https://keria-test.rootsid.cloud',
       witnessUrls:
         process.env.WITNESS_URLS === ''
           ? []
@@ -128,14 +129,12 @@ export class EnvironmentRegistry {
               'BH_XYb3mBmRB1nBVl8XrKjtuQkcIWYKALY4ZWLVOZjKg',
               'BAPWdGXGfiFsi3sMvSCPDnoPnEhPp-ZWxK9RYrqCQTa_',
             ],
-      vleiServerUrl:
-        process.env.VLEI_SERVER || 'http://schemas.rootsid.cloud',
+      vleiServerUrl: process.env.VLEI_SERVER || 'http://schemas.rootsid.cloud',
       verifierBaseUrl:
         process.env.VLEI_VERIFIER || 'RootsID demo verifier not set',
       workflow: process.env.WORKFLOW || 'singlesig-single-user.yaml',
       configuration:
-        process.env.CONFIGURATION ||
-        'configuration-singlesig-single-user.json',
+        process.env.CONFIGURATION || 'configuration-singlesig-single-user.json',
       ...overrides,
     }));
   }
@@ -148,13 +147,16 @@ export class EnvironmentRegistry {
   }
 
   public register<T extends TestEnvironment>(
-    preset: string, 
+    preset: string,
     configFn: (overrides: Partial<TestEnvironment>) => TestEnvironment
   ): void {
     this.environments.set(preset, configFn);
   }
 
-  public getEnvironment<T extends TestEnvironment>(preset: string, overrides?: Partial<T>): T {
+  public getEnvironment<T extends TestEnvironment>(
+    preset: string,
+    overrides?: Partial<T>
+  ): T {
     const configFn = this.environments.get(preset);
     if (!configFn) {
       throw new Error(`Unknown test environment preset '${preset}'`);
@@ -162,22 +164,22 @@ export class EnvironmentRegistry {
     return configFn(overrides);
   }
 
-public hasEnvironment(preset: string): boolean {
-  return this.environments.has(preset);
-}
+  public hasEnvironment(preset: string): boolean {
+    return this.environments.has(preset);
+  }
 
-public getAvailablePresets(): string[] {
-  return Array.from(this.environments.keys());
-}
+  public getAvailablePresets(): string[] {
+    return Array.from(this.environments.keys());
+  }
 }
 
 export function resolveEnvironment<T extends TestEnvironment = TestEnvironment>(
-envPreset?: string,
-overrides?: Partial<T>
+  envPreset?: string,
+  overrides?: Partial<T>
 ): T {
-const preset = envPreset ?? process.env.TEST_ENVIRONMENT ?? 'docker';
-const registry = EnvironmentRegistry.getInstance();
-const env = registry.getEnvironment<T>(preset, overrides);
-console.log(`Environment preset '${preset}':`, JSON.stringify(env));
-return env;
+  const preset = envPreset ?? process.env.TEST_ENVIRONMENT ?? 'docker';
+  const registry = EnvironmentRegistry.getInstance();
+  const env = registry.getEnvironment<T>(preset, overrides);
+  console.log(`Environment preset '${preset}':`, JSON.stringify(env));
+  return env;
 }

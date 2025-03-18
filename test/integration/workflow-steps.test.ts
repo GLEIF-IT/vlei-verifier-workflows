@@ -10,7 +10,15 @@ import { loadWorkflow } from '../../src/utils/test-data';
 import { WorkflowState } from '../../src/workflow-state';
 import minimist from 'minimist';
 
-import { ARG_KERIA_DOMAIN, ARG_KERIA_HOST, ARG_KERIA_NUM, ARG_KERIA_START_PORT, ARG_REFRESH, ARG_WITNESS_HOST, TestKeria } from '../../src/utils/test-keria';
+import {
+  ARG_KERIA_DOMAIN,
+  ARG_KERIA_HOST,
+  ARG_KERIA_NUM,
+  ARG_KERIA_START_PORT,
+  ARG_REFRESH,
+  ARG_WITNESS_HOST,
+  TestKeria,
+} from '../../src/utils/test-keria';
 import { TestPaths } from '../../src/utils/test-paths';
 import {
   DockerComposeState,
