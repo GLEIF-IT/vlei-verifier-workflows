@@ -87,7 +87,6 @@ services:
     image: gleif/vlei
     platform: linux/amd64
     network_mode: host
-    # container_name: vlei-server
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
@@ -118,7 +117,6 @@ services:
     image: weboftrust/keri-witness-demo:1.1.0
     platform: linux/amd64
     network_mode: host
-    # container_name: witness-demo
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
@@ -152,7 +150,7 @@ services:
       - 'localhost:127.0.0.1'
 
   vlei-verifier:
-    image: gleif/vlei-verifier:0.0.3
+    image: gleif/vlei-verifier:latest
     platform: linux/amd64
     network_mode: host
     environment:
