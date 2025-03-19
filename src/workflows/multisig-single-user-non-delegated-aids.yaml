@@ -203,14 +203,14 @@ workflow:
       description: 'Adding Root of Trust'
     credential_verification_no_delegation_valid_not_verified:
       id: 'credential_verification_no_delegation_valid_not_verified'
-      type: 'credential_verification'
-      presenter_aid: 'ecr-aid-1'
-      description: 'Running Credential Verification for ecr-aid-1'
-      credential: 'ecr_cred'
+      type: 'vlei_verification'
+      description: 'Running Vlei Verification'
       actions:
         present:
-          type: 'presentation'
+          credential: 'ecr_cred'
+          type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
         authorize:
-          type: 'authorization'
+          aid: 'ecr-aid-1'
+          type: 'credential_authorization'
           expected_status: 'cred_non_delegated_qvi'

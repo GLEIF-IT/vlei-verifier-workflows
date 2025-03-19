@@ -1,0 +1,40 @@
+workflow:
+  steps:
+    gleif_client:
+      id: 'gleif_client'
+      type: 'create_client'
+      agent_name: 'gleif-agent'
+      description: 'Creating client for gleif-agent'
+    user_client:
+      id: 'user_client'
+      type: 'create_client'
+      agent_name: 'user-agent'
+      description: 'Creating client for user-agent'
+    gleif_aid:
+      id: 'gleif_aid'
+      type: 'create_aid'
+      aid: 'gleif-aid'
+      description: 'Creating AID: gleif-aid'
+    user_aid:
+      id: 'user_aid'
+      type: 'create_aid'
+      aid: 'user-aid'
+      description: 'Creating AID: user-aid'
+    add_root_of_trust:
+      id: 'add_root_of_trust'
+      type: 'add_root_of_trust'
+      rot_aid: 'gleif-aid'
+      description: 'Adding Root of Trust'
+    aid_verification_valid_verified:
+      id: 'aid_verification_valid_verified'
+      type: 'vlei_verification'
+      description: 'Running Vlei Verification'
+      actions:
+        present_aid:
+          aid: 'user-aid'
+          type: 'aid_presentation'
+          expected_status: 'aid_crypt_valid'
+        authorize_aid:
+          aid: 'user-aid'
+          type: 'aid_authorization'
+          expected_status: 'aid_verified'

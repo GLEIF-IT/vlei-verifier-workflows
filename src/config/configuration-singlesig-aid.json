@@ -1,0 +1,26 @@
+{
+  "secrets": {
+    "gleif-client": "D_PbQb01zuzQgK-testq1",
+    "user-client": "D_PbQb01zuzQgK-testq2"
+  },
+  "credentials": {},
+  "agents": {
+    "gleif-agent": {
+      "secret": "gleif-client"
+    },
+    "user-agent": {
+      "secret": "user-client"
+    }
+  },
+  "identifiers": {
+    "gleif-aid": {
+      "agent": "gleif-agent",
+      "name": "gleif-aid"
+    },
+    "user-aid": {
+      "delegator": "gleif-aid",
+      "agent": "user-agent",
+      "name": "user-aid"
+    }
+  }
+}
