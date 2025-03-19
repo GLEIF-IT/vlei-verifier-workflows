@@ -16,7 +16,7 @@ export class WorkflowState {
   oobis = new Map<string, any[]>();
   credentialsInfo = new Map<string, CredentialInfo>();
   registries = new Map<string, { regk: string }>();
-  credentials = new Map<string, any>();
+  credentials = new Map<string, { cred: any; credCesr: string }>();
   aidsInfo = new Map<string, IdentifierData>();
   kargsAID =
     witnessIds.length > 0 ? { toad: witnessIds.length, wits: witnessIds } : {};

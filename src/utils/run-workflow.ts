@@ -6,7 +6,7 @@ import {
   ISSUE_CREDENTIAL,
   REVOKE_CREDENTIAL,
   NOTIFY_CREDENTIAL_ISSUEE,
-  CREDENTIAL_VERIFICATION,
+  VLEI_VERIFICATION,
   CREATE_CLIENT,
   CREATE_AID,
   CREATE_REGISTRY,
@@ -14,7 +14,7 @@ import {
   IssueCredentialStepRunner,
   RevokeCredentialStepRunner,
   NotifyCredentialIssueeStepRunner,
-  CredentialVerificationStepRunner,
+  VleiVerificationStepRunner,
   CreateClientStepRunner,
   CreateAidStepRunner,
   CreateRegistryStepRunner,
@@ -49,10 +49,7 @@ export class WorkflowRunner {
       NOTIFY_CREDENTIAL_ISSUEE,
       new NotifyCredentialIssueeStepRunner()
     );
-    this.registerRunner(
-      CREDENTIAL_VERIFICATION,
-      new CredentialVerificationStepRunner()
-    );
+    this.registerRunner(VLEI_VERIFICATION, new VleiVerificationStepRunner());
   }
 
   public registerRunner(type: string, runner: StepRunner): void {

@@ -97,14 +97,14 @@ workflow:
       description: 'Adding Root of Trust'
     credential_verification_valid_verified:
       id: 'credential_verification_valid_verified'
-      type: 'credential_verification'
-      presenter_aid: 'ecr-aid-1'
-      description: 'Running Credential Verification for ecr-aid-1'
-      credential: 'ecr_cred'
+      type: 'vlei_verification'
+      description: 'Running Vlei Verification'
       actions:
-        present:
-          type: 'presentation'
+        present_credential:
+          credential: 'ecr_cred'
+          type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
-        authorize:
-          type: 'authorization'
+        authorize_credential:
+          aid: 'ecr-aid-1'
+          type: 'credential_authorization'
           expected_status: 'cred_verified'

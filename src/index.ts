@@ -1,3 +1,5 @@
+import { unknownPrefix } from './constants.js';
+
 export { generateFileDigest } from './utils/generate-digest.js';
 export { buildTestData, EcrTestData } from './utils/generate-test-data.js';
 
@@ -9,7 +11,7 @@ export {
   IssueCredentialStepRunner,
   RevokeCredentialStepRunner,
   NotifyCredentialIssueeStepRunner,
-  CredentialVerificationStepRunner,
+  VleiVerificationStepRunner,
   CreateClientStepRunner,
   CreateAidStepRunner,
   CreateRegistryStepRunner,
@@ -44,4 +46,4 @@ export {
   loadPackagedWorkflow,
   listPackagedWorkflows,
 } from './utils/workflow-helpers.js';
-
+export { ECR_SCHEMA_SAID, unknownPrefix } from './constants.js';

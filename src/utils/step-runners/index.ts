@@ -24,9 +24,9 @@ export {
   NOTIFY_CREDENTIAL_ISSUEE,
 } from './notify-credential-issuee-step-runner.js';
 export {
-  CredentialVerificationStepRunner,
-  CREDENTIAL_VERIFICATION,
-} from './credential-verification-step-runner.js';
+  VleiVerificationStepRunner,
+  VLEI_VERIFICATION,
+} from './vlei-verification-step-runner.js';
 export {
   AddRootOfTrustStepRunner,
   ADD_ROOT_OF_TRUST,
