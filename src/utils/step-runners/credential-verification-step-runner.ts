@@ -1,15 +1,15 @@
-import { StepRunner } from '../../types/step-runner';
-import { CredentialVerification } from '../../credential-verification';
-import { WorkflowState } from '../../workflow-state';
+import { StepRunner } from '../../types/step-runner.js';
+import { CredentialVerification } from '../../credential-verification.js';
+import { WorkflowState } from '../../workflow-state.js';
 import {
   VleiUser,
   credPresentationStatusMapping,
   credAuthorizationStatusMapping,
-} from '../test-data';
+} from '../test-data.js';
 import {
   MultisigIdentifierData,
   SinglesigIdentifierData,
-} from '../handle-json-config';
+} from '../handle-json-config.js';
 
 export const CREDENTIAL_VERIFICATION = 'credential_verification';
 

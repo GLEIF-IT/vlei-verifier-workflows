@@ -1,10 +1,7 @@
+// jest needs a tsconfig file in the root of the project, find other settings in ./build/configs
 {
+  "extends": "./build/configs/tsconfig.base.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2019",
-    "declaration": true,
-    "outDir": "./dist",
     "esModuleInterop": true
-  },
-  "include": ["src/**/*"]
+  }
 }

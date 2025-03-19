@@ -5,11 +5,29 @@ import tseslint from 'typescript-eslint';
 import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config(
-  {
-    ...eslint.configs.recommended,
-    files: ['**/*.ts'], // restricts linting to TypeScript files
-  },
   tseslint.configs.strict,
   tseslint.configs.stylistic,
-  prettierConfig // blocks any eslint formatting rules that would conflict with Prettier
+  prettierConfig, // blocks any eslint formatting rules that would conflict with Prettier
+  {
+    ...eslint.configs.recommended,
+    files: ['**/*.ts'],
+    rules: {
+      // DO NOT DISABLE ANY ADDITIONAL RULES. YOU MAY RE-ENABLE RULES AND FIX RESULTING ERRORS AT ANY TIME.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          // this set of options enforces the use of _ for unused variables
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  }
 );

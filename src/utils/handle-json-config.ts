@@ -47,13 +47,13 @@ export function getAgentSecret(jsonConfig: any, agentName: string): string {
 }
 
 export function buildCredentials(jsonConfig: any): Map<string, CredentialInfo> {
-  let credentials: Map<string, CredentialInfo> = new Map<
+  const credentials: Map<string, CredentialInfo> = new Map<
     string,
     CredentialInfo
   >();
   for (const key in jsonConfig.credentials) {
     const cred = jsonConfig.credentials[key];
-    let curCred: CredentialInfo = {
+    const curCred: CredentialInfo = {
       type: cred.type,
       schema: cred.schema,
       rules: cred.rules,
@@ -67,7 +67,6 @@ export function buildCredentials(jsonConfig: any): Map<string, CredentialInfo> {
 }
 
 export async function buildAidData(jsonConfig: any): Promise<any> {
-  let users: Array<User> = new Array<User>();
   const identifiers = structuredClone(jsonConfig.identifiers);
   for (const key of Object.keys(identifiers)) {
     if (identifiers[key]['agent']) {

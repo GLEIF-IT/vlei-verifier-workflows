@@ -1,23 +1,23 @@
-import { SignifyClient } from 'signify-ts';
+import SignifyClient from 'signify-ts';
 import {
   buildCredentials,
   CredentialInfo,
   IdentifierData,
-} from './utils/handle-json-config';
-import { RULES, SCHEMAS, witnessIds } from './constants';
+} from './utils/handle-json-config.js';
+import { RULES, SCHEMAS, witnessIds } from './constants.js';
 
 export class WorkflowState {
   private static instance: WorkflowState;
   config: any;
   schemas: any = SCHEMAS;
   rules: any = RULES;
-  clients: Map<string, SignifyClient> = new Map();
-  aids: Map<string, any> = new Map();
-  oobis: Map<string, Array<any>> = new Map();
-  credentialsInfo: Map<string, CredentialInfo> = new Map();
-  registries: Map<string, { regk: string }> = new Map();
-  credentials: Map<string, any> = new Map();
-  aidsInfo: Map<string, IdentifierData> = new Map();
+  clients = new Map<string, SignifyClient.SignifyClient>();
+  aids = new Map<string, any>();
+  oobis = new Map<string, any[]>();
+  credentialsInfo = new Map<string, CredentialInfo>();
+  registries = new Map<string, { regk: string }>();
+  credentials = new Map<string, any>();
+  aidsInfo = new Map<string, IdentifierData>();
   kargsAID =
     witnessIds.length > 0 ? { toad: witnessIds.length, wits: witnessIds } : {};
 
@@ -39,6 +39,4 @@ export class WorkflowState {
       WorkflowState.instance = new WorkflowState(WorkflowState.instance.config);
     }
   }
-
-  public async preloadState() {}
 }

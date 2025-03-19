@@ -1,6 +1,6 @@
 import path = require('path');
 import fs = require('fs');
-import { Workflow, loadWorkflow } from '../types/workflow';
+import { Workflow, loadWorkflow } from '../types/workflow.js';
 
 /**
  * Gets the path to a specific workflow file in the package

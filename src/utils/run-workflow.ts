@@ -1,5 +1,5 @@
-import { Workflow } from '../types/workflow';
-import { WorkflowState } from '../workflow-state';
+import { Workflow } from '../types/workflow.js';
+import { WorkflowState } from '../workflow-state.js';
 
 import {
   StepRunner,
@@ -19,19 +19,21 @@ import {
   CreateAidStepRunner,
   CreateRegistryStepRunner,
   AddRootOfTrustStepRunner,
-} from './step-runners';
+} from './step-runners/index.js';
 
 export class WorkflowRunner {
   stepRunners: Map<string, StepRunner> = new Map<string, StepRunner>();
   config: any;
   workflow: Workflow;
-  context: any;
+  environmentContext: any;
+  agentContext: any;
   executedSteps = new Set<string>();
 
-  constructor(workflow: Workflow, config: any, context: any) {
+  constructor(workflow: Workflow, config: any, environmentContext: any, agentContext: any) {
     this.config = config;
     this.workflow = workflow;
-    this.context = context;
+    this.environmentContext = environmentContext;
+    this.agentContext = agentContext;
     WorkflowState.getInstance(this.config);
     this.registerPredefinedRunners();
   }

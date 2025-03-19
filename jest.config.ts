@@ -1,21 +1,24 @@
 import type { Config } from '@jest/types';
 
-const config: Config.InitialOptions = {
-  preset: 'ts-jest',
+const config = {
+  // need esm preset to support esm modules
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
-  testTimeout: 90000,
-  setupFilesAfterEnv: ['./jest.setup.ts'],
-  verbose: true,
-  testMatch: ['**/test/**/*.test.ts'],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  // part of esm support, see: https://kulshekhar.github.io/ts-jest/docs/guides/esm-support/
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
+    // '^.+\\.m?[tj]sx?$' to process js/ts/mjs/mts with `ts-jest`
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        useESM: true,
+      },
+    ],
   },
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.json',
-    },
-  },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };
 
 export default config;

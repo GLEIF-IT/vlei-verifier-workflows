@@ -1,6 +1,6 @@
-# vLEI Workflows Running Tool
+# vLEI Workflows Tool
 
-[![npm version](https://badge.fury.io/js/vlei-verifier-workflows.svg)](https://www.npmjs.com/package/vlei-verifier-workflows)  
+[![npm version](https://badge.fury.io/js/@gleif-it%2Fvlei-verifier-workflows.svg)](https://www.npmjs.com/package/@gleif-it/vlei-verifier-workflows)  
 [![GitHub License](https://img.shields.io/github/license/GLEIF-IT/vlei-verifier-workflows.svg)](https://github.com/GLEIF-IT/vlei-verifier-workflows/blob/main/LICENSE)
 
 A tool for running workflows related to vLEI (verifiable Legal Entity Identifier) users and credentials. This library provides a robust framework for defining and executing workflows involving vLEI users and credentials.
@@ -16,6 +16,7 @@ A tool for running workflows related to vLEI (verifiable Legal Entity Identifier
   - [Usage](#usage)
     - [Predefined Step Types](#predefined-step-types)
     - [Custom Step Types](#custom-step-types)
+  - [Running Locally](#running-locally)
 - [Workflow Structure](#workflow-structure)
 - [Configuration Structure](#configuration-structure)
 - [Interaction Between Workflow and Configuration](#interaction-between-workflow-and-configuration)
@@ -52,7 +53,7 @@ The **vLEI Workflows Running Tool** is designed to manage workflows involving vL
 Install the package using npm:
 
 ```bash
-npm install vlei-verifier-workflows
+npm install @gleif-it/vlei-verifier-workflows
 ```
 
 ### Usage
@@ -66,23 +67,25 @@ Example workflow :
 ```yaml
 workflow:
   steps:
-    qvi_cred:
-      id: 'qvi_cred'
-      type: 'issue_credential'
-      attributes:
-        LEI: '254900OPPU84GM83MG36'
-      issuer_aid: 'gleif-aid-1'
-      issuee_aid: 'qvi-aid-1'
-      description: 'GLEIF issues QVI vLEI credential'
-      credential: 'gleif_to_qvi_vlei_cred'
-    revoke_qvi_cred:
-      id: 'revoke_qvi_cred'
-      type: 'revoke_credential'
-      attributes:
-        credentialId: 'abc123'
+    gleif_client:
+      id: 'gleif_client'
+      type: 'create_client'
+      agent_name: 'gleif-agent-1'
+      description: 'Creating client for gleif-agent-1'
+    gleif_aid:
+      id: 'gleif_aid'
+      type: 'create_aid'
+      aid: 'gleif-aid-1'
+      description: 'Creating AID: gleif-aid-1'
+    gleif_registry:
+      id: 'gleif_registry'
+      type: 'create_registry'
+      aid: 'gleif-aid-1'
+      description: 'Creating registry for gleif-aid-1'
     add_root_of_trust:
       id: 'add_root_of_trust'
       type: 'add_root_of_trust'
+      rot_aid: 'gleif-aid-1'
       description: 'Adding Root of Trust'
 ```
 
@@ -150,6 +153,18 @@ const workflowRunResult = await runner.runWorkflow();
 assert.equal(workflowRunResult, true);
 ```
 
+## Running Locally
+
+The predefined step types are dependent on [Signify Clients](https://github.com/WebOfTrust/signify-ts) communicating with KERI Agents. When running locally, this is most easily accomplished via [Keria Agents](https://github.com/WebOfTrust/keria) running in local containers. Copy the `docker-compose.yaml` file from this project to your own. You need to call `docker compose up` and `docker compose down` before and after each workflow run, respectively. For convenience, you might try putting helpful scripts like the following into your `package.json`:
+
+```json
+"scripts": {
+        "test:workflow": "npm run docker:up && npm test && npm run docker:down",
+        "docker:up": "npm run docker:down && docker compose up -d",
+        "docker:down": "docker compose down -v"
+}
+```
+
 ## Workflow Structure
 
 Workflows are defined as YAML files with the following structure:
@@ -190,10 +205,7 @@ Example configuration file:
 ```json
 {
   "secrets": {
-    "gleif1": "D_PbQb01zuzQgK-kDWjq5",
-    "qvi1": "BTaqgh1eeOjXO5iQJp6m5",
-    "le1": "Akv4TFoiYeHNqzj3N8gE5",
-    "ecr1": "nf98hUHUy8Vt5tvdyaYV5"
+    "gleif1": "D_PbQb01zuzQgK-kDWjq5"
   },
   "credentials": {
     "gleif_to_qvi_vlei_cred": {
@@ -201,35 +213,17 @@ Example configuration file:
       "schema": "QVI_SCHEMA_SAID",
       "privacy": false,
       "attributes": {}
-    },
-    "qvi_to_le_vlei_cred": {
-      "credSource": {
-        "type": "qvi"
-      },
-      "type": "direct",
-      "schema": "LE_SCHEMA_SAID",
-      "rules": "LE_RULES",
-      "privacy": false,
-      "attributes": {}
     }
   },
   "agents": {
     "gleif-agent-1": {
       "secret": "gleif1"
-    },
-    "qvi-agent-1": {
-      "secret": "qvi1"
     }
   },
   "identifiers": {
     "gleif-aid-1": {
       "agent": "gleif-agent-1",
       "name": "gleif-aid-1"
-    },
-    "qvi-aid-1": {
-      "delegator": "gleif-aid-1",
-      "agent": "qvi-agent-1",
-      "name": "qvi-aid-1"
     }
   },
   "users": [
@@ -237,11 +231,6 @@ Example configuration file:
       "type": "GLEIF",
       "alias": "gleif-user-1",
       "identifiers": ["gleif-aid-1"]
-    },
-    {
-      "type": "QVI",
-      "alias": "qvi-user-1",
-      "identifiers": ["qvi-aid-1"]
     }
   ]
 }

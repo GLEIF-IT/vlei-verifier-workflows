@@ -26,7 +26,7 @@ export const WES = 'BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX';
 export class EnvironmentRegistry {
   private static instance: EnvironmentRegistry;
   private environments: Map<string, (overrides?: any) => any>;
-
+  public static ENVIRONMENT_CONTEXT = 'environmentContext';
   private constructor() {
     this.environments = new Map();
 

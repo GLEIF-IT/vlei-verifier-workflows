@@ -1,8 +1,8 @@
-import { StepRunner } from '../../types/step-runner';
-import { VleiIssuance } from '../../vlei-issuance';
-import { getAgentSecret } from '../../utils/handle-json-config';
-import { TestKeria } from '../test-keria';
-import { Workflow } from '../../types/workflow';
+import { StepRunner } from '../../types/step-runner.js';
+import { VleiIssuance } from '../../vlei-issuance.js';
+import { getAgentSecret } from '../../utils/handle-json-config.js';
+import { TestKeria } from '../test-keria.js';
+import { Workflow } from '../../types/workflow.js';
 
 export const CREATE_CLIENT = 'create_client';
 
@@ -11,7 +11,7 @@ export class CreateClientStepRunner extends StepRunner {
   public async run(stepName: string, step: any, config: any): Promise<any> {
     const agentName = step.agent_name;
     const secret = getAgentSecret(config, agentName);
-    const testKeria = await TestKeria.getInstance(config['context']);
+    const testKeria = await TestKeria.getInstance(config[TestKeria.AGENT_CONTEXT]);
     const result = await VleiIssuance.createClient(
       testKeria,
       secret,

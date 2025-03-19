@@ -175,7 +175,7 @@ services:
       - 'localhost:127.0.0.1'
 
   deps:
-    image: alpine
+    image: alpine:latest
     network_mode: host
     command: ['echo', 'Dependencies running']
     depends_on:
@@ -187,7 +187,7 @@ services:
       - 'localhost:127.0.0.1'
 
   verify:
-    image: alpine
+    image: alpine:latest
     network_mode: host
     command: ['echo', 'Dependencies running']
     depends_on:

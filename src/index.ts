@@ -1,15 +1,11 @@
-export { generateFileDigest } from './utils/generate-digest';
-export { buildTestData, EcrTestData } from './utils/generate-test-data';
-export { WorkflowRunner } from './utils/run-workflow';
-export {
-  getConfig,
-  getGrantedCredential,
-  VleiUser,
-  loadWorkflow,
-} from './utils/test-data';
+export { generateFileDigest } from './utils/generate-digest.js';
+export { buildTestData, EcrTestData } from './utils/generate-test-data.js';
+
+export { WorkflowRunner } from './utils/run-workflow.js';
+export { getConfig, loadWorkflow } from './utils/test-data.js';
+export { StepRunner } from './utils/workflow-step-runners.js';
 
 export {
-  StepRunner,
   IssueCredentialStepRunner,
   RevokeCredentialStepRunner,
   NotifyCredentialIssueeStepRunner,
@@ -17,15 +13,15 @@ export {
   CreateClientStepRunner,
   CreateAidStepRunner,
   CreateRegistryStepRunner,
-  AddRootOfTrustStepRunner,
-} from './utils/step-runners';
+  AddRootOfTrustStepRunner
+} from './utils/workflow-step-runners.js';
 
-export { Workflow, WorkflowStep } from './types/workflow';
-export { WorkflowState } from './workflow-state';
-export { VleiIssuance } from './vlei-issuance';
-export { buildAidData } from './utils/handle-json-config';
-export { getOrCreateClients } from './utils/test-util';
-export { startDockerServices } from './utils/test-docker';
+export { Workflow, WorkflowStep } from './types/workflow.js';
+export { WorkflowState } from './workflow-state.js';
+export { VleiIssuance } from './vlei-issuance.js';
+export { buildAidData } from './utils/handle-json-config.js';
+export { getOrCreateClients } from './utils/test-util.js';
+export { startDockerServices } from './utils/test-docker.js';
 export {
   ARG_KERIA_DOMAIN,
   ARG_KERIA_HOST,
@@ -33,8 +29,8 @@ export {
   ARG_REFRESH,
   ARG_WITNESS_HOST,
   TestKeria,
-} from './utils/test-keria';
-export { TestPaths } from './utils/test-paths';
+} from './utils/test-keria.js';
+export { TestPaths } from './utils/test-paths.js';
 export {
   WAN,
   WIL,
@@ -42,9 +38,10 @@ export {
   TestEnvironment,
   EnvironmentRegistry,
   resolveEnvironment,
-} from './utils/resolve-env';
+} from './utils/resolve-env.js';
 export {
   getWorkflowPath,
   loadPackagedWorkflow,
   listPackagedWorkflows,
-} from './utils/workflow-helpers';
+} from './utils/workflow-helpers.js';
+

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { TestPaths } from './test-paths';
+import { TestPaths } from './test-paths.js';
 import { URL } from 'url';
 import minimist = require('minimist');
 import * as dockerode from 'dockerode';
@@ -50,6 +50,7 @@ export class TestKeria {
     dockerode.Container
   >();
   private docker = new Dockerode();
+  public static AGENT_CONTEXT = 'agentContext';
 
   private constructor(
     testPaths: TestPaths,

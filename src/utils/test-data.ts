@@ -1,10 +1,9 @@
-import { SignifyClient } from 'signify-ts';
 import path = require('path');
-import { TestKeria } from './test-keria';
-import { Workflow } from '../types/workflow';
+import { Workflow } from '../types/workflow.js';
 
 const fs = require('fs');
 const yaml = require('js-yaml');
+import SignifyClient from 'signify-ts';
 
 // Function to load and parse YAML file
 export function loadWorkflow(workflowFilePath: string): Workflow {
@@ -22,7 +21,7 @@ export function getConfig(configFilePath: string): any {
 }
 
 export async function getGrantedCredential(
-  client: SignifyClient,
+  client: SignifyClient.SignifyClient,
   credId: string
 ): Promise<any> {
   const credentialList = await client.credentials().list({
@@ -97,18 +96,18 @@ export const CREDENTIAL_NOT_VALID_ROOT_OF_TRUST: CredentialAuthorizationStatus =
     status: 'fail',
   };
 
-export const credPresentationStatusMapping: Map<
+export const credPresentationStatusMapping = new Map<
   string,
   CredentialPresentationStatus
-> = new Map([
+>([
   ['cred_crypt_valid', CREDENTIAL_CRYPT_VALID],
   ['cred_crypt_invalid', CREDENTIAL_CRYPT_INVALID],
 ]);
 
-export const credAuthorizationStatusMapping: Map<
+export const credAuthorizationStatusMapping = new Map<
   string,
   CredentialAuthorizationStatus
-> = new Map([
+>([
   ['cred_verified', CREDENTIAL_VERIFIED],
   ['cred_revoked', CREDENTIAL_REVOKED],
   ['cred_invalid_schema', CREDENTIAL_INVALID_SCHEMA],

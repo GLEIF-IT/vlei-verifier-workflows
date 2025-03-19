@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES6", "DOM"],
+    "module": "CommonJS",
+    "target": "ES2015",
+    "outDir": "../../dist/cjs",
+    "declarationDir": "../../dist/cjs/types"
+  },
+  "exclude": ["../**/*.test.ts"]
+}
