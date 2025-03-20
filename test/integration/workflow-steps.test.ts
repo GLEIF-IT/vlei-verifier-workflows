@@ -109,7 +109,7 @@ afterAll(async () => {
 
 describe('testing Client creation workflow step', () => {
   it(
-    TEST_CONTEXTS.CLIENT_CREATION,
+    'successful_client_creation',
     async () => {
       const workflowsDir = './workflows/';
       const workflowFile = 'create-client.yaml';
@@ -145,7 +145,7 @@ describe('testing AID creation workflow step', () => {
   beforeEach(() => {
     WorkflowState.resetInstance();
   });
-  test(`${TEST_CONTEXTS.AID_CREATION_SUCCESS}`, async function run() {
+  test('successful_aid_creation', async function run() {
     const workflowsDir = './workflows/';
     const workflowFile = 'create-aid-valid.yaml';
     const workflow = loadWorkflow(
@@ -174,7 +174,7 @@ describe('testing AID creation workflow step', () => {
   }, 3600000);
 
   test(
-    TEST_CONTEXTS.AID_CREATION_FAILURE,
+    'aid_creation_failed',
     async function run() {
       const workflowsDir = './workflows/';
       const workflowFile = 'create-aid-invalid.yaml';
@@ -195,7 +195,8 @@ describe('testing AID creation workflow step', () => {
           configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
           configJson[TestKeria.AGENT_CONTEXT]
         );
-        await expect(wr.runWorkflow()).rejects.toThrow(Error);
+        const workflowRunResult = await wr.runWorkflow();
+        expect(workflowRunResult).toEqual(false);
       } else throw 'Invalid workflow of configuration';
     },
     3600000
@@ -207,7 +208,7 @@ describe('testing Registry creation workflow step', () => {
     WorkflowState.resetInstance();
   });
   test(
-    TEST_CONTEXTS.REGISTRY_CREATION_SUCCESS,
+    'successful_registry_creation',
     async function run() {
       const workflowsDir = './workflows/';
       const workflowFile = 'create-registry-valid.yaml';
@@ -239,7 +240,7 @@ describe('testing Registry creation workflow step', () => {
   );
 
   test(
-    TEST_CONTEXTS.REGISTRY_CREATION_FAILURE,
+    "registry_creation_failed_aid_not_created",
     async function run() {
       const workflowsDir = './workflows/';
       const workflowFile = 'create-registry-invalid-no-aid.yaml';
@@ -260,7 +261,8 @@ describe('testing Registry creation workflow step', () => {
           configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
           configJson[TestKeria.AGENT_CONTEXT]
         );
-        await expect(wr.runWorkflow()).rejects.toThrow(Error);
+        const workflowRunResult = await wr.runWorkflow();
+        expect(workflowRunResult).toEqual(false);
       } else throw 'Invalid workflow of configuration';
     },
     3600000

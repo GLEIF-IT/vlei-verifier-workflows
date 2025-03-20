@@ -164,11 +164,11 @@ services:
       - source: verifier.json
         target: /usr/local/var/vlei-verifier/scripts/keri/cf/verifier.json
     healthcheck:
-      test: ['CMD', 'wget', '--spider', 'http://localhost:7676/health']
-      interval: 2s
+      test: ['CMD', 'curl', '-f', 'http://localhost:7676/health']
+      interval: 5s
       timeout: 3s
       retries: 5
-      start_period: 2s
+      start_period: 5s
     extra_hosts:
       - 'localhost:127.0.0.1'
 

@@ -56,20 +56,42 @@ export class WorkflowRunner {
     this.stepRunners.set(type, runner);
   }
 
-  public async runWorkflow() {
-    for (const [stepName, step] of Object.entries(
-      this.workflow.workflow.steps
-    ) as any[]) {
-      console.log(`Executing: ${step.description}`);
-      const runner = this.stepRunners.get(step.type);
-      if (!runner) {
-        console.log(`No step runner was registered for step '${step.type}'`);
-        return false;
+  public async runWorkflow(): Promise<boolean> {
+    try {
+      const steps = this.workflow.workflow.steps;
+      for (const [stepName, step] of Object.entries(steps)) {
+        try {
+          console.log(`Executing: ${step.description || stepName}`);
+          
+          const stepType = step.type;
+          const stepRunner = this.stepRunners.get(stepType);
+          
+          if (!stepRunner) {
+            const errorMsg = `No step runner registered for step type: ${stepType}`;
+            console.error(`❌ ERROR in step "${stepName}": ${errorMsg}`);
+            throw new Error(errorMsg);
+          }
+          
+          await stepRunner.run(stepName, step, this.config);
+          this.executedSteps.add(stepName);
+          console.log(`✅ Successfully completed step: ${stepName}`);
+        } catch (error) {
+          // Instead of swallowing the error, print it clearly and rethrow
+          console.error(`❌ ERROR in step "${stepName}":`);
+          console.error(error);
+          
+          // Optionally print the step details for debugging
+          console.error(`Step details:`, JSON.stringify(step, null, 2));
+          
+          // Rethrow to stop workflow execution
+          throw error;
+        }
       }
-      await runner.run(stepName, step, this.config);
-      this.executedSteps.add(step.id);
+      return true;
+    } catch (error) {
+      console.error('❌ Workflow execution failed:');
+      console.error(error);
+      return false;
     }
-    console.log(`Workflow steps execution finished successfully`);
-    return true;
   }
 }
