@@ -10,3 +10,6 @@ coverage/*
 
 # Visual Studio Code
 .vscode
+
+# To pipe script output to a file
+output.txt

@@ -31,6 +31,7 @@ test.only('workflow', async function run() {
   const configJson = await getConfig(configFilePath);
   if (workflow && configJson) {
     const wr = new WorkflowRunner(workflow, configJson);
+    console.log(`Running workflow: ${workflowFile}`);
     const workflowRunResult = await wr.runWorkflow();
     assert.equal(workflowRunResult, true);
   }
