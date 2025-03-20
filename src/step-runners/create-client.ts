@@ -1,7 +1,7 @@
 import { StepRunner } from './base-step-runner.js';
-import { VleiIssuance } from '../../vlei-issuance.js';
-import { TestKeria } from '../test-keria.js';
-import { getAgentSecret } from '../handle-json-config.js';
+import { VleiIssuance } from '../vlei-issuance.js';
+import { TestKeria } from '../utils/test-keria.js';
+import { getAgentSecret } from '../utils/handle-json-config.js';
 
 export const CREATE_CLIENT = 'create_client';
 

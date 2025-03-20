@@ -1,8 +1,8 @@
-import { StepRunner } from '../../types/step-runner.js';
-import { VleiIssuance } from '../../vlei-issuance.js';
-import { getAgentSecret } from '../../utils/handle-json-config.js';
-import { TestKeria } from '../test-keria.js';
-import { Workflow } from '../../types/workflow.js';
+import { StepRunner } from '../types/step-runner.js';
+import { VleiIssuance } from '../vlei-issuance.js';
+import { getAgentSecret } from '../utils/handle-json-config.js';
+import { TestKeria } from '../utils/test-keria.js';
+import { Workflow } from '../types/workflow.js';
 
 export const CREATE_CLIENT = 'create_client';
 

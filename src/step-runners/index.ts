@@ -1,5 +1,5 @@
 // Export step runner base class
-export { StepRunner } from '../../types/step-runner.js';
+export { StepRunner } from '../types/step-runner.js';
 
 // Export step runner implementations and their constants
 export {

@@ -532,22 +532,60 @@ export class TestKeria {
     console.log('All Keria instances cleanup completed');
   }
 
-  private static getUniqueOffsetForInstance(instanceName: string): number {
-    if (!TestKeria._instanceOffsets) {
-      TestKeria._instanceOffsets = new Map<string, number>();
-    }
+//   private static getUniqueOffsetForInstance(instanceName: string): number {
+//     if (!TestKeria._instanceOffsets) {
+//       TestKeria._instanceOffsets = new Map<string, number>();
+//     }
 
-    if (!TestKeria._instanceOffsets.has(instanceName)) {
-      const nextOffset = TestKeria._instanceOffsets.size * 10;
-      TestKeria._instanceOffsets.set(instanceName, nextOffset);
-    }
+//     if (!TestKeria._instanceOffsets.has(instanceName)) {
+//       const nextOffset = TestKeria._instanceOffsets.size * 10;
+//       TestKeria._instanceOffsets.set(instanceName, nextOffset);
+//     }
 
-    return TestKeria._instanceOffsets.get(instanceName)!;
-  }
+//     return TestKeria._instanceOffsets.get(instanceName)!;
+//   }
 
   private static _instanceOffsets: Map<string, number>;
+
+private static getUniqueOffsetForInstance(instanceName: string): number {
+  if (!TestKeria._instanceOffsets) {
+    TestKeria._instanceOffsets = new Map<string, number>();
+    
+    // Pre-allocate offsets for known test contexts
+    const knownContexts = [
+      'issuance_workflow_test',
+      'successful_client_creation',
+      'successful_aid_creation',
+      'aid_creation_failed',
+      'successful_registry_creation',
+      'registry_creation_failed_aid_not_created'
+    ];
+    
+    knownContexts.forEach((ctx, index) => {
+      TestKeria._instanceOffsets.set(ctx, index * 10);
+    });
+  }
+
+  if (!TestKeria._instanceOffsets.has(instanceName)) {
+    // For unknown contexts, use a hash function or another deterministic approach
+    const hash = stringToHashCode(instanceName);
+    const nextOffset = (hash % 100) * 10; // Limit to reasonable range
+    TestKeria._instanceOffsets.set(instanceName, nextOffset);
+  }
+
+  return TestKeria._instanceOffsets.get(instanceName)!;
+}
 }
 
+// Simple string hash function
+function stringToHashCode(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
 /**
  * Helper function to stop Docker Compose services
  */

@@ -1,5 +1,5 @@
-import { StepRunner } from '../../types/step-runner.js';
-import { VleiIssuance } from '../../vlei-issuance.js';
+import { StepRunner } from '../types/step-runner.js';
+import { VleiIssuance } from '../vlei-issuance.js';
 
 export const ISSUE_CREDENTIAL = 'issue_credential';
 

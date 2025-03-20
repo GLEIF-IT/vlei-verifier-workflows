@@ -19,7 +19,7 @@ import {
   CreateAidStepRunner,
   CreateRegistryStepRunner,
   AddRootOfTrustStepRunner,
-} from './step-runners/index.js';
+} from '../step-runners/index.js';
 
 export class WorkflowRunner {
   stepRunners: Map<string, StepRunner> = new Map<string, StepRunner>();

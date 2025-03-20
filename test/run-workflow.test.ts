@@ -54,7 +54,7 @@ const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
   },
 });
 
-const BASE_PORT = parseInt(args[ARG_KERIA_START_PORT], 10) || 20000;
+const BASE_PORT = parseInt(args[ARG_KERIA_START_PORT], 10) || 30000;
 
 beforeAll(async () => {
   try {

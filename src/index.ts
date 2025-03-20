@@ -5,18 +5,16 @@ export { buildTestData, EcrTestData } from './utils/generate-test-data.js';
 
 export { WorkflowRunner } from './utils/run-workflow.js';
 export { getConfig, loadWorkflow } from './utils/test-data.js';
-export { StepRunner } from './utils/workflow-step-runners.js';
+export { StepRunner } from './step-runners/base-step-runner.js';
 
-export {
-  IssueCredentialStepRunner,
-  RevokeCredentialStepRunner,
-  NotifyCredentialIssueeStepRunner,
-  VleiVerificationStepRunner,
-  CreateClientStepRunner,
-  CreateAidStepRunner,
-  CreateRegistryStepRunner,
-  AddRootOfTrustStepRunner
-} from './utils/workflow-step-runners.js';
+export { IssueCredentialStepRunner } from './step-runners/issue-credential-step-runner.js';
+export { RevokeCredentialStepRunner } from './step-runners/revoke-credential-step-runner.js';
+export { NotifyCredentialIssueeStepRunner } from './step-runners/notify-credential-issuee-step-runner.js';
+export { VleiVerificationStepRunner } from './step-runners/vlei-verification-step-runner.js';
+export { CreateClientStepRunner } from './step-runners/create-client-step-runner.js';
+export { CreateAidStepRunner } from './step-runners/create-aid-step-runner.js';
+export { CreateRegistryStepRunner } from './step-runners/create-registry-step-runner.js';
+export { AddRootOfTrustStepRunner } from './step-runners/add-root-of-trust-step-runner.js';
 
 export { Workflow, WorkflowStep } from './types/workflow.js';
 export { WorkflowState } from './workflow-state.js';

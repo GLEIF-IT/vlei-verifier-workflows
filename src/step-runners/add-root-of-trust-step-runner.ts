@@ -1,6 +1,6 @@
-import { StepRunner } from '../../types/step-runner.js';
-import { EnvironmentRegistry, resolveEnvironment } from '../resolve-env.js';
-import { getRootOfTrust } from '../test-util.js';
+import { StepRunner } from '../types/step-runner.js';
+import { EnvironmentRegistry, resolveEnvironment } from '../utils/resolve-env.js';
+import { getRootOfTrust } from '../utils/test-util.js';
 import { VerifierClient } from 'vlei-verifier-client';
 
 export const ADD_ROOT_OF_TRUST = 'add_root_of_trust';

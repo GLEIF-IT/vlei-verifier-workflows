@@ -1,15 +1,15 @@
-import { StepRunner } from '../../types/step-runner.js';
-import { VleiVerification } from '../../vlei-verification.js';
-import { WorkflowState } from '../../workflow-state.js';
+import { StepRunner } from '../types/step-runner.js';
+import { VleiVerification } from '../vlei-verification.js';
+import { WorkflowState } from '../workflow-state.js';
 import {
   presentationStatusMapping,
   authorizationStatusMapping,
-} from '../test-data.js';
+} from '../utils/test-data.js';
 import {
   getIdentifierData,
   MultisigIdentifierData,
   SinglesigIdentifierData,
-} from '../handle-json-config.js';
+} from '../utils/handle-json-config.js';
 
 export const VLEI_VERIFICATION = 'vlei_verification';
 
