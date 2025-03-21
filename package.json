@@ -67,7 +67,7 @@
     "generate-docs": "jsdoc --configure .jsdoc.json --verbose",
     "formatter:fix": "prettier --write .",
     "formatter": "prettier --check .",
-    "dependency-checker": "npx depcheck --ignores='buffer, @typescript-eslint/eslint-plugin, @typescript-eslint/parser'",
+    "dependency-checker": "npx depcheck --ignores='buffer, @typescript-eslint/eslint-plugin, @typescript-eslint/parser, @types/jest'",
     "project-checker": "npm install && npm run formatter && npm run linter && npm run dependency-checker",
     "compatibility-checker": "./build/test/package/check-compatibility.sh",
     "package-checker": "npm pack --dry-run",
