@@ -3,7 +3,7 @@ export { buildTestData, EcrTestData } from './utils/generate-test-data.js';
 
 export { WorkflowRunner } from './utils/run-workflow.js';
 export { getConfig, loadWorkflow } from './utils/test-data.js';
-export { StepRunner } from './step-runners/base-step-runner.js';
+export { StepRunner } from './types/step-runner.js';
 
 export { IssueCredentialStepRunner } from './step-runners/issue-credential-step-runner.js';
 export { RevokeCredentialStepRunner } from './step-runners/revoke-credential-step-runner.js';
