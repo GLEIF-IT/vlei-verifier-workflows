@@ -100,7 +100,7 @@ describe('Workflow Tests', () => {
   test('issuance_workflow_test', async () => {
     const env = resolveEnvironment('docker');
     const configFileName = env.configuration;
-    const dirPath = '../src/config/';
+    const dirPath = '../src/examples/config/';
     const configFilePath = path.join(__dirname, dirPath) + configFileName;
     const configJson = await getConfig(configFilePath);
     configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = 'docker';
@@ -108,7 +108,7 @@ describe('Workflow Tests', () => {
     await TestKeria.getInstance(TEST_CONTEXTS.ISSUANCE_TEST);
     configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.ISSUANCE_TEST;
 
-    const workflowsDir = '../src/workflows/';
+    const workflowsDir = '../src/examples/workflows/';
     const workflowFile = env.workflow;
     const workflow = loadWorkflow(
       path.join(__dirname, `${workflowsDir}${workflowFile}`)
