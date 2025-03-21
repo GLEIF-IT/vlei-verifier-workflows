@@ -36,6 +36,12 @@ jobs:
           npm set registry https://registry.npmjs.org/
           npm ci
 
+      - name: Run docker
+        run: |
+          docker pull weboftrust/keria:${{ matrix.keria-version }}
+          # docker compose down -v
+          # docker compose up verify -d --pull always
+
       - name: Build
         run: npm run build
 
