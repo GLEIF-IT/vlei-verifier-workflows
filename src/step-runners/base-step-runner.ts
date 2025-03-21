@@ -2,7 +2,7 @@
  * Base class for all workflow step runners
  */
 export abstract class StepRunner {
-  type: string = '';
+  type = '';
 
   /**
    * Run the step

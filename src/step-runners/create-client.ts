@@ -9,10 +9,10 @@ export class CreateClientStepRunner extends StepRunner {
   type: string = CREATE_CLIENT;
 
   public async run(
-    stepName: string,
+    _: string,
     step: any,
     config: any = null,
-    workflow?: any
+    _workflow?: any
   ): Promise<any> {
     const agentName = step.agent_name;
     const secret = getAgentSecret(config, agentName);

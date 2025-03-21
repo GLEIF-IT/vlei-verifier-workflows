@@ -1,4 +1,4 @@
-import path = require('path');
+import path from 'path';
 
 export class TestPaths {
   private static instance: TestPaths;
@@ -29,7 +29,7 @@ export class TestPaths {
   private constructor(
     userName: string,
     dockerComposeFile: string,
-    userNum: number = 1,
+    userNum = 1,
     maxReportMb = 0
   ) {
     this.dockerComposeFile =

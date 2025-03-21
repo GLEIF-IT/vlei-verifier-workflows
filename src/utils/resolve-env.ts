@@ -148,7 +148,7 @@ export class EnvironmentRegistry {
 
   public register<T extends TestEnvironment>(
     preset: string,
-    configFn: (overrides: Partial<TestEnvironment>) => TestEnvironment
+    configFn: (overrides: Partial<TestEnvironment>) => T
   ): void {
     this.environments.set(preset, configFn);
   }

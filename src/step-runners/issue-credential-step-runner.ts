@@ -8,8 +8,8 @@ export class IssueCredentialStepRunner extends StepRunner {
   public async run(
     stepName: string,
     step: any,
-    config: any = null,
-    workflowObject?: any
+    _config: any = null,
+    _workflowObject?: any
   ): Promise<any> {
     const result = await VleiIssuance.getOrIssueCredential(
       stepName,

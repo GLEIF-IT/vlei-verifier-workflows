@@ -1,11 +1,11 @@
 import * as fs from 'fs';
-import * as path from 'path';
+import path from 'path';
 import * as os from 'os';
 import { TestPaths } from './test-paths.js';
 import { URL } from 'url';
-import minimist = require('minimist');
-import * as dockerode from 'dockerode';
-import Dockerode = require('dockerode');
+import minimist from 'minimist';
+import dockerode from 'dockerode';
+import Dockerode from 'dockerode';
 import { exec } from 'child_process';
 
 export const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
@@ -173,7 +173,7 @@ export class TestKeria {
           : baseBootPort,
       },
       '--': true,
-      unknown: (arg) => {
+      unknown: (_arg) => {
         // console.info(`Unknown keria argument, skipping: ${arg}`);
         return false;
       },
@@ -215,7 +215,7 @@ export class TestKeria {
     containerName: string,
     pullImage: boolean,
     platform = 'linux/amd64',
-    useHostNetwork: boolean = true
+    useHostNetwork = true
   ): Promise<dockerode.Container> {
     try {
       console.log(`Creating container ${containerName}...`);
@@ -284,7 +284,7 @@ export class TestKeria {
         const existingContainer = await this.docker.getContainer(containerName);
         console.log('Found existing container, removing it...');
         await existingContainer.remove({ force: true });
-      } catch (e) {
+      } catch (_e) {
         // Container doesn't exist, which is fine
       }
 
@@ -311,7 +311,7 @@ export class TestKeria {
           console.log(`Container ${containerName} is ready`);
           return;
         }
-      } catch (e) {
+      } catch (_e) {
         // Container not ready yet, wait and retry
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
@@ -428,7 +428,7 @@ export class TestKeria {
         `http://${this.host}:${this.keriaHttpPort}/spec.yaml`
       );
       return response.ok;
-    } catch (e) {
+    } catch (_e) {
       return false;
     }
   }
@@ -483,7 +483,7 @@ export class TestKeria {
           );
           try {
             const container = docker.getContainer(containerInfo.Id);
-            await container.stop({ t: 5 }).catch(() => {}); // Ignore errors if already stopped
+            await container.stop({ t: 5 }).catch(() => {console.log('Container already stopped')}); // Ignore errors if already stopped
             await container.remove({ force: true });
             console.log(
               `Successfully removed leftover container ${containerName}`

@@ -1,13 +1,15 @@
 import { exec } from 'child_process';
 import * as net from 'net';
 import { ensureDockerPermissions } from './docker-permissions.js';
-
+import Dockerode from 'dockerode';
+import { ChildProcess } from 'child_process';
 export class DockerComposeState {
   private static instance: DockerComposeState;
-  private isRunning: boolean = false;
+  private isRunning = false;
   private initializationPromise: Promise<void> | null = null;
-  private activeProcesses: Set<import('child_process').ChildProcess> =
-    new Set();
+  private activeProcesses: Set<ChildProcess> =
+    new Set<ChildProcess>();
+  private docker: Dockerode = new Dockerode();
 
   private constructor() {
     // Handle cleanup on process exit
@@ -156,7 +158,7 @@ export class DockerComposeState {
 
 export async function runDockerCompose(
   file: string,
-  command: string = 'up',
+  command = 'up',
   service?: string,
   options: string[] = []
 ): Promise<void> {
@@ -261,7 +263,7 @@ async function isHealthyServices(): Promise<boolean> {
   return new Promise((resolve) => {
     exec(
       'docker ps --format "{{.Names}}: {{.Status}}"',
-      (error, stdout, stderr) => {
+      (error, stdout, _stderr) => {
         if (error) {
           console.error('Error checking container health:', error);
           return resolve(false);
@@ -282,7 +284,7 @@ async function isHealthyServices(): Promise<boolean> {
 export function stopDockerCompose(composePath: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const cmd = `docker compose -f ${composePath} down -v --remove-orphans`;
-    exec(cmd, (error, stdout, stderr) => {
+    exec(cmd, (error, _stdout, stderr) => {
       if (error) {
         console.error(`Error stopping docker compose command: ${stderr}`);
         return reject(error);
@@ -306,9 +308,9 @@ function isPortInUse(port: number): Promise<boolean> {
 
 export async function isDockerComposeRunning(
   file: string,
-  vleiServerPort: number = 7723,
-  witnessPort: number = 5642,
-  verifierPort: number = 7676
+  vleiServerPort = 7723,
+  witnessPort = 5642,
+  verifierPort = 7676
 ): Promise<boolean> {
   const ports = [
     { name: 'vleiServerPort', port: vleiServerPort },
@@ -355,3 +357,5 @@ export async function isDockerComposeRunning(
     });
   });
 }
+
+export const DOCKER_COMPOSE_COMMAND = 'docker compose';

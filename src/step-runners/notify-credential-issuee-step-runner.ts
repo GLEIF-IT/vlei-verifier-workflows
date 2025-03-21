@@ -6,10 +6,10 @@ export const NOTIFY_CREDENTIAL_ISSUEE = 'notify_credential_issuee';
 export class NotifyCredentialIssueeStepRunner extends StepRunner {
   type: string = NOTIFY_CREDENTIAL_ISSUEE;
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
-    config: any = null,
-    workflowObject?: any
+    _config: any = null,
+    _workflowObject?: any
   ): Promise<any> {
     const result = await VleiIssuance.notifyCredentialIssuee(
       step.credential,

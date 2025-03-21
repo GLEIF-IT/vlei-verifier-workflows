@@ -6,10 +6,10 @@ export const REVOKE_CREDENTIAL = 'revoke_credential';
 export class RevokeCredentialStepRunner extends StepRunner {
   type: string = REVOKE_CREDENTIAL;
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
-    config: any = null,
-    workflowObject?: any
+    _config: any = null,
+    _workflowObject?: any
   ): Promise<any> {
     const result = await VleiIssuance.revokeCredential(
       step.credential,

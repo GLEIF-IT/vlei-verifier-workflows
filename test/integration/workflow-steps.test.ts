@@ -46,15 +46,14 @@ const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
     [ARG_KERIA_START_PORT]: 20000,
   },
   '--': true,
-  unknown: (arg: any) => {
-    // console.info(`Unknown run-workflow-bank argument, Skipping: ${arg}`);
-    // throw new Error(`Unknown argument: ${arg}`);
+  unknown: (_arg: any) => {
     return false;
   },
 });
 
 const BASE_PORT = parseInt(args[ARG_KERIA_START_PORT], 10) || 20000;
-const refresh = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : false;
+const refreshValue = args[ARG_REFRESH] ? args[ARG_REFRESH] === 'false' : false;
+args[ARG_REFRESH] = refreshValue;
 
 beforeAll(async () => {
   try {
@@ -66,12 +65,12 @@ beforeAll(async () => {
     if (dockerStarted) {
       // Initialize all Keria instances upfront
       await Promise.all(
-        Object.values(TEST_CONTEXTS).map(async (contextId, index) => {
+        Object.values(TEST_CONTEXTS).map(async (contextId, _) => {
           try {
             console.log(
               `Initializing Keria instance for context: ${contextId}`
             );
-            const keriaInstance = await TestKeria.getInstance(
+            await TestKeria.getInstance(
               contextId,
               testPaths,
               args[ARG_KERIA_DOMAIN],

@@ -9,6 +9,7 @@ export class AddRootOfTrustStepRunner extends StepRunner {
   type: string = ADD_ROOT_OF_TRUST;
 
   public async run(stepName: string, step: any, config: any): Promise<any> {
+    console.log(`Running ${stepName} with config: ${JSON.stringify(config)}`);
     const env = resolveEnvironment(config[EnvironmentRegistry.ENVIRONMENT_CONTEXT]);
     const rot_aid = step.rot_aid;
     const rot_member_aid = step.rot_member_aid;

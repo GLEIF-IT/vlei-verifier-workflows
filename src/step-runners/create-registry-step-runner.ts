@@ -7,10 +7,10 @@ export const CREATE_REGISTRY = 'create_registry';
 export class CreateRegistryStepRunner extends StepRunner {
   type: string = CREATE_REGISTRY;
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
     config: any = null,
-    workflowObject?: any
+    _workflowObject?: any
   ): Promise<any> {
     const identifierData: IdentifierData = getIdentifierData(config, step.aid);
     const result = await VleiIssuance.createRegistry(identifierData);

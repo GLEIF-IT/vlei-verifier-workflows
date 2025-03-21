@@ -13,7 +13,7 @@ export async function ensureDockerPermissions(): Promise<boolean> {
     execSync('docker ps', { stdio: 'ignore' });
     console.log('✅ Docker permissions are correctly configured');
     return true;
-  } catch (error) {
+  } catch (_error) {
     console.warn('⚠️ Docker permissions issue detected');
     
     try {
@@ -26,7 +26,7 @@ export async function ensureDockerPermissions(): Promise<boolean> {
           console.log('User added to docker group. You may need to log out and log back in for changes to take effect.');
           console.log('Alternatively, run: newgrp docker');
           return false;
-        } catch (e) {
+        } catch (_e) {
           console.error('Failed to add user to docker group. Please run manually:');
           console.error('sudo usermod -aG docker $USER');
           return false;

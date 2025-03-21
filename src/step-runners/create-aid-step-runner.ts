@@ -7,7 +7,7 @@ export const CREATE_AID = 'create_aid';
 export class CreateAidStepRunner extends StepRunner {
   type: string = CREATE_AID;
   public async run(
-    stepName: string,
+    _: string,
     step: any,
     config: any = null
   ): Promise<any> {

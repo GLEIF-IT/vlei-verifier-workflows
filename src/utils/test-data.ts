@@ -1,8 +1,7 @@
-import path = require('path');
 import { Workflow } from '../types/workflow.js';
 
-const fs = require('fs');
-const yaml = require('js-yaml');
+import fs from 'fs';
+import yaml from 'js-yaml';
 import SignifyClient from 'signify-ts';
 
 // Function to load and parse YAML file

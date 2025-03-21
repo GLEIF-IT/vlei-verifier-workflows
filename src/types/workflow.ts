@@ -1,3 +1,7 @@
+import fs from 'fs';
+import path from 'path';
+import yaml from 'js-yaml';
+
 /**
  * Represents a workflow with steps for vLEI verification processes
  */
@@ -22,9 +26,6 @@ export interface WorkflowStep {
  * Helper function to load a workflow from a file
  */
 export function loadWorkflow(path: string): Workflow | null {
-  const fs = require('fs');
-  const yaml = require('js-yaml');
-
   try {
     const fileContents = fs.readFileSync(path, 'utf8');
     return yaml.load(fileContents) as Workflow;
@@ -38,8 +39,6 @@ export function loadWorkflow(path: string): Workflow | null {
  * Helper function to get all available workflows from the workflows directory
  */
 export function getAvailableWorkflows(): string[] {
-  const fs = require('fs');
-  const path = require('path');
 
   const workflowsDir = path.join(process.cwd(), 'src', 'workflows');
 

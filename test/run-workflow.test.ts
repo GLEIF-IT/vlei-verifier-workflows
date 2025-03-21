@@ -5,7 +5,6 @@ import { strict as assert } from 'assert';
 import {
   EnvironmentRegistry,
   resolveEnvironment,
-  TestEnvironment,
 } from '../src/utils/resolve-env.js';
 import { getConfig } from '../src/utils/test-data.js';
 import { WorkflowRunner } from '../src/utils/run-workflow.js';
@@ -25,7 +24,6 @@ import {
 } from '../src/utils/test-docker';
 
 let testPaths: TestPaths;
-let env: TestEnvironment;
 
 // Test context constants
 const TEST_CONTEXTS = {
@@ -48,8 +46,7 @@ const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
   },
   '--': true,
   unknown: (arg: any) => {
-    // console.info(`Unknown run-workflow-bank argument, Skipping: ${arg}`);
-    // throw new Error(`Unknown argument: ${arg}`);
+    console.debug(`Unknown run-workflow-bank argument, Skipping: ${arg}`);
     return false;
   },
 });
@@ -66,12 +63,12 @@ beforeAll(async () => {
     if (dockerStarted) {
       // Initialize all Keria instances upfront
       await Promise.all(
-        Object.values(TEST_CONTEXTS).map(async (contextId, index) => {
+        Object.values(TEST_CONTEXTS).map(async (contextId, _) => {
           try {
             console.log(
               `Initializing Keria instance for context: ${contextId}`
             );
-            const keriaInstance = await TestKeria.getInstance(
+            await TestKeria.getInstance(
               contextId,
               testPaths,
               args[ARG_KERIA_DOMAIN],
@@ -102,23 +99,20 @@ beforeAll(async () => {
 afterAll(async () => {
   console.log('Running run-workflow test cleanup...');
   await TestKeria.cleanupInstances(Object.values(TEST_CONTEXTS));
-  // if (TestKeria.instances.size <= 0) {
-  //   await stopDockerCompose(testPaths.dockerComposeFile);
-  // }
 }, 60000);
 
 describe('Workflow Tests', () => {
   test(
-    TEST_CONTEXTS.ISSUANCE_TEST,
+    'issuance_workflow_test',
     async () => {
       const env = resolveEnvironment("docker");
       const configFileName = env.configuration;
-      let dirPath = '../src/config/';
+      const dirPath = '../src/config/';
       const configFilePath = path.join(__dirname, dirPath) + configFileName;
       const configJson = await getConfig(configFilePath);
       configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = "docker";
 
-      const keriaInstance = await TestKeria.getInstance(TEST_CONTEXTS.ISSUANCE_TEST);
+      await TestKeria.getInstance(TEST_CONTEXTS.ISSUANCE_TEST);
       configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.ISSUANCE_TEST;
 
       const workflowsDir = '../src/workflows/';

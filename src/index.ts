@@ -1,5 +1,3 @@
-import { unknownPrefix } from './constants.js';
-
 export { generateFileDigest } from './utils/generate-digest.js';
 export { buildTestData, EcrTestData } from './utils/generate-test-data.js';
 
