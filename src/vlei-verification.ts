@@ -23,6 +23,10 @@ export class VleiVerification {
     credCesr: string,
     expectedStatus: PresentationStatus = CREDENTIAL_CRYPT_VALID
   ) {
+    if (!cred || !cred.sad) {
+      throw new Error('Invalid credential format: missing sad property');
+    }
+
     const presentationExpectedStatusCode =
       expectedStatus.status == CREDENTIAL_CRYPT_VALID.status ? 202 : 400;
     await this.presentation(

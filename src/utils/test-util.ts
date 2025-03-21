@@ -149,6 +149,46 @@ export async function getIssuedCredential(
   assert(credentialList.length <= 1);
   return credentialList[0];
 }
+/**
+ * Get issued credential with specific role
+ * This extends the default credential retrieval to filter by role
+ */
+export async function getIssuedCredentialByRole(
+  client: SignifyClient.SignifyClient,
+  issuerAID: any,
+  recipientAID: any,
+  schema: string,
+  role: string
+) {
+  // Get all credentials matching the basic criteria
+  const credentials = await client.credentials().list({
+    filter: {
+      '-i': issuerAID.prefix,
+      '-s': schema,
+      '-a-i': recipientAID.prefix,
+    },
+  });
+
+  // If no credentials found, return null
+  if (!credentials || credentials.length === 0) {
+    return null;
+  }
+
+  console.log(`Looking for role: "${role}"`);
+  console.log(`Found ${credentials.length} credentials with roles:`);
+  credentials.forEach((cred, index) => {
+    console.log(
+      `  ${index + 1}. Role: "${cred.sad.a.engagementContextRole}" | SAID: ${cred.sad.d}`
+    );
+  });
+
+  // Find the credential with the matching role
+  const matchingCred = credentials.find(
+    (cred) => cred.sad.a.engagementContextRole === role
+  );
+
+  return matchingCred || null;
+}
 
 export async function getOrCreateAID(
   client: SignifyClient.SignifyClient,
@@ -338,6 +378,7 @@ export async function getOrIssueCredential(
         cred.sad.i === issuerAid.prefix &&
         cred.sad.a.i === recipientAid.prefix &&
         cred.sad.a.AID === credData.AID &&
+        cred.sad.a.engagementContextRole === credData.engagementContextRole &&
         cred.status.et != 'rev'
     );
     if (credential) return credential;

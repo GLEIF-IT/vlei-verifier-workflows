@@ -162,19 +162,42 @@ export class VleiVerificationStepRunner extends StepRunner {
               singlesigIdentifierData.agent.name
             );
           }
-          const credential: { cred: any; credCesr: string } =
-            workflow_state.credentials.get(action.credential)!;
+          const credential = workflow_state.credentials.get(action.credential);
+          if (!credential) {
+            throw new Error(`Credential not found: ${action.credential}`);
+          }
           cred = credential.cred;
+          if (!cred || !cred.sad || !cred.sad.d) {
+            throw new Error(
+              `Invalid credential format for: ${action.credential}`
+            );
+          }
           credCesr =
             client !== undefined
               ? await client.credentials().get(cred.sad.d, true)
               : undefined;
         } else {
-          const credential: { cred: any; credCesr: string } =
-            workflow_state.credentials.get(action.credential)!;
+          const credential = workflow_state.credentials.get(action.credential);
+          if (!credential) {
+            throw new Error(`Credential not found: ${action.credential}`);
+          }
           cred = credential.cred;
+          if (!cred || !cred.sad || !cred.sad.d) {
+            throw new Error(
+              `Invalid credential format for: ${action.credential}`
+            );
+          }
           credCesr = credential.credCesr;
         }
+
+        if (!credCesr) {
+          throw new Error(
+            `Credential CESR data not found for: ${action.credential}`
+          );
+        }
+
+        //console.log('Credential retrieved:', JSON.stringify(credential, null, 2));
+        console.log('Credential cred property:', JSON.stringify(cred, null, 2));
 
         const credStatus = presentationStatusMapping.get(
           action.expected_status

@@ -21,6 +21,7 @@ import {
   assertOperations,
   sleep,
   revokeCredential,
+  getIssuedCredentialByRole,
 } from './utils/test-util.js';
 import {
   addEndRoleMultisig,
@@ -771,6 +772,59 @@ export const VleiIssuance = {
     const schema = workflow_state.schemas[credInfo.schema];
     const rules = workflow_state.rules[credInfo.rules!];
     const privacy = credInfo.privacy;
+
+    // Extract the role from the credential info or attributes
+    const role =
+      credInfo.attributes?.engagementContextRole ||
+      attributes?.engagementContextRole;
+
+    // Check for an existing credential with this specific role
+    const existingCred = await getIssuedCredentialByRole(
+      issuerclient!,
+      issuerAID,
+      recipientAID,
+      schema,
+      role
+    );
+
+    // If credential with this role already exists, use it
+    if (existingCred) {
+      console.log(
+        `Found existing credential with role "${role}" and SAID: ${existingCred.sad.d}`
+      );
+      const credCesr = await recipientclient!
+        .credentials()
+        .get(existingCred.sad.d, true);
+
+      // Store with consistent structure
+      workflow_state.credentials.set(credId, {
+        cred: existingCred,
+        credCesr: credCesr,
+      });
+
+      if (generateTestData) {
+        const credData = { ...credInfo.attributes, ...attributes };
+        const testData: EcrTestData = {
+          aid: recipientAID.prefix,
+          lei: credData.LEI,
+          credential: { raw: existingCred, cesr: credCesr },
+          engagementContextRole:
+            credData.engagementContextRole || credData.officialRole,
+        };
+        await buildTestData(testData, testName, issueeAidKey);
+      }
+
+      const response: VleiUser = {
+        roleClient: recipientclient!,
+        ecrAid: recipientAID,
+        creds: { [credId]: { cred: existingCred, credCesr: credCesr } },
+        idAlias: issueeAidKey,
+      };
+
+      return [response, role];
+    }
+
+    // If credential with this role does not exist, create it
     let credSource = null;
     if (credSourceId != null) {
       const credType = credInfo.credSource['type'];
@@ -859,6 +913,39 @@ export const VleiIssuance = {
     const schema = workflow_state.schemas[credInfo.schema];
     let rules = workflow_state.rules[credInfo.rules!];
     const privacy = credInfo.privacy;
+    // Extract the role from the credential info or attributes
+    const role =
+      credInfo.attributes?.engagementContextRole ||
+      attributes?.engagementContextRole;
+
+    // Get the first issuer AID for initial check
+    const firstIssuerAid = issuerAidInfo.identifiers[0];
+    const firstIssuerSinglesigData = workflow_state.aidsInfo.get(
+      firstIssuerAid
+    ) as SinglesigIdentifierData;
+    const firstIssuerClient = workflow_state.clients.get(
+      firstIssuerSinglesigData.agent.name
+    );
+
+    // Check for an existing credential with this specific role
+    const existingCred = await getIssuedCredentialByRole(
+      firstIssuerClient!,
+      issuerAIDMultisig,
+      recipientAID,
+      schema,
+      role
+    );
+
+    // If credential with this role already exists, use it
+    if (existingCred) {
+      console.log(
+        `Found existing multisig credential with role "${role}" and SAID: ${existingCred.sad.d}`
+      );
+      workflow_state.credentials.set(credId, existingCred);
+      return [existingCred, null];
+    }
+
+    // If no credential exists, continue with credential issuance
     const registryName = issuerAidInfo.name;
     const issuerRegistry = workflow_state.registries.get(registryName)!;
     const issuerAids =
