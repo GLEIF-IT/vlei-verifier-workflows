@@ -103,7 +103,7 @@ export class TestPaths {
         );
     this.workflowsDir = process.env.WORKFLOWS_DIR
       ? process.env.WORKFLOWS_DIR
-      : path.join(process.cwd(), 'src/workflows');
+      : path.join(process.cwd(), 'src/examples/workflows');
   }
 
   public static getInstance(

@@ -101,15 +101,16 @@ afterAll(async () => {
   // }
 }, 60000);
 
+const workflowsDir = '../../src/examples/workflows/';
+const configDir = '../../src/examples/config/';
+
 describe('testing Client creation workflow step', () => {
   it('successful_client_creation', async () => {
-    const workflowsDir = './workflows/';
     const workflowFile = 'create-client.yaml';
     const workflowObj = loadWorkflow(
       path.join(__dirname, `${workflowsDir}${workflowFile}`)
     );
     const configFileName = 'create-client.json';
-    const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
     const agentName = 'client-agent-1';
@@ -136,14 +137,12 @@ describe('testing AID creation workflow step', () => {
     WorkflowState.resetInstance();
   });
   test('successful_aid_creation', async function run() {
-    const workflowsDir = './workflows/';
     const workflowFile = 'create-aid-valid.yaml';
     const workflow = loadWorkflow(
       path.join(__dirname, `${workflowsDir}${workflowFile}`)
     );
     const aidName = 'aid-1';
     const configFileName = 'create-aid.json';
-    const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
     configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.AID_CREATION_SUCCESS;
@@ -164,13 +163,11 @@ describe('testing AID creation workflow step', () => {
   }, 3600000);
 
   test('aid_creation_failed', async function run() {
-    const workflowsDir = './workflows/';
     const workflowFile = 'create-aid-invalid.yaml';
     const workflow = loadWorkflow(
       path.join(__dirname, `${workflowsDir}${workflowFile}`)
     );
     const configFileName = 'create-aid.json';
-    const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
     configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.AID_CREATION_FAILURE;
@@ -194,14 +191,12 @@ describe('testing Registry creation workflow step', () => {
     WorkflowState.resetInstance();
   });
   test('successful_registry_creation', async function run() {
-    const workflowsDir = './workflows/';
     const workflowFile = 'create-registry-valid.yaml';
     const workflow = loadWorkflow(
       path.join(__dirname, `${workflowsDir}${workflowFile}`)
     );
     const aidName = 'aid-1';
     const configFileName = 'create-registry.json';
-    const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
     configJson[TestKeria.AGENT_CONTEXT] =
@@ -223,13 +218,11 @@ describe('testing Registry creation workflow step', () => {
   }, 3600000);
 
   test('registry_creation_failed_aid_not_created', async function run() {
-    const workflowsDir = './workflows/';
     const workflowFile = 'create-registry-invalid-no-aid.yaml';
     const workflow = loadWorkflow(
       path.join(__dirname, `${workflowsDir}${workflowFile}`)
     );
     const configFileName = 'create-registry.json';
-    const configDir = './config/';
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
     configJson[TestKeria.AGENT_CONTEXT] =
