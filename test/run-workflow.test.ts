@@ -12,7 +12,6 @@ import { loadWorkflow } from '../src/utils/test-data.js';
 import {
   ARG_KERIA_DOMAIN,
   ARG_KERIA_HOST,
-  ARG_KERIA_NUM,
   ARG_KERIA_START_PORT,
   ARG_REFRESH,
   ARG_WITNESS_HOST,
@@ -31,14 +30,12 @@ const TEST_CONTEXTS = {
 // Parse command-line arguments using minimist
 const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
   alias: {
-    [ARG_KERIA_NUM]: 'knum',
     [ARG_REFRESH]: 'r',
   },
   default: {
     [ARG_WITNESS_HOST]: 'localhost',
     [ARG_KERIA_HOST]: 'localhost',
     [ARG_KERIA_DOMAIN]: 'localhost',
-    [ARG_KERIA_NUM]: 1,
     [ARG_REFRESH]: false,
     [ARG_KERIA_START_PORT]: 20000,
   },

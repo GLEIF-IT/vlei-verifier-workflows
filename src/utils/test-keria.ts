@@ -11,7 +11,6 @@ import { exec } from 'child_process';
 export const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
 export const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
 export const ARG_KERIA_HOST = 'keria_host'; //docker domain for witness
-export const ARG_KERIA_NUM = 'keria_num';
 export const ARG_REFRESH = 'refresh';
 
 export const ARG_KERIA_ADMIN_PORT = 'keria-admin-port';
