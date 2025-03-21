@@ -23,7 +23,6 @@ export { startDockerServices } from './utils/test-docker.js';
 export {
   ARG_KERIA_DOMAIN,
   ARG_KERIA_HOST,
-  ARG_KERIA_NUM,
   ARG_REFRESH,
   ARG_WITNESS_HOST,
   TestKeria,
