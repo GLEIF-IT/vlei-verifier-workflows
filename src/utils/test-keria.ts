@@ -97,7 +97,7 @@ export class TestKeria {
     containerLocalhost?: string,
     basePort?: number,
     instanceOffset?: number,
-    keriaImage = `weboftrust/keria:0.2.0-dev4`,
+    keriaImage = `weboftrust/keria:0.2.0-dev3`,
     platform = 'linux/amd64'
   ): Promise<TestKeria> {
     if (!TestKeria.instances) {
