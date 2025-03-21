@@ -36,11 +36,6 @@ jobs:
           npm set registry https://registry.npmjs.org/
           npm ci
 
-      - name: Run docker
-        run: |
-          docker compose down -v
-          docker compose up verify -d --pull always
-
       - name: Build
         run: npm run build
 
