@@ -59,7 +59,7 @@
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p ./build/configs/tsconfig.esm.json && npx echo-cli '{\"type\": \"module\"}' > dist/esm/package.json",
     "build:cjs": "tsc -p ./build/configs/tsconfig.cjs.json && npx echo-cli '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
-    "test": "jest test/",
+    "test": "jest",
     "test:full": "npm run project-checker && npm run build && npm run docker:up && npm test && npm run compatibility-checker && npm run package-checker && npm run docker:down",
     "docker:up": "npm run docker:down && docker compose up -d",
     "docker:down": "docker compose down -v",
@@ -72,7 +72,8 @@
     "compatibility-checker": "./build/test/package/check-compatibility.sh",
     "package-checker": "npm pack --dry-run",
     "prepublishOnly": "npm run test:full",
-    "publish:dev": "npm version prerelease --preid=dev && npm publish --access public --tag dev && npm dist-tag add $(node -p \"require('./package.json').name + '@' + require('./package.json').version\") latest"
+    "pretest": "npx jest --testPathPattern=test/unit/ensure-docker-permissions.test.ts --no-coverage",
+    "test:with-permissions": "bash -c 'newgrp docker || true && npm test'"
   },
   "dependencies": {
     "buffer": "^6.0.3",

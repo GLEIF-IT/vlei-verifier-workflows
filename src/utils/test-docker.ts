@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
 import * as net from 'net';
+import { ensureDockerPermissions } from './docker-permissions.js';
 
 export class DockerComposeState {
   private static instance: DockerComposeState;
@@ -222,6 +223,12 @@ export async function startDockerServices(
   file: string,
   maxRetries = 3
 ): Promise<boolean> {
+  // Check permissions first
+  const permissionsOk = await ensureDockerPermissions();
+  if (!permissionsOk) {
+    throw new Error('Docker permissions not configured correctly. Please fix permissions and try again.');
+  }
+  
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
