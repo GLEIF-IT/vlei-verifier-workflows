@@ -29,7 +29,12 @@ export class WorkflowRunner {
   agentContext: any;
   executedSteps = new Set<string>();
 
-  constructor(workflow: Workflow, config: any, environmentContext: any, agentContext: any) {
+  constructor(
+    workflow: Workflow,
+    config: any,
+    environmentContext: any,
+    agentContext: any
+  ) {
     this.config = config;
     this.workflow = workflow;
     this.environmentContext = environmentContext;
@@ -62,16 +67,16 @@ export class WorkflowRunner {
       for (const [stepName, step] of Object.entries(steps)) {
         try {
           console.log(`Executing: ${step.description || stepName}`);
-          
+
           const stepType = step.type;
           const stepRunner = this.stepRunners.get(stepType);
-          
+
           if (!stepRunner) {
             const errorMsg = `No step runner registered for step type: ${stepType}`;
             console.error(`❌ ERROR in step "${stepName}": ${errorMsg}`);
             throw new Error(errorMsg);
           }
-          
+
           await stepRunner.run(stepName, step, this.config);
           this.executedSteps.add(stepName);
           console.log(`✅ Successfully completed step: ${stepName}`);
@@ -79,10 +84,10 @@ export class WorkflowRunner {
           // Instead of swallowing the error, print it clearly and rethrow
           console.error(`❌ ERROR in step "${stepName}":`);
           console.error(error);
-          
+
           // Optionally print the step details for debugging
           console.error(`Step details:`, JSON.stringify(step, null, 2));
-          
+
           // Rethrow to stop workflow execution
           throw error;
         }

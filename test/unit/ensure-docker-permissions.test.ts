@@ -5,10 +5,14 @@ describe('Docker Permissions Check', () => {
     const result = await ensureDockerPermissions();
     if (!result) {
       console.log('\nPlease fix Docker permissions before running tests.');
-      console.log('After fixing permissions, you may need to restart your terminal session.');
+      console.log(
+        'After fixing permissions, you may need to restart your terminal session.'
+      );
       process.exit(1); // This will exit the test process if permissions aren't set up
     }
-    console.log('Docker permissions are correctly configured. You can run tests now.');
+    console.log(
+      'Docker permissions are correctly configured. You can run tests now.'
+    );
     expect(result).toBe(true);
   });
-}); 
+});

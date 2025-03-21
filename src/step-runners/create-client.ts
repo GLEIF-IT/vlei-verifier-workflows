@@ -16,7 +16,9 @@ export class CreateClientStepRunner extends StepRunner {
   ): Promise<any> {
     const agentName = step.agent_name;
     const secret = getAgentSecret(config, agentName);
-    const testKeria = await TestKeria.getInstance(config[TestKeria.AGENT_CONTEXT]);
+    const testKeria = await TestKeria.getInstance(
+      config[TestKeria.AGENT_CONTEXT]
+    );
     const result = await VleiIssuance.createClient(
       testKeria,
       secret,

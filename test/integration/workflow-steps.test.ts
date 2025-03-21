@@ -16,9 +16,7 @@ import {
   TestKeria,
 } from '../../src/utils/test-keria';
 import { TestPaths } from '../../src/utils/test-paths';
-import {
-  startDockerServices,
-} from '../../src/utils/test-docker';
+import { startDockerServices } from '../../src/utils/test-docker';
 import { EnvironmentRegistry } from '../../src/utils/resolve-env.js';
 
 let testPaths: TestPaths;
@@ -107,37 +105,33 @@ afterAll(async () => {
 }, 60000);
 
 describe('testing Client creation workflow step', () => {
-  it(
-    'successful_client_creation',
-    async () => {
-      const workflowsDir = './workflows/';
-      const workflowFile = 'create-client.yaml';
-      const workflowObj = loadWorkflow(
-        path.join(__dirname, `${workflowsDir}${workflowFile}`)
-      );
-      const configFileName = 'create-client.json';
-      const configDir = './config/';
-      const configFilePath = path.join(__dirname, configDir) + configFileName;
-      const configJson = await getConfig(configFilePath);
-      const agentName = 'client-agent-1';
-      configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.CLIENT_CREATION;
-      configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = "docker";
+  it('successful_client_creation', async () => {
+    const workflowsDir = './workflows/';
+    const workflowFile = 'create-client.yaml';
+    const workflowObj = loadWorkflow(
+      path.join(__dirname, `${workflowsDir}${workflowFile}`)
+    );
+    const configFileName = 'create-client.json';
+    const configDir = './config/';
+    const configFilePath = path.join(__dirname, configDir) + configFileName;
+    const configJson = await getConfig(configFilePath);
+    const agentName = 'client-agent-1';
+    configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.CLIENT_CREATION;
+    configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = 'docker';
 
-      if (workflowObj && configJson) {
-        const wr = new WorkflowRunner(
-          workflowObj,
-          configJson,
-          configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
-          configJson[TestKeria.AGENT_CONTEXT]
-        );
-        const workflowRunResult = await wr.runWorkflow();
-        const workflowState = WorkflowState.getInstance();
-        expect(workflowRunResult).toEqual(true);
-        expect(workflowState.clients.get(agentName)).not.toEqual(undefined);
-      } else throw 'Invalid workflow of configuration';
-    },
-    3600000
-  );
+    if (workflowObj && configJson) {
+      const wr = new WorkflowRunner(
+        workflowObj,
+        configJson,
+        configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
+        configJson[TestKeria.AGENT_CONTEXT]
+      );
+      const workflowRunResult = await wr.runWorkflow();
+      const workflowState = WorkflowState.getInstance();
+      expect(workflowRunResult).toEqual(true);
+      expect(workflowState.clients.get(agentName)).not.toEqual(undefined);
+    } else throw 'Invalid workflow of configuration';
+  }, 3600000);
 });
 
 describe('testing AID creation workflow step', () => {
@@ -156,7 +150,7 @@ describe('testing AID creation workflow step', () => {
     const configFilePath = path.join(__dirname, configDir) + configFileName;
     const configJson = await getConfig(configFilePath);
     configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.AID_CREATION_SUCCESS;
-    configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = "docker";
+    configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = 'docker';
 
     if (workflow && configJson) {
       const wr = new WorkflowRunner(
@@ -172,98 +166,88 @@ describe('testing AID creation workflow step', () => {
     } else throw 'Invalid workflow of configuration';
   }, 3600000);
 
-  test(
-    'aid_creation_failed',
-    async function run() {
-      const workflowsDir = './workflows/';
-      const workflowFile = 'create-aid-invalid.yaml';
-      const workflow = loadWorkflow(
-        path.join(__dirname, `${workflowsDir}${workflowFile}`)
-      );
-      const configFileName = 'create-aid.json';
-      const configDir = './config/';
-      const configFilePath = path.join(__dirname, configDir) + configFileName;
-      const configJson = await getConfig(configFilePath);
-      configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.AID_CREATION_FAILURE;
-      configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = "docker";
+  test('aid_creation_failed', async function run() {
+    const workflowsDir = './workflows/';
+    const workflowFile = 'create-aid-invalid.yaml';
+    const workflow = loadWorkflow(
+      path.join(__dirname, `${workflowsDir}${workflowFile}`)
+    );
+    const configFileName = 'create-aid.json';
+    const configDir = './config/';
+    const configFilePath = path.join(__dirname, configDir) + configFileName;
+    const configJson = await getConfig(configFilePath);
+    configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.AID_CREATION_FAILURE;
+    configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = 'docker';
 
-      if (workflow && configJson) {
-        const wr = new WorkflowRunner(
-          workflow,
-          configJson,
-          configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
-          configJson[TestKeria.AGENT_CONTEXT]
-        );
-        const workflowRunResult = await wr.runWorkflow();
-        expect(workflowRunResult).toEqual(false);
-      } else throw 'Invalid workflow of configuration';
-    },
-    3600000
-  );
+    if (workflow && configJson) {
+      const wr = new WorkflowRunner(
+        workflow,
+        configJson,
+        configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
+        configJson[TestKeria.AGENT_CONTEXT]
+      );
+      const workflowRunResult = await wr.runWorkflow();
+      expect(workflowRunResult).toEqual(false);
+    } else throw 'Invalid workflow of configuration';
+  }, 3600000);
 });
 
 describe('testing Registry creation workflow step', () => {
   beforeEach(() => {
     WorkflowState.resetInstance();
   });
-  test(
-    'successful_registry_creation',
-    async function run() {
-      const workflowsDir = './workflows/';
-      const workflowFile = 'create-registry-valid.yaml';
-      const workflow = loadWorkflow(
-        path.join(__dirname, `${workflowsDir}${workflowFile}`)
+  test('successful_registry_creation', async function run() {
+    const workflowsDir = './workflows/';
+    const workflowFile = 'create-registry-valid.yaml';
+    const workflow = loadWorkflow(
+      path.join(__dirname, `${workflowsDir}${workflowFile}`)
+    );
+    const aidName = 'aid-1';
+    const configFileName = 'create-registry.json';
+    const configDir = './config/';
+    const configFilePath = path.join(__dirname, configDir) + configFileName;
+    const configJson = await getConfig(configFilePath);
+    configJson[TestKeria.AGENT_CONTEXT] =
+      TEST_CONTEXTS.REGISTRY_CREATION_SUCCESS;
+    configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = 'docker';
+
+    if (workflow && configJson) {
+      const wr = new WorkflowRunner(
+        workflow,
+        configJson,
+        configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
+        configJson[TestKeria.AGENT_CONTEXT]
       );
-      const aidName = 'aid-1';
-      const configFileName = 'create-registry.json';
-      const configDir = './config/';
-      const configFilePath = path.join(__dirname, configDir) + configFileName;
-      const configJson = await getConfig(configFilePath);
-      configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.REGISTRY_CREATION_SUCCESS;
-      configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = "docker";
+      const workflowRunResult = await wr.runWorkflow();
+      const workflowState = WorkflowState.getInstance();
+      expect(workflowRunResult).toEqual(true);
+      expect(workflowState.registries.get(aidName)).not.toEqual(undefined);
+    } else throw 'Invalid workflow of configuration';
+  }, 3600000);
 
-      if (workflow && configJson) {
-        const wr = new WorkflowRunner(
-          workflow,
-          configJson,
-          configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
-          configJson[TestKeria.AGENT_CONTEXT]
-        );
-        const workflowRunResult = await wr.runWorkflow();
-        const workflowState = WorkflowState.getInstance();
-        expect(workflowRunResult).toEqual(true);
-        expect(workflowState.registries.get(aidName)).not.toEqual(undefined);
-      } else throw 'Invalid workflow of configuration';
-    },
-    3600000
-  );
+  test('registry_creation_failed_aid_not_created', async function run() {
+    const workflowsDir = './workflows/';
+    const workflowFile = 'create-registry-invalid-no-aid.yaml';
+    const workflow = loadWorkflow(
+      path.join(__dirname, `${workflowsDir}${workflowFile}`)
+    );
+    const configFileName = 'create-registry.json';
+    const configDir = './config/';
+    const configFilePath = path.join(__dirname, configDir) + configFileName;
+    const configJson = await getConfig(configFilePath);
+    configJson[TestKeria.AGENT_CONTEXT] =
+      TEST_CONTEXTS.REGISTRY_CREATION_FAILURE;
+    configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = 'docker';
 
-  test(
-    "registry_creation_failed_aid_not_created",
-    async function run() {
-      const workflowsDir = './workflows/';
-      const workflowFile = 'create-registry-invalid-no-aid.yaml';
-      const workflow = loadWorkflow(
-        path.join(__dirname, `${workflowsDir}${workflowFile}`)
+    if (workflow && configJson) {
+      const wr = new WorkflowRunner(
+        workflow,
+        configJson,
+        configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
+        configJson[TestKeria.AGENT_CONTEXT]
       );
-      const configFileName = 'create-registry.json';
-      const configDir = './config/';
-      const configFilePath = path.join(__dirname, configDir) + configFileName;
-      const configJson = await getConfig(configFilePath);
-      configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.REGISTRY_CREATION_FAILURE;
-      configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = "docker";
-
-      if (workflow && configJson) {
-        const wr = new WorkflowRunner(
-          workflow,
-          configJson,
-          configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
-          configJson[TestKeria.AGENT_CONTEXT]
-        );
-        const workflowRunResult = await wr.runWorkflow();
-        expect(workflowRunResult).toEqual(false);
-      } else throw 'Invalid workflow of configuration';
-    },
-    3600000
-  );
+      const workflowRunResult = await wr.runWorkflow();
+      expect(workflowRunResult).toEqual(false);
+    } else throw 'Invalid workflow of configuration';
+  }, 3600000);
 });

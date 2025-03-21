@@ -39,7 +39,6 @@ export function loadWorkflow(path: string): Workflow | null {
  * Helper function to get all available workflows from the workflows directory
  */
 export function getAvailableWorkflows(): string[] {
-
   const workflowsDir = path.join(process.cwd(), 'src', 'workflows');
 
   try {

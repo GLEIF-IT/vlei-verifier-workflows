@@ -19,9 +19,7 @@ import {
   TestKeria,
 } from '../src/utils/test-keria';
 import { TestPaths } from '../src/utils/test-paths';
-import {
-  startDockerServices,
-} from '../src/utils/test-docker';
+import { startDockerServices } from '../src/utils/test-docker';
 
 let testPaths: TestPaths;
 
@@ -102,36 +100,32 @@ afterAll(async () => {
 }, 60000);
 
 describe('Workflow Tests', () => {
-  test(
-    'issuance_workflow_test',
-    async () => {
-      const env = resolveEnvironment("docker");
-      const configFileName = env.configuration;
-      const dirPath = '../src/config/';
-      const configFilePath = path.join(__dirname, dirPath) + configFileName;
-      const configJson = await getConfig(configFilePath);
-      configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = "docker";
+  test('issuance_workflow_test', async () => {
+    const env = resolveEnvironment('docker');
+    const configFileName = env.configuration;
+    const dirPath = '../src/config/';
+    const configFilePath = path.join(__dirname, dirPath) + configFileName;
+    const configJson = await getConfig(configFilePath);
+    configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT] = 'docker';
 
-      await TestKeria.getInstance(TEST_CONTEXTS.ISSUANCE_TEST);
-      configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.ISSUANCE_TEST;
+    await TestKeria.getInstance(TEST_CONTEXTS.ISSUANCE_TEST);
+    configJson[TestKeria.AGENT_CONTEXT] = TEST_CONTEXTS.ISSUANCE_TEST;
 
-      const workflowsDir = '../src/workflows/';
-      const workflowFile = env.workflow;
-      const workflow = loadWorkflow(
-        path.join(__dirname, `${workflowsDir}${workflowFile}`)
+    const workflowsDir = '../src/workflows/';
+    const workflowFile = env.workflow;
+    const workflow = loadWorkflow(
+      path.join(__dirname, `${workflowsDir}${workflowFile}`)
+    );
+
+    if (workflow && configJson) {
+      const wr = new WorkflowRunner(
+        workflow,
+        configJson,
+        configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
+        configJson[TestKeria.AGENT_CONTEXT]
       );
-
-      if (workflow && configJson) {
-        const wr = new WorkflowRunner(
-          workflow,
-          configJson,
-          configJson[EnvironmentRegistry.ENVIRONMENT_CONTEXT],
-          configJson[TestKeria.AGENT_CONTEXT]
-        );
-        const workflowRunResult = await wr.runWorkflow();
-        assert.equal(workflowRunResult, true);
-      }
-    },
-    3600000
-  ); // Match the global timeout for the test itself
+      const workflowRunResult = await wr.runWorkflow();
+      assert.equal(workflowRunResult, true);
+    }
+  }, 3600000); // Match the global timeout for the test itself
 });

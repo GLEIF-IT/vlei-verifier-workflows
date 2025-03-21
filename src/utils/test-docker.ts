@@ -7,8 +7,7 @@ export class DockerComposeState {
   private static instance: DockerComposeState;
   private isRunning = false;
   private initializationPromise: Promise<void> | null = null;
-  private activeProcesses: Set<ChildProcess> =
-    new Set<ChildProcess>();
+  private activeProcesses: Set<ChildProcess> = new Set<ChildProcess>();
   private docker: Dockerode = new Dockerode();
 
   private constructor() {
@@ -228,9 +227,11 @@ export async function startDockerServices(
   // Check permissions first
   const permissionsOk = await ensureDockerPermissions();
   if (!permissionsOk) {
-    throw new Error('Docker permissions not configured correctly. Please fix permissions and try again.');
+    throw new Error(
+      'Docker permissions not configured correctly. Please fix permissions and try again.'
+    );
   }
-  
+
   let attempt = 0;
   while (attempt < maxRetries) {
     try {

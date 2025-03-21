@@ -188,15 +188,13 @@ export async function getOrCreateClient(
   bran ??= SignifyClient.randomPasscode();
   bran = bran.padEnd(21, '_');
   const client = new SignifyClient.SignifyClient(
-    
     `http://${testKeria.domain}:${testKeria.keriaAdminPort}`,
-   
+
     bran,
-   
+
     SignifyClient.Tier.low,
-   
+
     `http://${testKeria.domain}:${testKeria.keriaBootPort}`
-  
   );
   try {
     await client.connect();
