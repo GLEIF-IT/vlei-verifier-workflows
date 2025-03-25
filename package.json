@@ -52,7 +52,7 @@
   },
   "files": [
     "dist/**/*",
-    "/src/workflows"
+    "/src/examples/**/*"
   ],
   "scripts": {
     "clean": "del-cli ./dist",

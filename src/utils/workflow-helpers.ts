@@ -11,7 +11,7 @@ export function getWorkflowPath(workflowName: string): string {
   const fileName = workflowName.endsWith('.yaml')
     ? workflowName
     : `${workflowName}.yaml`;
-  return path.join(__dirname, '../../src/workflows', fileName);
+  return path.join(__dirname, '../../src/examples/workflows', fileName);
 }
 
 /**
