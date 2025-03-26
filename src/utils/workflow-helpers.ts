@@ -28,13 +28,29 @@ export function loadPackagedWorkflow(workflowName: string): Workflow | null {
  * @returns Array of workflow file names
  */
 export function listPackagedWorkflows(): string[] {
-  const workflowsDir = path.join(__dirname, '../../src/workflows');
+  let workflowsDir;
+  try {
+    workflowsDir = path.join(__dirname, '../../src/workflows');
+    
+    if (!fs.existsSync(workflowsDir)) {
+      workflowsDir = path.join(process.cwd(), 'node_modules/vlei-verifier-workflows/src/workflows');
+      
+      if (!fs.existsSync(workflowsDir)) {
+        workflowsDir = require.resolve('vlei-verifier-workflows/dist/cjs/utils/workflow-helpers.js');
+        workflowsDir = path.join(path.dirname(workflowsDir), '../../src/workflows');
+      }
+    }
+  } catch (error) {
+    console.error('Error resolving workflows directory:', error);
+    return [];
+  }
+  
   try {
     return fs
       .readdirSync(workflowsDir)
       .filter((file) => file.endsWith('.yaml') || file.endsWith('.yml'));
   } catch (error) {
-    console.error(`Failed to read workflows directory: ${error}`);
+    console.error(`Error reading workflows directory at ${workflowsDir}:`, error);
     return [];
   }
 }

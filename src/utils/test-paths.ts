@@ -1,4 +1,5 @@
-import path from 'path';
+import * as pathModule from 'path';
+const path = pathModule;
 
 export class TestPaths {
   private static instance: TestPaths;
