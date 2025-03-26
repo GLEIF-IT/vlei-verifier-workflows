@@ -1,5 +1,6 @@
-import path from 'path';
-import fs from 'fs';
+// Use CommonJS require for problematic modules
+const path = require('path');
+const fs = require('fs');
 import { Workflow, loadWorkflow } from '../types/workflow.js';
 
 /**
@@ -28,29 +29,32 @@ export function loadPackagedWorkflow(workflowName: string): Workflow | null {
  * @returns Array of workflow file names
  */
 export function listPackagedWorkflows(): string[] {
-  let workflowsDir;
   try {
-    workflowsDir = path.join(__dirname, '../../src/workflows');
+    // Use let instead of const to allow reassignment
+    let workflowsDir = path.join(__dirname, '..', 'workflows');
     
+    // Check if the directory exists
     if (!fs.existsSync(workflowsDir)) {
+      // Try alternative paths
       workflowsDir = path.join(process.cwd(), 'node_modules/vlei-verifier-workflows/src/workflows');
       
       if (!fs.existsSync(workflowsDir)) {
-        workflowsDir = require.resolve('vlei-verifier-workflows/dist/cjs/utils/workflow-helpers.js');
-        workflowsDir = path.join(path.dirname(workflowsDir), '../../src/workflows');
+        try {
+          const helperPath = require.resolve('vlei-verifier-workflows/dist/cjs/utils/workflow-helpers.js');
+          workflowsDir = path.join(path.dirname(helperPath), '../../src/workflows');
+        } catch (e) {
+          // If require.resolve fails, fall back to a relative path
+          workflowsDir = path.join(process.cwd(), 'src/workflows');
+        }
       }
     }
-  } catch (error) {
-    console.error('Error resolving workflows directory:', error);
-    return [];
-  }
-  
-  try {
+    
+    // Now use the workflowsDir to list files
     return fs
       .readdirSync(workflowsDir)
-      .filter((file) => file.endsWith('.yaml') || file.endsWith('.yml'));
+      .filter((file: string) => file.endsWith('.yaml') || file.endsWith('.yml'));
   } catch (error) {
-    console.error(`Error reading workflows directory at ${workflowsDir}:`, error);
+    console.error('Error resolving workflows directory:', error);
     return [];
   }
 }

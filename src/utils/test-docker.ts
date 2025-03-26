@@ -1,16 +1,22 @@
-import { exec } from 'child_process';
+// Use CommonJS require for problematic modules
+const Dockerode = require('dockerode');
+const { exec } = require('child_process');
 import * as net from 'net';
 import { ensureDockerPermissions } from './docker-permissions.js';
-import Dockerode from 'dockerode';
 import { ChildProcess } from 'child_process';
+import { promisify } from 'util';
+const execAsync = promisify(exec);
+
 export class DockerComposeState {
   private static instance: DockerComposeState;
   private isRunning = false;
   private initializationPromise: Promise<void> | null = null;
-  private activeProcesses: Set<ChildProcess> = new Set<ChildProcess>();
-  private docker: Dockerode = new Dockerode();
+  private activeProcesses = new Set<import('child_process').ChildProcess>();
+  docker: any; // Using 'any' to avoid type issues
 
   private constructor() {
+    // Initialize Dockerode without using the imported module
+    this.docker = new Dockerode();
     // Handle cleanup on process exit
     process.on('beforeExit', async () => {
       await this.cleanup();

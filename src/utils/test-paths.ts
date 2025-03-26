@@ -1,5 +1,6 @@
-import * as pathModule from 'path';
-const path = pathModule;
+// Use CommonJS require for problematic modules
+const path = require('path');
+const fs = require('fs');
 
 export class TestPaths {
   private static instance: TestPaths;
