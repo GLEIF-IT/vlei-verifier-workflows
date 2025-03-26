@@ -1,12 +1,14 @@
-import * as fs from 'fs';
-import path from 'path';
-import * as os from 'os';
+import { 
+  fs, 
+  path, 
+  os, 
+  Dockerode, 
+  exec, 
+  minimist,
+  URL,
+  DockerodeTypes 
+} from '../node-modules.js';
 import { TestPaths } from './test-paths.js';
-import { URL } from 'url';
-import minimist from 'minimist';
-import dockerode from 'dockerode';
-import Dockerode from 'dockerode';
-import { exec } from 'child_process';
 
 export const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
 export const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
@@ -44,11 +46,11 @@ export class TestKeria {
   public witnessHost: string;
   public host: string;
   public keriaImage: string;
-  private containers: Map<string, dockerode.Container> = new Map<
+  private containers: Map<string, DockerodeTypes.Container> = new Map<
     string,
-    dockerode.Container
+    DockerodeTypes.Container
   >();
-  private docker = new Dockerode();
+  private docker: typeof Dockerode;
   public static AGENT_CONTEXT = 'agentContext';
 
   private constructor(
@@ -61,6 +63,8 @@ export class TestKeria {
     kBootPort: number,
     keriaImage: string
   ) {
+    this.containers = new Map();
+    this.docker = new Dockerode();
     this.testPaths = testPaths;
     this.domain = domain;
     this.witnessHost = witnessHost;
@@ -148,36 +152,30 @@ export class TestKeria {
     return TestKeria.instances.get(instanceName)!;
   }
 
-  public static processKeriaArgs(
-    baseAdminPort: number,
-    baseHttpPort: number,
-    baseBootPort: number
-  ): minimist.ParsedArgs {
-    // Parse command-line arguments using minimist
+  static processKeriaArgs(baseAdminPort, baseHttpPort, baseBootPort) {
+    // Parse command-line arguments using minimist directly
     const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
       alias: {
         [ARG_KERIA_ADMIN_PORT]: 'kap',
         [ARG_KERIA_HTTP_PORT]: 'khp',
         [ARG_KERIA_BOOT_PORT]: 'kbp',
+        [ARG_KERIA_START_PORT]: 'ksp',
+        [ARG_KERIA_DOMAIN]: 'kd',
+        [ARG_WITNESS_HOST]: 'wh',
+        [ARG_KERIA_HOST]: 'kh',
+        [ARG_REFRESH]: 'r',
       },
       default: {
-        [ARG_KERIA_ADMIN_PORT]: process.env.KERIA_ADMIN_PORT
-          ? parseInt(process.env.KERIA_ADMIN_PORT)
-          : baseAdminPort,
-        [ARG_KERIA_HTTP_PORT]: process.env.KERIA_HTTP_PORT
-          ? parseInt(process.env.KERIA_HTTP_PORT)
-          : baseHttpPort,
-        [ARG_KERIA_BOOT_PORT]: process.env.KERIA_BOOT_PORT
-          ? parseInt(process.env.KERIA_BOOT_PORT)
-          : baseBootPort,
-      },
-      '--': true,
-      unknown: (_arg) => {
-        // console.info(`Unknown keria argument, skipping: ${arg}`);
-        return false;
+        [ARG_KERIA_ADMIN_PORT]: baseAdminPort,
+        [ARG_KERIA_HTTP_PORT]: baseHttpPort,
+        [ARG_KERIA_BOOT_PORT]: baseBootPort,
+        [ARG_KERIA_START_PORT]: baseAdminPort,
+        [ARG_KERIA_DOMAIN]: '127.0.0.1',
+        [ARG_WITNESS_HOST]: 'localhost',
+        [ARG_KERIA_HOST]: '127.0.0.1',
+        [ARG_REFRESH]: false,
       },
     });
-
     return args;
   }
 
@@ -215,10 +213,10 @@ export class TestKeria {
     pullImage: boolean,
     platform = 'linux/amd64',
     useHostNetwork = true
-  ): Promise<dockerode.Container> {
+  ): Promise<DockerodeTypes.Container> {
     try {
       console.log(`Creating container ${containerName}...`);
-      const containerOptions: dockerode.ContainerCreateOptions = {
+      const containerOptions: DockerodeTypes.ContainerCreateOptions = {
         Image: imageName,
         name: containerName,
         platform: platform,
@@ -532,19 +530,6 @@ export class TestKeria {
 
     console.log('All Keria instances cleanup completed');
   }
-
-  //   private static getUniqueOffsetForInstance(instanceName: string): number {
-  //     if (!TestKeria._instanceOffsets) {
-  //       TestKeria._instanceOffsets = new Map<string, number>();
-  //     }
-
-  //     if (!TestKeria._instanceOffsets.has(instanceName)) {
-  //       const nextOffset = TestKeria._instanceOffsets.size * 10;
-  //       TestKeria._instanceOffsets.set(instanceName, nextOffset);
-  //     }
-
-  //     return TestKeria._instanceOffsets.get(instanceName)!;
-  //   }
 
   private static _instanceOffsets: Map<string, number>;
 

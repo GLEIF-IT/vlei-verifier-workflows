@@ -1,22 +1,44 @@
 import { Workflow } from '../types/workflow.js';
 
-import fs from 'fs';
-import yaml from 'js-yaml';
+// Replace individual imports with centralized imports
+import { fs, path } from '../node-modules.js';
+
+// Import YAML library properly
+const yaml = require('js-yaml');
 import SignifyClient from 'signify-ts';
 
+// Other imports can stay as ES module imports
+import { TestPaths } from './test-paths.js';
+
 // Function to load and parse YAML file
-export function loadWorkflow(workflowFilePath: string): Workflow {
+export function loadWorkflow(workflowPath: string): any {
   try {
-    const file = fs.readFileSync(workflowFilePath, 'utf8');
-    return yaml.load(file) as Workflow;
+    // Check file extension to determine how to parse
+    if (workflowPath.endsWith('.yaml') || workflowPath.endsWith('.yml')) {
+      // Use yaml.load for YAML files
+      const content = fs.readFileSync(workflowPath, 'utf-8');
+      return yaml.load(content);
+    } else {
+      // Assume JSON for other files
+      return JSON.parse(fs.readFileSync(workflowPath, 'utf-8'));
+    }
   } catch (e) {
     throw new Error(`Error reading YAML file: ${e}`);
   }
 }
 
 export function getConfig(configFilePath: string): any {
-  const config = JSON.parse(fs.readFileSync(configFilePath, 'utf-8'));
-  return config;
+  // Similar approach for config files
+  try {
+    if (configFilePath.endsWith('.yaml') || configFilePath.endsWith('.yml')) {
+      const content = fs.readFileSync(configFilePath, 'utf-8');
+      return yaml.load(content);
+    } else {
+      return JSON.parse(fs.readFileSync(configFilePath, 'utf-8'));
+    }
+  } catch (e) {
+    throw new Error(`Error reading config file: ${e}`);
+  }
 }
 
 export async function getGrantedCredential(

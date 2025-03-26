@@ -1,6 +1,15 @@
+// Replace individual imports with centralized imports
+import { 
+  fs, 
+  path, 
+  exec, 
+  execSync, 
+  spawn,
+  child_process 
+} from '../node-modules.js';
+
 // Use CommonJS require for problematic modules
 const Dockerode = require('dockerode');
-const { exec } = require('child_process');
 import * as net from 'net';
 import { ensureDockerPermissions } from './docker-permissions.js';
 import { ChildProcess } from 'child_process';
@@ -366,3 +375,14 @@ export async function isDockerComposeRunning(
 }
 
 export const DOCKER_COMPOSE_COMMAND = 'docker compose';
+
+export async function runDockerComposeCommand(composeFilePath: string, command: string): Promise<string> {
+  const fullCommand = `docker compose -f ${composeFilePath} ${command}`;
+  console.log(`Running docker compose command: ${fullCommand}`);
+  
+  return new Promise((resolve, reject) => {
+    exec(fullCommand, (error, stdout, stderr) => {
+      // ... implementation ...
+    });
+  });
+}
