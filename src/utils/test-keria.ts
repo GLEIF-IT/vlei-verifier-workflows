@@ -50,7 +50,7 @@ export class TestKeria {
     string,
     typeof Dockerode.Container
   >();
-  private docker;
+  private docker: any;
   public static AGENT_CONTEXT = 'agentContext';
 
   private constructor(
