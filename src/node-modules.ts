@@ -1,6 +1,6 @@
 /**
  * Centralized module imports for Node.js built-in modules
- * 
+ *
  * This file provides a consistent way to import Node.js built-in modules
  * across the project, using proper ES module syntax.
  */
@@ -48,8 +48,8 @@ export {
   net,
   Dockerode,
   yaml,
-  minimist
+  minimist,
 };
 
 // Type exports
-export type { default as DockerodeTypes } from 'dockerode'; 
+export type { default as DockerodeTypes } from 'dockerode';

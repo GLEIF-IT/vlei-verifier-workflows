@@ -1,12 +1,12 @@
-import { 
-  fs, 
-  path, 
-  os, 
-  Dockerode, 
-  exec, 
+import {
+  fs,
+  path,
+  os,
+  Dockerode,
+  exec,
   minimist,
   URL,
-  DockerodeTypes 
+  DockerodeTypes,
 } from '../node-modules.js';
 import { TestPaths } from './test-paths.js';
 
@@ -152,7 +152,11 @@ export class TestKeria {
     return TestKeria.instances.get(instanceName)!;
   }
 
-  static processKeriaArgs(baseAdminPort: number, baseHttpPort: number, baseBootPort: number) {
+  static processKeriaArgs(
+    baseAdminPort: number,
+    baseHttpPort: number,
+    baseBootPort: number
+  ) {
     // Parse command-line arguments using minimist directly
     const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
       alias: {
@@ -322,11 +326,15 @@ export class TestKeria {
     console.log('Running workflow-steps test cleanup...');
     try {
       // Check if testContexts is defined and not empty
-      if (!testContexts || !Array.isArray(testContexts) || testContexts.length === 0) {
+      if (
+        !testContexts ||
+        !Array.isArray(testContexts) ||
+        testContexts.length === 0
+      ) {
         console.log('No test contexts provided for cleanup, skipping');
         return;
       }
-      
+
       // Use Promise.all to wait for all cleanup operations to complete
       await Promise.all(
         testContexts.map(async (contextId) => {

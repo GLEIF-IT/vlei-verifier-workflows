@@ -32,27 +32,37 @@ export function listPackagedWorkflows(): string[] {
   try {
     // Use let instead of const to allow reassignment
     let workflowsDir = path.join(__dirname, '..', 'workflows');
-    
+
     // Check if the directory exists
     if (!fs.existsSync(workflowsDir)) {
       // Try alternative paths
-      workflowsDir = path.join(process.cwd(), 'node_modules/vlei-verifier-workflows/src/workflows');
-      
+      workflowsDir = path.join(
+        process.cwd(),
+        'node_modules/vlei-verifier-workflows/src/workflows'
+      );
+
       if (!fs.existsSync(workflowsDir)) {
         try {
-          const helperPath = require.resolve('vlei-verifier-workflows/dist/cjs/utils/workflow-helpers.js');
-          workflowsDir = path.join(path.dirname(helperPath), '../../src/workflows');
+          const helperPath = require.resolve(
+            'vlei-verifier-workflows/dist/cjs/utils/workflow-helpers.js'
+          );
+          workflowsDir = path.join(
+            path.dirname(helperPath),
+            '../../src/workflows'
+          );
         } catch (e) {
           // If require.resolve fails, fall back to a relative path
           workflowsDir = path.join(process.cwd(), 'src/workflows');
         }
       }
     }
-    
+
     // Now use the workflowsDir to list files
     return fs
       .readdirSync(workflowsDir)
-      .filter((file: string) => file.endsWith('.yaml') || file.endsWith('.yml'));
+      .filter(
+        (file: string) => file.endsWith('.yaml') || file.endsWith('.yml')
+      );
   } catch (error) {
     console.error('Error resolving workflows directory:', error);
     return [];
