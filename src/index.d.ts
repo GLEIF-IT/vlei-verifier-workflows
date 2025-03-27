@@ -79,6 +79,19 @@ declare module '@gleif-it/vlei-verifier-workflows' {
   ): Promise<boolean>;
 
   export class TestKeria {
+    public testPaths: TestPaths;
+    public keriaAdminPort: number;
+    public keriaAdminUrl: URL;
+    public keriaHttpPort: number;
+    public keriaHttpUrl: URL;
+    public keriaBootPort: number;
+    public keriaBootUrl: URL;
+    public domain: string;
+    public witnessHost: string;
+    public host: string;
+    public keriaImage: string;
+    private docker: any;
+
     static AGENT_CONTEXT: string;
 
     static getInstance(
