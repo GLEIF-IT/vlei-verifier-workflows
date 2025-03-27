@@ -94,7 +94,7 @@ export class VleiVerificationStepRunner extends StepRunner {
           ) as SinglesigIdentifierData;
         }
         const client = workflow_state.clients.get(identifierData.agent.name);
-        const oobi = await client.oobis().get(action.aid);
+        const oobi = await client!.oobis().get(action.aid);
         let oobiUrl = oobi.oobis[0];
         const url = new URL(oobiUrl);
         if (url.hostname === 'keria')

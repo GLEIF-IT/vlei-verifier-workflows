@@ -1,16 +1,23 @@
-import { exec } from 'child_process';
+// Replace individual imports with centralized imports
+import {
+  exec,
+} from '../node-modules.js';
+
+// Use CommonJS require for problematic modules
+const Dockerode = require('dockerode');
 import * as net from 'net';
 import { ensureDockerPermissions } from './docker-permissions.js';
-import Dockerode from 'dockerode';
-import { ChildProcess } from 'child_process';
+
 export class DockerComposeState {
   private static instance: DockerComposeState;
   private isRunning = false;
   private initializationPromise: Promise<void> | null = null;
-  private activeProcesses: Set<ChildProcess> = new Set<ChildProcess>();
-  private docker: Dockerode = new Dockerode();
+  private activeProcesses = new Set<import('child_process').ChildProcess>();
+  docker: any; // Using 'any' to avoid type issues
 
   private constructor() {
+    // Initialize Dockerode without using the imported module
+    this.docker = new Dockerode();
     // Handle cleanup on process exit
     process.on('beforeExit', async () => {
       await this.cleanup();
@@ -360,3 +367,22 @@ export async function isDockerComposeRunning(
 }
 
 export const DOCKER_COMPOSE_COMMAND = 'docker compose';
+
+export async function runDockerComposeCommand(
+  composeFilePath: string,
+  command: string
+): Promise<string> {
+  const fullCommand = `docker compose -f ${composeFilePath} ${command}`;
+  console.log(`Running docker compose command: ${fullCommand}`);
+
+  return new Promise((resolve, reject) => {
+    exec(fullCommand, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error running docker compose command: ${stderr}`);
+        return reject(error);
+      }
+      console.log('Docker compose output:', stdout);
+      resolve(stdout);
+    });
+  });
+}
