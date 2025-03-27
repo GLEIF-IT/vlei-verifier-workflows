@@ -1,20 +1,12 @@
 // Replace individual imports with centralized imports
 import {
-  fs,
-  path,
   exec,
-  execSync,
-  spawn,
-  child_process,
 } from '../node-modules.js';
 
 // Use CommonJS require for problematic modules
 const Dockerode = require('dockerode');
 import * as net from 'net';
 import { ensureDockerPermissions } from './docker-permissions.js';
-import { ChildProcess } from 'child_process';
-import { promisify } from 'util';
-const execAsync = promisify(exec);
 
 export class DockerComposeState {
   private static instance: DockerComposeState;
@@ -385,7 +377,12 @@ export async function runDockerComposeCommand(
 
   return new Promise((resolve, reject) => {
     exec(fullCommand, (error, stdout, stderr) => {
-      // ... implementation ...
+      if (error) {
+        console.error(`Error running docker compose command: ${stderr}`);
+        return reject(error);
+      }
+      console.log('Docker compose output:', stdout);
+      resolve(stdout);
     });
   });
 }

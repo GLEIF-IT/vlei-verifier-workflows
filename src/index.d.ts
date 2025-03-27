@@ -303,7 +303,7 @@ declare module '@gleif-it/vlei-verifier-workflows' {
     eid: string
   ): Promise<boolean>;
   export function warnNotifications(...clients: any[]): Promise<void>;
-  export function deleteOperations<T = any>(
+  export function deleteOperations(
     client: any,
     op: any
   ): Promise<void>;
@@ -338,7 +338,7 @@ declare module '@gleif-it/vlei-verifier-workflows' {
     route: string,
     options?: RetryOptions
   ): Promise<Notification[]>;
-  export function waitOperation<T = any>(
+  export function waitOperation(
     client: any,
     op: any | string,
     signal?: AbortSignal

@@ -52,6 +52,7 @@ export function listPackagedWorkflows(): string[] {
           );
         } catch (e) {
           // If require.resolve fails, fall back to a relative path
+          console.error('Error resolving workflows directory:', e);
           workflowsDir = path.join(process.cwd(), 'src/workflows');
         }
       }
