@@ -48,9 +48,9 @@ export class TestKeria {
   public keriaImage: string;
   private containers: Map<string, DockerodeTypes.Container> = new Map<
     string,
-    DockerodeTypes.Container
+    typeof Dockerode.Container
   >();
-  private docker: typeof Dockerode;
+  private docker;
   public static AGENT_CONTEXT = 'agentContext';
 
   private constructor(
@@ -152,7 +152,7 @@ export class TestKeria {
     return TestKeria.instances.get(instanceName)!;
   }
 
-  static processKeriaArgs(baseAdminPort, baseHttpPort, baseBootPort) {
+  static processKeriaArgs(baseAdminPort: number, baseHttpPort: number, baseBootPort: number) {
     // Parse command-line arguments using minimist directly
     const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
       alias: {
@@ -321,6 +321,12 @@ export class TestKeria {
   public static async cleanupInstances(testContexts: string[]): Promise<void> {
     console.log('Running workflow-steps test cleanup...');
     try {
+      // Check if testContexts is defined and not empty
+      if (!testContexts || !Array.isArray(testContexts) || testContexts.length === 0) {
+        console.log('No test contexts provided for cleanup, skipping');
+        return;
+      }
+      
       // Use Promise.all to wait for all cleanup operations to complete
       await Promise.all(
         testContexts.map(async (contextId) => {

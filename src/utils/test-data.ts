@@ -1,10 +1,9 @@
 import { Workflow } from '../types/workflow.js';
 
 // Replace individual imports with centralized imports
-import { fs, path } from '../node-modules.js';
+import { fs, path, yaml } from '../node-modules.js';
 
 // Import YAML library properly
-const yaml = require('js-yaml');
 import SignifyClient from 'signify-ts';
 
 // Other imports can stay as ES module imports

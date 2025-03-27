@@ -1,6 +1,6 @@
 {
   "name": "@gleif-it/vlei-verifier-workflows",
-  "version": "0.0.7",
+  "version": "0.0.7-beta1",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "Apache-2.0",
   "type": "module",
@@ -25,14 +25,8 @@
   },
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/esm/types/index.d.ts",
-        "default": "./dist/esm/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/types/index.d.ts",
-        "default": "./dist/cjs/index.js"
-      }
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     }
   },
   "module": "./dist/esm/index.js",
@@ -56,9 +50,11 @@
   ],
   "scripts": {
     "clean": "del-cli ./dist",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:types && npm run copy-dts",
+    "copy-dts": "cp src/index.d.ts dist/esm/types/index.d.ts",
     "build:esm": "tsc -p ./build/configs/tsconfig.esm.json && npx echo-cli '{\"type\": \"module\"}' > dist/esm/package.json",
     "build:cjs": "tsc -p ./build/configs/tsconfig.cjs.json && npx echo-cli '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "build:types": "tsc -p tsconfig.types.json",
     "workflow:singlesig-single-user-light": "npm run docker:up && jest test/run-workflow.test.ts && npm run docker:down",
     "workflow:singlesig-single-user": "npm run docker:up && cross-env WORKFLOW=singlesig-single-user.yaml CONFIGURATION=configuration-singlesig-single-user.json jest test/run-workflow.test.ts && npm run docker:down",
     "workflow:singlesig-multi-user-vlei-verifier-router-test": "npm run docker:up && cross-env WORKFLOW=singlesig-multi-user-vlei-verifier-router-test.yaml CONFIGURATION=configuration-singlesig-multi-user-vlei-verifier-router-test.json jest test/run-workflow.test.ts && npm run docker:down",
@@ -119,5 +115,11 @@
   },
   "overrides": {
     "glob": "^9.0.0"
+  },
+  "baseUrl": ".",
+  "paths": {
+    "@gleif-it/vlei-verifier-workflows": [
+      "../vlei-verifier-workflows/src"
+    ]
   }
 }

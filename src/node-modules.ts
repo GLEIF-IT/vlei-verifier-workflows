@@ -2,37 +2,54 @@
  * Centralized module imports for Node.js built-in modules
  * 
  * This file provides a consistent way to import Node.js built-in modules
- * across the project, avoiding issues with TypeScript's module transformation.
+ * across the project, using proper ES module syntax.
  */
 
-// Core Node.js modules
-export const fs = require('fs');
-export const path = require('path');
-export const os = require('os');
-export const child_process = require('child_process');
-export const url = require('url');
-export const util = require('util');
-export const crypto = require('crypto');
-export const stream = require('stream');
-export const events = require('events');
-export const http = require('http');
-export const https = require('https');
-export const net = require('net');
+// Import Node.js built-in modules with namespace imports
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
+import * as child_process from 'child_process';
+import * as url from 'url';
+import * as util from 'util';
+import * as crypto from 'crypto';
+import * as stream from 'stream';
+import * as events from 'events';
+import * as http from 'http';
+import * as https from 'https';
+import * as net from 'net';
 
-// Common third-party modules that need CommonJS require
-export const Dockerode = require('dockerode');
-export const minimist = require('minimist');
+// For third-party modules, use a dynamic import approach
+// This creates a wrapper that will load the module on first use
+const Dockerode = require('dockerode');
+const yaml = require('js-yaml');
+const minimist = require('minimist');
 
-// Commonly used functions from modules
+// Export commonly used functions from modules
 export const { exec, spawn, execSync } = child_process;
 export const { URL, URLSearchParams } = url;
 export const { promisify } = util;
 export const { Readable, Writable, Transform } = stream;
 export const { EventEmitter } = events;
 
-// Type imports for TypeScript
-import type * as DockerodeTypes from 'dockerode';
-export type { DockerodeTypes };
+// Re-export everything
+export {
+  fs,
+  path,
+  os,
+  child_process,
+  url,
+  util,
+  crypto,
+  stream,
+  events,
+  http,
+  https,
+  net,
+  Dockerode,
+  yaml,
+  minimist
+};
 
-// Add YAML library
-export const yaml = require('js-yaml'); 
+// Type exports
+export type { default as DockerodeTypes } from 'dockerode'; 
