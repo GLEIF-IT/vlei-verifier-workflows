@@ -44,7 +44,7 @@ export {
 export { ECR_SCHEMA_SAID, unknownPrefix } from './constants.js';
 export { TestPaths } from './utils/test-paths.js';
 
-export { 
+export {
   ISSUE_CREDENTIAL,
   REVOKE_CREDENTIAL,
   NOTIFY_CREDENTIAL_ISSUEE,
@@ -52,7 +52,7 @@ export {
   CREATE_CLIENT,
   CREATE_AID,
   CREATE_REGISTRY,
-  ADD_ROOT_OF_TRUST
+  ADD_ROOT_OF_TRUST,
 } from './step-runners/index.js';
 
 export {
@@ -96,5 +96,13 @@ export {
 } from './utils/handle-json-config.js';
 
 // Type exports
-export type { TestEnvironment, TestEnvironmentPreset } from './utils/resolve-env.js';
-export type { CredentialInfo, IdentifierData, SinglesigIdentifierData, MultisigIdentifierData } from './utils/handle-json-config.js';
+export type {
+  TestEnvironment,
+  TestEnvironmentPreset,
+} from './utils/resolve-env.js';
+export type {
+  CredentialInfo,
+  IdentifierData,
+  SinglesigIdentifierData,
+  MultisigIdentifierData,
+} from './utils/handle-json-config.js';

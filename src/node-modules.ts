@@ -7,7 +7,7 @@
 
 // Import Node.js built-in modules with namespace imports
 import * as fs from 'fs';
-import * as path from 'path';
+import path from 'path';
 import * as os from 'os';
 import * as child_process from 'child_process';
 import * as url from 'url';
@@ -21,9 +21,9 @@ import * as net from 'net';
 
 // For third-party modules, use a dynamic import approach
 // This creates a wrapper that will load the module on first use
-const Dockerode = require('dockerode');
-const yaml = require('js-yaml');
-const minimist = require('minimist');
+import Dockerode from 'dockerode';
+import yaml from 'js-yaml';
+import minimist from 'minimist';
 
 // Export commonly used functions from modules
 export const { exec, spawn, execSync } = child_process;

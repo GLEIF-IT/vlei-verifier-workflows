@@ -49,7 +49,7 @@ export class TestKeria {
   public keriaImage: string;
   private containers: Map<string, DockerodeTypes.Container> = new Map<
     string,
-    typeof Dockerode.Container
+    DockerodeTypes.Container
   >();
   private docker: any;
 
@@ -411,7 +411,9 @@ export class TestKeria {
     }
   }
 
-  public async createTempKeriaConfigFile(kConfig: KeriaConfig): Promise<string> {
+  public async createTempKeriaConfigFile(
+    kConfig: KeriaConfig
+  ): Promise<string> {
     console.log('Create temp config file...');
     try {
       const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'keria-config-'));

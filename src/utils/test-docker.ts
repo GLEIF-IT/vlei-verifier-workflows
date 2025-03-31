@@ -1,10 +1,8 @@
 // Replace individual imports with centralized imports
-import {
-  exec,
-} from '../node-modules.js';
+import { exec } from '../node-modules.js';
 
 // Use CommonJS require for problematic modules
-const Dockerode = require('dockerode');
+import Dockerode from 'dockerode';
 import * as net from 'net';
 import { ensureDockerPermissions } from './docker-permissions.js';
 

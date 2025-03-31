@@ -1,6 +1,5 @@
-// Use CommonJS require for problematic modules
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
 import { Workflow } from '../types/workflow.js';
 import * as yaml from 'yaml';
 
@@ -21,10 +20,10 @@ export function getWorkflowPath(workflowName: string): string {
     path.join(cwd, 'dist', 'cjs', 'workflows', fileName),
     path.join(__dirname, '..', 'workflows', fileName),
     path.join(cwd, 'src', 'workflows', fileName),
-    path.join(cwd, 'workflows', fileName)
+    path.join(cwd, 'workflows', fileName),
   ];
 
-  const existingPath = possiblePaths.find(p => fs.existsSync(p));
+  const existingPath = possiblePaths.find((p) => fs.existsSync(p));
   if (!existingPath) {
     throw new Error(`Could not find workflow file: ${fileName}`);
   }
@@ -47,7 +46,7 @@ export function loadPackagedWorkflow(workflowName: string): Workflow | null {
  */
 export function listPackagedWorkflows(): string[] {
   let workflowsDir: string;
-  
+
   try {
     // Try multiple possible locations
     const possiblePaths = [
@@ -55,18 +54,21 @@ export function listPackagedWorkflows(): string[] {
       path.join(process.cwd(), 'dist', 'esm', 'workflows'),
       path.join(process.cwd(), 'dist', 'cjs', 'workflows'),
       path.join(process.cwd(), 'src', 'workflows'),
-      path.join(process.cwd(), 'workflows')
+      path.join(process.cwd(), 'workflows'),
     ];
 
-    workflowsDir = possiblePaths.find(p => fs.existsSync(p)) || '';
-    
+    workflowsDir = possiblePaths.find((p) => fs.existsSync(p)) || '';
+
     if (!workflowsDir) {
       console.warn('Could not find workflows directory');
       return [];
     }
 
-    return fs.readdirSync(workflowsDir)
-      .filter((file: string) => file.endsWith('.yaml') || file.endsWith('.yml'));
+    return fs
+      .readdirSync(workflowsDir)
+      .filter(
+        (file: string) => file.endsWith('.yaml') || file.endsWith('.yml')
+      );
   } catch (e) {
     console.error('Error listing workflows:', e);
     return [];
@@ -77,11 +79,11 @@ export function loadWorkflow(workflowPath: string): Workflow | null {
   try {
     const fileContents = fs.readFileSync(workflowPath, 'utf8');
     const workflow = yaml.parse(fileContents) as Workflow;
-    
+
     if (!workflow || !workflow.workflow || !workflow.workflow.steps) {
       throw new Error('Invalid workflow format');
     }
-    
+
     return workflow;
   } catch (error) {
     if (error instanceof Error) {

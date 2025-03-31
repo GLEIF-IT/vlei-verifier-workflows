@@ -1,5 +1,4 @@
-// Use CommonJS require for problematic modules
-const path = require('path');
+import path from 'path';
 
 export class TestPaths {
   private static instance: TestPaths;
