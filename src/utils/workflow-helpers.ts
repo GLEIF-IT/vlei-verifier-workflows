@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { Workflow } from '../types/workflow.js';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 
 /**
  * Gets the path to a specific workflow file in the package
@@ -78,7 +78,7 @@ export function listPackagedWorkflows(): string[] {
 export function loadWorkflow(workflowPath: string): Workflow | null {
   try {
     const fileContents = fs.readFileSync(workflowPath, 'utf8');
-    const workflow = yaml.parse(fileContents) as Workflow;
+    const workflow = yaml.load(fileContents) as Workflow;
 
     if (!workflow || !workflow.workflow || !workflow.workflow.steps) {
       throw new Error('Invalid workflow format');
