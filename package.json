@@ -1,6 +1,6 @@
 {
   "name": "@gleif-it/vlei-verifier-workflows",
-  "version": "0.0.7-beta2",
+  "version": "0.0.7-beta3",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "Apache-2.0",
   "type": "module",
@@ -94,7 +94,8 @@
     "mathjs": "^12.4.0",
     "minimist": "^1.2.8",
     "signify-ts": "^0.3.0-rc1",
-    "vlei-verifier-client": "0.0.1"
+    "vlei-verifier-client": "0.0.1",
+    "yaml": "^2.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
