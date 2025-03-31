@@ -34,6 +34,7 @@ export class TestKeria {
     string,
     TestKeria
   >();
+  public static readonly AGENT_CONTEXT: string = 'agent_context';
   public testPaths: TestPaths;
   public keriaAdminPort: number;
   public keriaAdminUrl: URL;
@@ -51,7 +52,6 @@ export class TestKeria {
     typeof Dockerode.Container
   >();
   private docker: any;
-  public static AGENT_CONTEXT = 'agentContext';
 
   private constructor(
     testPaths: TestPaths,
@@ -183,7 +183,7 @@ export class TestKeria {
     return args;
   }
 
-  async startupInstance(
+  public async startupInstance(
     keriaImage: string,
     containerPostfix: string,
     refresh: boolean,
@@ -364,7 +364,7 @@ export class TestKeria {
   /**
    * Cleans up a specific instance
    */
-  async cleanupInstance(instanceId: string): Promise<void> {
+  public async cleanupInstance(instanceId: string): Promise<void> {
     console.log(`Cleanup for keria instance ${instanceId}...`);
     try {
       // Clean up test data
@@ -411,7 +411,7 @@ export class TestKeria {
     }
   }
 
-  async createTempKeriaConfigFile(kConfig: KeriaConfig): Promise<string> {
+  public async createTempKeriaConfigFile(kConfig: KeriaConfig): Promise<string> {
     console.log('Create temp config file...');
     try {
       const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'keria-config-'));

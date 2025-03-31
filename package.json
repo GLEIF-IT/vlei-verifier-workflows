@@ -1,6 +1,6 @@
 {
   "name": "@gleif-it/vlei-verifier-workflows",
-  "version": "0.0.7-beta1",
+  "version": "0.0.7-beta2",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "Apache-2.0",
   "type": "module",
@@ -26,35 +26,39 @@
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
     }
   },
   "module": "./dist/esm/index.js",
   "main": "./dist/cjs/index.js",
-  "types": "./dist/esm/types/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "typesVersions": {
     "<=4.9": {
       "*": [
-        "dist/cjs/types/*"
+        "dist/types/*"
       ]
     },
     ">=5.0": {
       "*": [
-        "dist/esm/types/*"
+        "dist/types/*"
       ]
     }
   },
   "files": [
-    "dist/**/*",
-    "/src/workflows"
+    "dist",
+    "src/workflows",
+    "workflows",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "clean": "del-cli ./dist",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:types && npm run copy-dts",
-    "copy-dts": "cp src/index.d.ts dist/esm/types/index.d.ts",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:types",
     "build:esm": "tsc -p ./build/configs/tsconfig.esm.json && npx echo-cli '{\"type\": \"module\"}' > dist/esm/package.json",
     "build:cjs": "tsc -p ./build/configs/tsconfig.cjs.json && npx echo-cli '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
     "build:types": "tsc -p tsconfig.types.json",
+    "copy-workflows": "mkdir -p dist/esm/workflows && mkdir -p dist/cjs/workflows && cp -r src/workflows/* dist/esm/workflows/ && cp -r src/workflows/* dist/cjs/workflows/",
     "workflow:singlesig-single-user-light": "npm run docker:up && jest test/run-workflow.test.ts && npm run docker:down",
     "workflow:singlesig-single-user": "npm run docker:up && cross-env WORKFLOW=singlesig-single-user.yaml CONFIGURATION=configuration-singlesig-single-user.json jest test/run-workflow.test.ts && npm run docker:down",
     "workflow:singlesig-multi-user-vlei-verifier-router-test": "npm run docker:up && cross-env WORKFLOW=singlesig-multi-user-vlei-verifier-router-test.yaml CONFIGURATION=configuration-singlesig-multi-user-vlei-verifier-router-test.json jest test/run-workflow.test.ts && npm run docker:down",
@@ -77,9 +81,11 @@
     "project-checker": "npm install && npm run formatter && npm run linter && npm run dependency-checker",
     "compatibility-checker": "./build/test/package/check-compatibility.sh",
     "package-checker": "npm pack --dry-run",
-    "prepublishOnly": "npm run test:full",
+    "prepublishOnly": "npm run build",
     "pretest": "npx jest --testPathPattern=test/unit/ensure-docker-permissions.test.ts --no-coverage",
-    "test:with-permissions": "bash -c 'newgrp docker || true && npm test'"
+    "test:with-permissions": "bash -c 'newgrp docker || true && npm test'",
+    "prepare": "npm run build",
+    "postbuild": "npm run copy-workflows"
   },
   "dependencies": {
     "buffer": "^6.0.3",

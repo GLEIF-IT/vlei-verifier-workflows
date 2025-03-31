@@ -1,4 +1,4 @@
-import assert from 'assert';
+import { strict as assert } from 'assert';
 import SignifyClient from 'signify-ts';
 
 import { RetryOptions, retry } from './retry.js';

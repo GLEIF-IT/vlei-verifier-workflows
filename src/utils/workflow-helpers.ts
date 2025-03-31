@@ -1,7 +1,8 @@
 // Use CommonJS require for problematic modules
 const path = require('path');
 const fs = require('fs');
-import { Workflow, loadWorkflow } from '../types/workflow.js';
+import { Workflow } from '../types/workflow.js';
+import * as yaml from 'yaml';
 
 /**
  * Gets the path to a specific workflow file in the package
@@ -12,7 +13,23 @@ export function getWorkflowPath(workflowName: string): string {
   const fileName = workflowName.endsWith('.yaml')
     ? workflowName
     : `${workflowName}.yaml`;
-  return path.join(__dirname, '../../src/workflows', fileName);
+
+  // Try multiple possible locations
+  const cwd = process.cwd();
+  const possiblePaths = [
+    path.join(cwd, 'dist', 'esm', 'workflows', fileName),
+    path.join(cwd, 'dist', 'cjs', 'workflows', fileName),
+    path.join(__dirname, '..', 'workflows', fileName),
+    path.join(cwd, 'src', 'workflows', fileName),
+    path.join(cwd, 'workflows', fileName)
+  ];
+
+  const existingPath = possiblePaths.find(p => fs.existsSync(p));
+  if (!existingPath) {
+    throw new Error(`Could not find workflow file: ${fileName}`);
+  }
+
+  return existingPath;
 }
 
 /**
@@ -29,43 +46,47 @@ export function loadPackagedWorkflow(workflowName: string): Workflow | null {
  * @returns Array of workflow file names
  */
 export function listPackagedWorkflows(): string[] {
+  let workflowsDir: string;
+  
   try {
-    // Use let instead of const to allow reassignment
-    let workflowsDir = path.join(__dirname, '..', 'workflows');
+    // Try multiple possible locations
+    const possiblePaths = [
+      path.join(__dirname, '..', 'workflows'),
+      path.join(process.cwd(), 'dist', 'esm', 'workflows'),
+      path.join(process.cwd(), 'dist', 'cjs', 'workflows'),
+      path.join(process.cwd(), 'src', 'workflows'),
+      path.join(process.cwd(), 'workflows')
+    ];
 
-    // Check if the directory exists
-    if (!fs.existsSync(workflowsDir)) {
-      // Try alternative paths
-      workflowsDir = path.join(
-        process.cwd(),
-        'node_modules/vlei-verifier-workflows/src/workflows'
-      );
-
-      if (!fs.existsSync(workflowsDir)) {
-        try {
-          const helperPath = require.resolve(
-            'vlei-verifier-workflows/dist/cjs/utils/workflow-helpers.js'
-          );
-          workflowsDir = path.join(
-            path.dirname(helperPath),
-            '../../src/workflows'
-          );
-        } catch (e) {
-          // If require.resolve fails, fall back to a relative path
-          console.error('Error resolving workflows directory:', e);
-          workflowsDir = path.join(process.cwd(), 'src/workflows');
-        }
-      }
+    workflowsDir = possiblePaths.find(p => fs.existsSync(p)) || '';
+    
+    if (!workflowsDir) {
+      console.warn('Could not find workflows directory');
+      return [];
     }
 
-    // Now use the workflowsDir to list files
-    return fs
-      .readdirSync(workflowsDir)
-      .filter(
-        (file: string) => file.endsWith('.yaml') || file.endsWith('.yml')
-      );
-  } catch (error) {
-    console.error('Error resolving workflows directory:', error);
+    return fs.readdirSync(workflowsDir)
+      .filter((file: string) => file.endsWith('.yaml') || file.endsWith('.yml'));
+  } catch (e) {
+    console.error('Error listing workflows:', e);
     return [];
+  }
+}
+
+export function loadWorkflow(workflowPath: string): Workflow | null {
+  try {
+    const fileContents = fs.readFileSync(workflowPath, 'utf8');
+    const workflow = yaml.parse(fileContents) as Workflow;
+    
+    if (!workflow || !workflow.workflow || !workflow.workflow.steps) {
+      throw new Error('Invalid workflow format');
+    }
+    
+    return workflow;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to load workflow file: ${error.message}`);
+    }
+    throw error;
   }
 }
