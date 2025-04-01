@@ -1,35 +1,29 @@
 // Replace individual imports with centralized imports
-import { fs, yaml } from '../node-modules.js';
+import * as fsModule from 'fs';
+import * as yamlModule from 'js-yaml';
+import { Workflow } from '../types/workflow.js';
 
 // Import YAML library properly
 import SignifyClient from 'signify-ts';
 
 // Function to load and parse YAML file
-export function loadWorkflow(workflowPath: string): any {
+export function loadWorkflow(filePath: string): Workflow {
   try {
-    // Check file extension to determine how to parse
-    if (workflowPath.endsWith('.yaml') || workflowPath.endsWith('.yml')) {
-      // Use yaml.load for YAML files
-      const content = fs.readFileSync(workflowPath, 'utf-8');
-      return yaml.load(content);
-    } else {
-      // Assume JSON for other files
-      return JSON.parse(fs.readFileSync(workflowPath, 'utf-8'));
-    }
+    const fs = fsModule;
+    const yaml = yamlModule;
+    
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    return yaml.load(fileContents) as Workflow;
   } catch (e) {
     throw new Error(`Error reading YAML file: ${e}`);
   }
 }
 
-export function getConfig(configFilePath: string): any {
-  // Similar approach for config files
+export function getConfig(configPath: string): any {
   try {
-    if (configFilePath.endsWith('.yaml') || configFilePath.endsWith('.yml')) {
-      const content = fs.readFileSync(configFilePath, 'utf-8');
-      return yaml.load(content);
-    } else {
-      return JSON.parse(fs.readFileSync(configFilePath, 'utf-8'));
-    }
+    const fs = fsModule;
+    const fileContents = fs.readFileSync(configPath, 'utf8');
+    return JSON.parse(fileContents);
   } catch (e) {
     throw new Error(`Error reading config file: ${e}`);
   }

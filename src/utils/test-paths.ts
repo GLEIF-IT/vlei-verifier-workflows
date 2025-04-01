@@ -1,4 +1,4 @@
-import path from 'path';
+import { path } from '../node-modules.js';
 
 export class TestPaths {
   private static instance: TestPaths;

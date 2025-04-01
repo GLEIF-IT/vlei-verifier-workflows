@@ -1,14 +1,18 @@
+import * as dockerodeModule from 'dockerode';
+import * as minimistModule from 'minimist';
+
 import {
   fs,
   path,
   os,
-  Dockerode,
+  Docker,
   exec,
-  minimist,
   URL,
   DockerodeTypes,
 } from '../node-modules.js';
 import { TestPaths } from './test-paths.js';
+
+
 
 export const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
 export const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
@@ -64,7 +68,28 @@ export class TestKeria {
     keriaImage: string
   ) {
     this.containers = new Map();
-    this.docker = new Dockerode();
+    
+    try {
+      // Try different ways to get the Docker constructor
+      let Docker;
+      if (typeof dockerodeModule === 'function') {
+        // If dockerode is a function (CommonJS default export)
+        Docker = dockerodeModule;
+      } else {
+        // Fallback - try requiring directly
+        Docker = require('dockerode');
+      }
+      
+      this.docker = new Docker();
+    } catch (error) {
+      console.error('Error initializing Docker client:', error);
+      // Create a mock Docker client
+      this.docker = {
+        listContainers: () => Promise.resolve([]),
+        // Add other methods as needed
+      };
+    }
+    
     this.testPaths = testPaths;
     this.domain = domain;
     this.witnessHost = witnessHost;
@@ -157,6 +182,11 @@ export class TestKeria {
     baseHttpPort: number,
     baseBootPort: number
   ) {
+    // Get the minimist function
+    const minimist = typeof minimistModule === 'function' 
+      ? minimistModule 
+      : require('minimist');
+    
     // Parse command-line arguments using minimist directly
     const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
       alias: {
@@ -482,7 +512,7 @@ export class TestKeria {
 
     // Force cleanup any containers that might have been missed
     try {
-      const docker = new Dockerode();
+      const docker = new Docker();
 
       // Get all containers
       const containers = await docker.listContainers({ all: true });

@@ -7,7 +7,7 @@
 
 // Import Node.js built-in modules with namespace imports
 import * as fs from 'fs';
-import path from 'path';
+import * as path from 'path';
 import * as os from 'os';
 import * as child_process from 'child_process';
 import * as url from 'url';
@@ -21,7 +21,7 @@ import * as net from 'net';
 
 // For third-party modules, use a dynamic import approach
 // This creates a wrapper that will load the module on first use
-import Dockerode from 'dockerode';
+import DockerodeConstructor from 'dockerode';
 import yaml from 'js-yaml';
 import minimist from 'minimist';
 
@@ -46,10 +46,18 @@ export {
   http,
   https,
   net,
-  Dockerode,
+  DockerodeConstructor,
   yaml,
   minimist,
 };
+
+// Export Dockerode constructor properly
+export const Docker = DockerodeConstructor;
+
+
+import Dockerode from 'dockerode';
+// Export Dockerode directly
+export { Dockerode };
 
 // Type exports
 export type { default as DockerodeTypes } from 'dockerode';
