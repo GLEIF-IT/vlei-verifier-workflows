@@ -22,6 +22,7 @@ import * as net from 'net';
 // For third-party modules, use a dynamic import approach
 // This creates a wrapper that will load the module on first use
 import Dockerode from 'dockerode';
+import DockerodeConstructor from 'dockerode';
 import yaml from 'js-yaml';
 import minimist from 'minimist';
 
@@ -46,10 +47,13 @@ export {
   http,
   https,
   net,
-  Dockerode,
   yaml,
   minimist,
 };
 
+// Export Dockerode constructor properly
+export const Docker = DockerodeConstructor;
+// Export Dockerode directly
+export { Dockerode };
 // Type exports
 export type { default as DockerodeTypes } from 'dockerode';

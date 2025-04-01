@@ -1,7 +1,5 @@
-import path from 'path';
-import fs from 'fs';
+import { path, fs, yaml } from '../node-modules.js';
 import { Workflow } from '../types/workflow.js';
-import * as yaml from 'js-yaml';
 
 /**
  * Gets the path to a specific workflow file in the package
