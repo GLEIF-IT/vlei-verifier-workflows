@@ -1,5 +1,6 @@
 import { strict as assert } from 'assert';
 import SignifyClient from 'signify-ts';
+import { URL } from '../node-modules.js';
 
 import { RetryOptions, retry } from './retry.js';
 import { resolveEnvironment } from './resolve-env.js';
@@ -670,10 +671,9 @@ export async function getRootOfTrust(
     .get(rootOfTrustIdentifierName);
 
   const oobi = await client.oobis().get(rootOfTrustIdentifierName);
-  let oobiUrl = oobi.oobis[0];
+  const oobiUrl = oobi.oobis[0];
   console.log(`Root of trust OOBI: ${oobiUrl}`);
-  const url = new URL(oobiUrl);
-  if (url.hostname === 'keria') oobiUrl = oobiUrl.replace('keria', 'localhost');
+  const _url = new URL(oobiUrl);
   const oobiResp = await fetch(oobiUrl);
   const oobiRespBody = await oobiResp.text();
 

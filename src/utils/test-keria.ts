@@ -1,18 +1,17 @@
-import * as dockerodeModule from 'dockerode';
-import * as minimistModule from 'minimist';
-
-import {
-  fs,
-  path,
-  os,
-  Docker,
-  exec,
-  URL,
-  DockerodeTypes,
-} from '../node-modules.js';
+import { fs, path, os, exec, URL, DockerodeTypes } from '../node-modules.js';
 import { TestPaths } from './test-paths.js';
 
-
+// Define a function to get Dockerode that works in both ESM and CommonJS
+function getDockerodeConstructor() {
+  try {
+    // This will be transformed properly in CommonJS builds
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('dockerode');
+  } catch (error) {
+    console.error('Failed to load Dockerode:', error);
+    throw new Error('Failed to load Dockerode module');
+  }
+}
 
 export const ARG_KERIA_DOMAIN = 'keria_domain'; //external domain for keria
 export const ARG_WITNESS_HOST = 'witness_host'; //docker domain for witness
@@ -68,28 +67,11 @@ export class TestKeria {
     keriaImage: string
   ) {
     this.containers = new Map();
-    
-    try {
-      // Try different ways to get the Docker constructor
-      let Docker;
-      if (typeof dockerodeModule === 'function') {
-        // If dockerode is a function (CommonJS default export)
-        Docker = dockerodeModule;
-      } else {
-        // Fallback - try requiring directly
-        Docker = require('dockerode');
-      }
-      
-      this.docker = new Docker();
-    } catch (error) {
-      console.error('Error initializing Docker client:', error);
-      // Create a mock Docker client
-      this.docker = {
-        listContainers: () => Promise.resolve([]),
-        // Add other methods as needed
-      };
-    }
-    
+
+    // Load Dockerode dynamically to ensure it works in both module formats
+    const DockerodeConstructor = getDockerodeConstructor();
+    this.docker = new DockerodeConstructor();
+
     this.testPaths = testPaths;
     this.domain = domain;
     this.witnessHost = witnessHost;
@@ -160,9 +142,9 @@ export class TestKeria {
             domain!,
             host!,
             containerLocalhost!,
-            parseInt(args[ARG_KERIA_ADMIN_PORT], 10),
-            parseInt(args[ARG_KERIA_HTTP_PORT], 10),
-            parseInt(args[ARG_KERIA_BOOT_PORT], 10),
+            args[ARG_KERIA_ADMIN_PORT],
+            args[ARG_KERIA_HTTP_PORT],
+            args[ARG_KERIA_BOOT_PORT],
             keriaImage
           )
         );
@@ -182,34 +164,62 @@ export class TestKeria {
     baseHttpPort: number,
     baseBootPort: number
   ) {
-    // Get the minimist function
-    const minimist = typeof minimistModule === 'function' 
-      ? minimistModule 
-      : require('minimist');
-    
-    // Parse command-line arguments using minimist directly
-    const args = minimist(process.argv.slice(process.argv.indexOf('--') + 1), {
-      alias: {
-        [ARG_KERIA_ADMIN_PORT]: 'kap',
-        [ARG_KERIA_HTTP_PORT]: 'khp',
-        [ARG_KERIA_BOOT_PORT]: 'kbp',
-        [ARG_KERIA_START_PORT]: 'ksp',
-        [ARG_KERIA_DOMAIN]: 'kd',
-        [ARG_WITNESS_HOST]: 'wh',
-        [ARG_KERIA_HOST]: 'kh',
-        [ARG_REFRESH]: 'r',
-      },
-      default: {
-        [ARG_KERIA_ADMIN_PORT]: baseAdminPort,
-        [ARG_KERIA_HTTP_PORT]: baseHttpPort,
-        [ARG_KERIA_BOOT_PORT]: baseBootPort,
-        [ARG_KERIA_START_PORT]: baseAdminPort,
-        [ARG_KERIA_DOMAIN]: '127.0.0.1',
-        [ARG_WITNESS_HOST]: 'localhost',
-        [ARG_KERIA_HOST]: '127.0.0.1',
-        [ARG_REFRESH]: false,
-      },
-    });
+    // Create default args object
+    const args = {
+      [ARG_KERIA_ADMIN_PORT]: baseAdminPort,
+      [ARG_KERIA_HTTP_PORT]: baseHttpPort,
+      [ARG_KERIA_BOOT_PORT]: baseBootPort,
+      [ARG_KERIA_START_PORT]: baseAdminPort,
+      [ARG_KERIA_DOMAIN]: '127.0.0.1',
+      [ARG_WITNESS_HOST]: 'localhost',
+      [ARG_KERIA_HOST]: '127.0.0.1',
+      [ARG_REFRESH]: false,
+    };
+
+    // Simple argument parser that doesn't rely on minimist
+    try {
+      const argIndex = process.argv.indexOf('--');
+      if (argIndex >= 0) {
+        const cliArgs = process.argv.slice(argIndex + 1);
+
+        // Process arguments in pairs (--key value)
+        for (let i = 0; i < cliArgs.length; i += 2) {
+          const key = cliArgs[i].replace(/^--/, '');
+          const value = cliArgs[i + 1];
+
+          // Handle aliases
+          const aliasMap: Record<string, string> = {
+            kap: ARG_KERIA_ADMIN_PORT,
+            khp: ARG_KERIA_HTTP_PORT,
+            kbp: ARG_KERIA_BOOT_PORT,
+            ksp: ARG_KERIA_START_PORT,
+            kd: ARG_KERIA_DOMAIN,
+            wh: ARG_WITNESS_HOST,
+            kh: ARG_KERIA_HOST,
+            r: ARG_REFRESH,
+          };
+
+          const actualKey = aliasMap[key] || key;
+
+          // Set the value in args
+          if (actualKey in args) {
+            // Convert to appropriate type
+            if (typeof args[actualKey as keyof typeof args] === 'number') {
+              (args as any)[actualKey] = parseInt(value, 10);
+            } else if (
+              typeof args[actualKey as keyof typeof args] === 'boolean'
+            ) {
+              (args as any)[actualKey] = value === 'true';
+            } else {
+              (args as any)[actualKey] = value;
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing command line arguments:', error);
+    }
+
     return args;
   }
 
@@ -512,7 +522,9 @@ export class TestKeria {
 
     // Force cleanup any containers that might have been missed
     try {
-      const docker = new Docker();
+      // Load Dockerode dynamically
+      const DockerodeConstructor = getDockerodeConstructor();
+      const docker = new DockerodeConstructor();
 
       // Get all containers
       const containers = await docker.listContainers({ all: true });
@@ -571,7 +583,7 @@ export class TestKeria {
         );
       }
     } catch (error) {
-      console.error('Error during force cleanup:', error);
+      console.error('Error cleaning up leftover containers:', error);
     }
 
     console.log('All Keria instances cleanup completed');

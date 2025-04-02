@@ -1,45 +1,43 @@
-// Import dockerode properly for both ESM and CommonJS compatibility
-import * as dockerodeModule from 'dockerode';
+
 
 // Replace individual imports with centralized imports
 import { exec } from '../node-modules.js';
-import * as net from 'net';
+import { net } from '../node-modules.js';
 import { ensureDockerPermissions } from './docker-permissions.js';
 
-class DockerComposeState {
+// Define a function to get Dockerode that works in both ESM and CommonJS
+function getDockerodeConstructor() {
+  try {
+    // This will be transformed properly in CommonJS builds
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('dockerode');
+  } catch (error) {
+    console.error('Failed to load Dockerode:', error);
+    throw new Error('Failed to load Dockerode module');
+  }
+}
+
+export class DockerComposeState {
   private static instance: DockerComposeState;
   private isRunning = false;
   private initializationPromise: Promise<void> | null = null;
   private activeProcesses = new Set<import('child_process').ChildProcess>();
-  private docker: any;
-  
-  constructor() {
-      try {
-          // Try different ways to get the Docker constructor
-          let Docker;
-          if (typeof dockerodeModule === 'function') {
-              // If dockerode is a function (CommonJS default export)
-              Docker = dockerodeModule;
-          } else {
-              // Fallback - try requiring directly
-              Docker = require('dockerode');
-          }
-          
-          if (!Docker) {
-              throw new Error('Could not find Dockerode constructor');
-          }
-          
-          this.docker = new Docker();
-          console.log('Successfully initialized Docker client');
-      } catch (error) {
-          console.error('Error initializing Docker client:', error);
-          // Create a mock Docker client for testing without Docker
-          this.docker = {
-              listContainers: () => Promise.resolve([]),
-              // Add other methods as needed
-          };
-      }
-          // Handle cleanup on process exit
+  docker: any; // Use any to avoid type issues
+
+  private constructor() {
+    try {
+      // Load Dockerode dynamically to ensure it works in both module formats
+      const DockerodeConstructor = getDockerodeConstructor();
+      this.docker = new DockerodeConstructor();
+      console.log('Successfully initialized Docker client');
+    } catch (error) {
+      console.error('Error initializing Docker client:', error);
+      throw new Error(
+        `Failed to initialize Docker client: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+
+    // Handle cleanup on process exit
     process.on('beforeExit', async () => {
       await this.cleanup();
     });

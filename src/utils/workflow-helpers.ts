@@ -1,7 +1,5 @@
-import * as pathModule from 'path';
-import * as fsModule from 'fs';
+import { path, fs, yaml } from '../node-modules.js';
 import { Workflow } from '../types/workflow.js';
-import * as yaml from 'js-yaml';
 
 /**
  * Gets the path to a specific workflow file in the package
@@ -9,9 +7,6 @@ import * as yaml from 'js-yaml';
  * @returns The full path to the workflow file
  */
 export function getWorkflowPath(workflowName: string): string {
-  // Get path module - handle both ESM and CommonJS
-  const path = pathModule;
-  const fs = fsModule;
   
   const fileName = workflowName.endsWith('.yaml')
     ? workflowName
@@ -49,9 +44,6 @@ export function loadPackagedWorkflow(workflowName: string): Workflow | null {
  * @returns Array of workflow file names
  */
 export function listPackagedWorkflows(): string[] {
-  // Get path and fs modules - handle both ESM and CommonJS
-  const path = pathModule;
-  const fs = fsModule;
   
   let workflowsDir: string;
 
@@ -85,7 +77,6 @@ export function listPackagedWorkflows(): string[] {
 
 export function loadWorkflow(workflowPath: string): Workflow | null {
   try {
-    const fs = fsModule;
     const fileContents = fs.readFileSync(workflowPath, 'utf8');
     const workflow = yaml.load(fileContents) as Workflow;
 
