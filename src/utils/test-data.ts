@@ -11,7 +11,7 @@ export function loadWorkflow(filePath: string): Workflow {
   try {
     const fs = fsModule;
     const yaml = yamlModule;
-    
+
     const fileContents = fs.readFileSync(filePath, 'utf8');
     return yaml.load(fileContents) as Workflow;
   } catch (e) {

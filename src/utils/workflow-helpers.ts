@@ -7,7 +7,6 @@ import { Workflow } from '../types/workflow.js';
  * @returns The full path to the workflow file
  */
 export function getWorkflowPath(workflowName: string): string {
-  
   const fileName = workflowName.endsWith('.yaml')
     ? workflowName
     : `${workflowName}.yaml`;
@@ -44,7 +43,6 @@ export function loadPackagedWorkflow(workflowName: string): Workflow | null {
  * @returns Array of workflow file names
  */
 export function listPackagedWorkflows(): string[] {
-  
   let workflowsDir: string;
 
   try {
