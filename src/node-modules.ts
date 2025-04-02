@@ -7,7 +7,7 @@
 
 // Import Node.js built-in modules with namespace imports
 import * as fs from 'fs';
-import path from 'path';
+import * as pathModule from 'path';
 import * as os from 'os';
 import * as child_process from 'child_process';
 import * as url from 'url';
@@ -19,12 +19,21 @@ import * as http from 'http';
 import * as https from 'https';
 import * as net from 'net';
 
-// For third-party modules, use a dynamic import approach
-// This creates a wrapper that will load the module on first use
-import Dockerode from 'dockerode';
-import DockerodeConstructor from 'dockerode';
-import yaml from 'js-yaml';
-import minimist from 'minimist';
+// Type exports
+export type { default as DockerodeTypes } from 'dockerode';
+
+// Export yaml - unchanged
+import * as yaml from 'js-yaml';
+export { yaml };
+
+// For minimist, we need to handle it specially
+// Import it directly and then create a simple wrapper function
+import minimistPkg from 'minimist';
+
+// Create a simple wrapper function that just calls the imported function
+export function minimist(args: string[], opts?: any): any {
+  return minimistPkg(args, opts);
+}
 
 // Export commonly used functions from modules
 export const { exec, spawn, execSync } = child_process;
@@ -36,7 +45,7 @@ export const { EventEmitter } = events;
 // Re-export everything
 export {
   fs,
-  path,
+  pathModule,
   os,
   child_process,
   url,
@@ -47,13 +56,7 @@ export {
   http,
   https,
   net,
-  yaml,
-  minimist,
 };
 
-// Export Dockerode constructor properly
-export const Docker = DockerodeConstructor;
-// Export Dockerode directly
-export { Dockerode };
-// Type exports
-export type { default as DockerodeTypes } from 'dockerode';
+// Export path with a specific name to avoid transformation issues
+export const path = pathModule;

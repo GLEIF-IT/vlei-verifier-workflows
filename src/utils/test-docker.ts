@@ -1,21 +1,38 @@
 // Replace individual imports with centralized imports
 import { exec } from '../node-modules.js';
-
-// Use CommonJS require for problematic modules
-import Dockerode from 'dockerode';
-import * as net from 'net';
+import { net } from '../node-modules.js';
 import { ensureDockerPermissions } from './docker-permissions.js';
+
+// Define a function to get Dockerode that works in both ESM and CommonJS
+function getDockerodeConstructor() {
+  try {
+    // This will be transformed properly in CommonJS builds
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('dockerode');
+  } catch (error) {
+    console.error('Failed to load Dockerode:', error);
+    throw new Error('Failed to load Dockerode module');
+  }
+}
 
 export class DockerComposeState {
   private static instance: DockerComposeState;
   private isRunning = false;
   private initializationPromise: Promise<void> | null = null;
   private activeProcesses = new Set<import('child_process').ChildProcess>();
-  docker: any; // Using 'any' to avoid type issues
+  docker: any; // Use any to avoid type issues
 
   private constructor() {
-    // Initialize Dockerode without using the imported module
-    this.docker = new Dockerode();
+    try {
+      // Load Dockerode dynamically to ensure it works in both module formats
+      const DockerodeConstructor = getDockerodeConstructor();
+      this.docker = new DockerodeConstructor();
+      console.log('Successfully initialized Docker client');
+    } catch (error) {
+      console.error('Error initializing Docker client:', error);
+      throw new Error(`Failed to initialize Docker client: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    
     // Handle cleanup on process exit
     process.on('beforeExit', async () => {
       await this.cleanup();

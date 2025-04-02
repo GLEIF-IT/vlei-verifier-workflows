@@ -2,8 +2,7 @@ import {
   loadPackagedWorkflow,
   listPackagedWorkflows,
 } from '../../src/utils/workflow-helpers';
-import fs from 'fs';
-import path from 'path';
+import { fs, path } from '../../src/node-modules.js';
 
 describe('workflow-helpers', () => {
   describe('loadPackagedWorkflow', () => {

@@ -1,5 +1,6 @@
 import { strict as assert } from 'assert';
 import SignifyClient from 'signify-ts';
+import { URL } from '../node-modules.js';
 
 import { RetryOptions, retry } from './retry.js';
 import { resolveEnvironment } from './resolve-env.js';
