@@ -30,9 +30,11 @@ export class DockerComposeState {
       console.log('Successfully initialized Docker client');
     } catch (error) {
       console.error('Error initializing Docker client:', error);
-      throw new Error(`Failed to initialize Docker client: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to initialize Docker client: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
-    
+
     // Handle cleanup on process exit
     process.on('beforeExit', async () => {
       await this.cleanup();
