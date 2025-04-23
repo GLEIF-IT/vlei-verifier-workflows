@@ -108,3 +108,10 @@ workflow:
         authorize:
           type: 'authorization'
           expected_status: 'cred_verified'
+    sign_report:
+      id: 'sign_report'
+      type: 'sign_report'
+      aid: 'ecr-aid-1'
+      agent_name: 'ecr-agent-1'
+      reportFileName: 'Test_Zip.zip'
+      description: 'Signing report'

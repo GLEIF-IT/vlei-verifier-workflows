@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 export type TestEnvironmentPreset =
   | 'local'
   | 'docker'

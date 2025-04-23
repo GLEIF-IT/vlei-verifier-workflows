@@ -9,6 +9,7 @@ import signify, {
   Serder,
   SignifyClient,
   Tier,
+  Signer,
 } from 'signify-ts';
 import { RetryOptions, retry } from './retry';
 import { resolveEnvironment } from './resolve-env';
@@ -17,6 +18,25 @@ import {
   getIdentifierData,
   SinglesigIdentifierData,
 } from './handle-json-config';
+
+import { generateFileDigest } from './generate-digest';
+import AdmZip = require('adm-zip');
+import * as fs from 'fs';
+import * as path from 'path';
+
+export interface SimpleSignatureEntry {
+  file: string;
+  digest: string;
+  aid: string;
+  sigs: string[];
+}
+
+export interface SimpleManifest {
+  documentInfo: {
+    documentType: string;
+    signatures: SimpleSignatureEntry[];
+  };
+}
 
 export interface Aid {
   name: string;
@@ -691,4 +711,63 @@ export async function getRootOfTrust(
     aid: rootOfTrustAid.prefix,
     oobi: oobiUrl,
   };
+}
+
+export async function createSimpleSignature(
+  payload: string,
+  keeper: signify.Keeper,
+  aid: string
+): Promise<string[]> {
+  const buffer = Buffer.from(payload);
+  const digest = generateFileDigest(buffer);
+  const nonPrefixedDigest = digest.split("-", 2)[1];
+
+  const signatures: string[] = [];
+
+  for (const signer of keeper.signers as Signer[]) {
+    const sig = signer.sign(signify.b(nonPrefixedDigest), 0);
+    const result = signer.verfer.verify(sig.raw, nonPrefixedDigest);
+    if (result) {
+      signatures.push(sig.qb64);
+    } else {
+      throw new Error(`Failed to sign payload: ${payload}`);
+    }
+
+    return signatures;
+  }
+
+  return signatures;
+}
+
+export async function signReportZip(
+  unsignedZip: string,
+  signedPath: string,
+  aidPrefix: string,
+  keeper: signify.Keeper
+): Promise<string> {
+  const buffer = fs.readFileSync(unsignedZip);
+  const digest = generateFileDigest(buffer);
+  
+  const [jws] = await createSimpleSignature(digest, keeper, aidPrefix);
+
+  const manifest: SimpleManifest = {
+    documentInfo: {
+      documentType: 'http://xbrl.org/PWD/2020-12-09/report-package',
+      signatures: [
+        {
+          file: path.basename(unsignedZip),
+          digest,
+          aid: aidPrefix,
+          sigs: [jws],
+        },
+      ],
+    },
+  };
+
+  const zip = new AdmZip(unsignedZip);
+  const manifestJson = JSON.stringify(manifest, null, 2);
+  zip.addFile('META-INF/reports.json', Buffer.from(manifestJson, 'utf8'));
+
+  zip.writeZip(signedPath);
+  return signedPath;
 }

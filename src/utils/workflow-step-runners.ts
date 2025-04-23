@@ -14,8 +14,10 @@ import {
 } from './handle-json-config';
 import { WorkflowState } from '../workflow-state';
 import { resolveEnvironment } from './resolve-env';
-import { getRootOfTrust } from './test-util';
+import { getRootOfTrust, signReportZip } from './test-util';
 import { VerifierClient } from 'vlei-verifier-client';
+import { createSimpleSignature } from './test-util';
+import * as path from 'path';
 
 export abstract class StepRunner {
   type = '';
@@ -216,5 +218,32 @@ export class AddRootOfTrustStepRunner extends StepRunner {
     );
 
     return response;
+  }
+}
+
+export class SignReportStepRunner extends StepRunner {
+  type = 'sign_report';
+  public async run(
+    _stepName: string,
+    step: any,
+  ): Promise<any> {
+    const workflow_state = WorkflowState.getInstance();
+    const client = workflow_state.clients.get(step.agent_name);
+    if (!client) throw new Error(`No client for agent ${step.agent_name}`);
+
+    const aidState = workflow_state.aids.get(step.aid);
+    if (!aidState) throw new Error(`No AID state for ${step.aid}`);
+    const keeper = client?.manager?.get(aidState);
+    if (!keeper) {
+      throw new Error(`Keeper not found for aid: ${step.aid}`);
+    }
+    const reportsDir = path.join(__dirname, '..', 'reports');
+
+    const unsignedZip = path.join(reportsDir, step.reportFileName);
+    const signedZip   = path.join(
+      reportsDir,
+      step.reportFileName.replace(/\.zip$/, '_signed.zip')
+    );
+    return await signReportZip(unsignedZip, signedZip, aidState.prefix, keeper);
   }
 }
