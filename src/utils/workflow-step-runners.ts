@@ -185,11 +185,32 @@ export class VleiVerificationStepRunner extends StepRunner {
           credStatus
         );
       } else if (action.type == 'credential_authorization') {
+        const aid = action.aid;
+        const aidInfo = workflow_state.aidsInfo.get(aid);
+        let client;
+        if (
+          aidInfo !== undefined &&
+          aidInfo.type !== undefined &&
+          aidInfo.type == 'multisig'
+        ) {
+          const multisigIdentifierData = aidInfo as MultisigIdentifierData;
+          const multisigMemberAidInfo = workflow_state.aidsInfo.get(
+            multisigIdentifierData.identifiers[0]
+          ) as SinglesigIdentifierData;
+          client = workflow_state.clients.get(
+            multisigMemberAidInfo.agent.name
+          );
+        } else {
+          const singlesigIdentifierData = aidInfo as SinglesigIdentifierData;
+          client = workflow_state.clients.get(
+            singlesigIdentifierData.agent.name
+          );
+        }
         const aidPrefix = workflow_state.aids.get(action.aid).prefix;
         const credStatus = authorizationStatusMapping.get(
           action.expected_status
         );
-        await vleiVerification.credentialAuthorization(aidPrefix, credStatus);
+        await vleiVerification.credentialAuthorization(client, aid, aidPrefix, credStatus);
       } else if (action.type == 'aid_presentation') {
         const aidPrefix = workflow_state.aids.get(action.aid).prefix;
         const aidInfo = workflow_state.aidsInfo.get(action.aid)!;
@@ -218,11 +239,32 @@ export class VleiVerificationStepRunner extends StepRunner {
         const aidStatus = presentationStatusMapping.get(action.expected_status);
         await vleiVerification.aidPresentation(aidPrefix, aidCesr, aidStatus);
       } else if (action.type == 'aid_authorization') {
+        const aid = action.aid;
+        const aidInfo = workflow_state.aidsInfo.get(aid);
+        let client;
+        if (
+          aidInfo !== undefined &&
+          aidInfo.type !== undefined &&
+          aidInfo.type == 'multisig'
+        ) {
+          const multisigIdentifierData = aidInfo as MultisigIdentifierData;
+          const multisigMemberAidInfo = workflow_state.aidsInfo.get(
+            multisigIdentifierData.identifiers[0]
+          ) as SinglesigIdentifierData;
+          client = workflow_state.clients.get(
+            multisigMemberAidInfo.agent.name
+          );
+        } else {
+          const singlesigIdentifierData = aidInfo as SinglesigIdentifierData;
+          client = workflow_state.clients.get(
+            singlesigIdentifierData.agent.name
+          );
+        }
         const aidPrefix = workflow_state.aids.get(action.aid).prefix;
         const aidStatus = authorizationStatusMapping.get(
           action.expected_status
         );
-        await vleiVerification.aidAuthorization(aidPrefix, aidStatus);
+        await vleiVerification.aidAuthorization(client, aid, aidPrefix, aidStatus);
       } else {
         throw new Error(`vlei_verification: Invalid action: ${action.type} `);
       }
@@ -257,3 +299,23 @@ export class AddRootOfTrustStepRunner extends StepRunner {
     return response;
   }
 }
+
+
+export class SleepStepRunner extends StepRunner {
+  type = 'sleep';
+
+  public async run(
+    _stepName: string,
+    step: any,
+    _configJson: any
+  ): Promise<any> {
+    const seconds = step.seconds ?? 1; // default to 1 second if not provided
+    console.log(`Sleeping for ${seconds} second(s)...`);
+
+    await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+
+    console.log(`Woke up after ${seconds} second(s).`);
+    return { slept: seconds };
+  }
+}
+

@@ -115,39 +115,22 @@ workflow:
       issuer_aid: 'le-aid-1'
       issuee_aid: 'ecr-aid-1'
       description: 'LE revokes ECR vLEI credential'
-      credential: 'ecr_cred'
-    # credential_verification_revoked_valid_verified:
-    #   id: 'credential_verification_revoked_valid_verified'
-    #   type: 'vlei_verification'
-    #   description: 'Running Vlei Verification'
-    #   actions:
-    #     present_credential:
-    #       presenter_aid: 'ecr-aid-1'
-    #       credential: 'ecr_cred'
-    #       type: 'credential_presentation'
-    #       expected_status: 'cred_crypt_valid'
-    #     authorize_credential:
-    #       aid: 'ecr-aid-1'
-    #       type: 'credential_authorization'
-    #       expected_status: 'cred_verified'
-    # notify_ecr_credential_issuee:
-    #   id: 'notify_ecr_credential_issuee'
-    #   type: 'notify_credential_issuee'
-    #   issuer_aid: 'le-aid-1'
-    #   issuee_aid: 'ecr-aid-1'
-    #   description: 'LE notifies ECR vLEI credential about revocation'
-    #   credential: 'ecr_cred'
-    # credential_verification_revoked_valid_not_verified:
-    #   id: 'credential_verification_revoked_valid_not_verified'
-    #   type: 'vlei_verification'
-    #   description: 'Running Vlei Verification'
-    #   actions:
-    #     present_credential:
-    #       presenter_aid: 'ecr-aid-1'
-    #       credential: 'ecr_cred'
-    #       type: 'credential_presentation'
-    #       expected_status: 'cred_crypt_valid'
-    #     authorize_credential:
-    #       aid: 'ecr-aid-1'
-    #       type: 'credential_authorization'
-    #       expected_status: 'cred_revoked'
+      credential: 'ecr_cred'    
+    sleep:
+      id: 'sleep_1'
+      type: 'sleep'
+      seconds: 20     
+    credential_verification_revoked_valid_not_verified:
+      id: 'credential_verification_revoked_valid_not_verified'
+      type: 'vlei_verification'
+      description: 'Running Vlei Verification'
+      actions:
+        present_credential:
+          presenter_aid: 'ecr-aid-1'
+          credential: 'ecr_cred'
+          type: 'credential_presentation'
+          expected_status: 'cred_crypt_valid'
+        authorize_credential:
+          aid: 'ecr-aid-1'
+          type: 'credential_authorization'
+          expected_status: 'cred_revoked'

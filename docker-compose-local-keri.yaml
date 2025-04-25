@@ -5,15 +5,15 @@ configs:
             "dt": "2023-12-01T10:05:25.062609+00:00",
             "keria": {
               "dt": "2023-12-01T10:05:25.062609+00:00",
-              "curls": ["http://keria:3902/"]
+              "curls": ["http://localhost:3902/"]
             },
             "iurls": [
-              "http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
-              "http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller",
-              "http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller",
-              "http://witness-demo:5645/oobi/BM35JN8XeJSEfpxopjn5jr7tAHCE5749f0OobhMLCorE/controller",
-              "http://witness-demo:5646/oobi/BIj15u5V11bkbtAxMA7gcNJZcax-7TgaBMLsQnMHpYHP/controller",
-              "http://witness-demo:5647/oobi/BF2rZTW79z4IXocYRQnjjsOuvFUQv-ptCf8Yltd7PfsM/controller"
+              "http://localhost:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
+              "http://localhost:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller",
+              "http://localhost:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller",
+              "http://localhost:5645/oobi/BM35JN8XeJSEfpxopjn5jr7tAHCE5749f0OobhMLCorE/controller",
+              "http://localhost:5646/oobi/BIj15u5V11bkbtAxMA7gcNJZcax-7TgaBMLsQnMHpYHP/controller",
+              "http://localhost:5647/oobi/BF2rZTW79z4IXocYRQnjjsOuvFUQv-ptCf8Yltd7PfsM/controller"
             ]
       }
 
@@ -23,7 +23,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wan": {
             "dt": "2022-01-20T12:57:59.823350+00:00",
-            "curls": ["tcp://witness-demo:5632/", "http://witness-demo:5642/"]
+            "curls": ["tcp://localhost:5632/", "http://localhost:5642/"]
           },
       }
 
@@ -33,7 +33,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wil": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5643/"]
+              "curls": ["http://localhost:5643/"]
           }
       }
   wes.json:
@@ -42,7 +42,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wes": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5644/"]
+              "curls": ["http://localhost:5644/"]
           }
       }
 
@@ -52,7 +52,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wit": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5645/"]
+              "curls": ["http://localhost:5645/"]
           }
       }
 
@@ -62,7 +62,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wub": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5646/"]
+              "curls": ["http://localhost:5646/"]
           }
       }
 
@@ -72,7 +72,7 @@ configs:
           "dt": "2022-01-20T12:57:59.823350+00:00",
           "wyx": {
               "dt": "2022-01-20T12:57:59.823350+00:00",
-              "curls": ["http://witness-demo:5647/"]
+              "curls": ["http://localhost:5647/"]
           }
       }
 
@@ -107,21 +107,20 @@ services:
     depends_on:
       vlei-server:
         condition: service_healthy
-      witness-demo:
-        condition: service_healthy
     image: ${KERIA_IMAGE:-weboftrust/keria}:${KERIA_IMAGE_TAG:-0.2.0-dev4}
     platform: linux/x86_64
+    network_mode: "host" 
     environment:
       - KERI_AGENT_CORS=1
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
-      - KERI_URL=http://keria:3902
+      - KERI_URL=http://localhost:3902
     configs:
       - source: keria.json
         target: /usr/local/var/keri/cf/keria.json
     entrypoint: ['keria', 'start', '--config-file', 'keria', '--name', 'agent']
     healthcheck:
-      test: ['CMD', 'wget', '--spider', 'http://keria:3902/spec.yaml']
+      test: ['CMD', 'wget', '--spider', 'http://localhost:3902/spec.yaml']
       interval: 2s
       timeout: 3s
       retries: 5
@@ -132,35 +131,6 @@ services:
       - 3902:3902
       - 3903:3903
 
-  witness-demo:
-    image: weboftrust/keri-witness-demo:1.1.0
-    environment:
-      - PYTHONUNBUFFERED=1
-      - PYTHONIOENCODING=UTF-8
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:5642/oobi']
-      interval: 2s
-      timeout: 3s
-      retries: 5
-      start_period: 2s
-    configs:
-      - source: wan.json
-        target: /keripy/scripts/keri/cf/main/wan.json
-      - source: wes.json
-        target: /keripy/scripts/keri/cf/main/wes.json
-      - source: wil.json
-        target: /keripy/scripts/keri/cf/main/wil.json
-      - source: wit.json
-        target: /keripy/scripts/keri/cf/main/wit.json
-      - source: wub.json
-        target: /keripy/scripts/keri/cf/main/wub.json
-      - source: wyx.json
-        target: /keripy/scripts/keri/cf/main/wyx.json
-    ports:
-      - 5642:5642
-      - 5643:5643
-      - 5644:5644
-
   vlei-verifier:
     image: gleif/vlei-verifier:latest
     container_name: vlei-verifier
@@ -169,7 +139,6 @@ services:
       - VERIFIER_CONFIG_FILE=verifier-config-test.json
     depends_on:
       - vlei-server
-      - witness-demo
     ports:
       - 7676:7676
     healthcheck:
@@ -187,8 +156,6 @@ services:
         condition: service_healthy
       keria:
         condition: service_healthy
-      witness-demo:
-        condition: service_healthy
   verify:
     image: alpine:latest
     command: ['echo', 'Dependencies running']
@@ -196,8 +163,6 @@ services:
       vlei-server:
         condition: service_healthy
       keria:
-        condition: service_healthy
-      witness-demo:
         condition: service_healthy
       vlei-verifier:
         condition: service_healthy

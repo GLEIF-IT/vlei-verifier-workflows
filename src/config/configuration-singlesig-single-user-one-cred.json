@@ -1,0 +1,32 @@
+{
+  "secrets": {
+    "gleif1": "D_PbQb01zuzQgK-kDWjq9",
+    "qvi1": "BTaqgh1eeOjXO5iQJp6m9"
+  },
+  "credentials": {
+    "gleif_to_qvi_vlei_cred": {
+      "type": "direct",
+      "schema": "QVI_SCHEMA_SAID",
+      "privacy": false,
+      "attributes": {}
+    }
+  },
+  "agents": {
+    "gleif-agent-1": {
+      "secret": "gleif1"
+    },
+    "qvi-agent-1": {
+      "secret": "qvi1"
+    }
+  },
+  "identifiers": {
+    "gleif-aid-1": {
+      "agent": "gleif-agent-1",
+      "name": "gleif-aid-1"
+    },
+    "qvi-aid-1": {
+      "agent": "qvi-agent-1",
+      "name": "qvi-aid-1"
+    }
+  }
+}

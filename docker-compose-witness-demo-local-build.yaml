@@ -133,7 +133,7 @@ services:
       - 3903:3903
 
   witness-demo:
-    image: weboftrust/keri-witness-demo:1.1.0
+    image: witness-demo:test
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8

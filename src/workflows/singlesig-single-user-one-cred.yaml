@@ -1,0 +1,59 @@
+workflow:
+  steps:
+    gleif_client:
+      id: 'gleif_client'
+      type: 'create_client'
+      agent_name: 'gleif-agent-1'
+      description: 'Creating client for gleif-agent-1'
+    qvi_client:
+      id: 'qvi_client'
+      type: 'create_client'
+      agent_name: 'qvi-agent-1'
+      description: 'Creating client for qvi-agent-1'    
+    gleif_aid:
+      id: 'gleif_aid'
+      type: 'create_aid'
+      aid: 'gleif-aid-1'
+      description: 'Creating AID: gleif-aid-1'
+    qvi_aid:
+      id: 'qvi_aid'
+      type: 'create_aid'
+      aid: 'qvi-aid-1'
+      description: 'Creating AID: qvi-aid-1'   
+    gleif_registry:
+      id: 'gleif_registry'
+      type: 'create_registry'
+      aid: 'gleif-aid-1'
+      description: 'Creating registry for gleif-aid-1'
+    qvi_registry:
+      id: 'qvi_registry'
+      type: 'create_registry'
+      aid: 'qvi-aid-1'
+      description: 'Creating registry for qvi-aid-1'    
+    qvi_cred:
+      id: 'qvi_cred'
+      type: 'issue_credential'
+      attributes:
+        LEI: '254900OPPU84GM83MG36'
+      issuer_aid: 'gleif-aid-1'
+      issuee_aid: 'qvi-aid-1'
+      description: 'GLEIF issues QVI vLEI credential'
+      credential: 'gleif_to_qvi_vlei_cred'    
+    add_root_of_trust:
+      id: 'add_root_of_trust'
+      type: 'add_root_of_trust'
+      rot_aid: 'gleif-aid-1'
+      description: 'Adding Root of Trust'
+    credential_verification_valid_verified:
+      id: 'credential_verification_valid_verified'
+      type: 'vlei_verification'
+      description: 'Running Vlei Verification'
+      actions:
+        present_credential:
+          credential: 'qvi_cred'
+          type: 'credential_presentation'
+          expected_status: 'cred_crypt_valid'
+        authorize_credential:
+          aid: 'qvi-aid-1'
+          type: 'credential_authorization'
+          expected_status: 'cred_verified'
