@@ -109,7 +109,7 @@ services:
         condition: service_healthy
     image: ${KERIA_IMAGE:-weboftrust/keria}:${KERIA_IMAGE_TAG:-0.2.0-dev4}
     platform: linux/x86_64
-    network_mode: "host" 
+    network_mode: 'host'
     environment:
       - KERI_AGENT_CORS=1
       - PYTHONUNBUFFERED=1

@@ -9,7 +9,7 @@ workflow:
       id: 'qvi_client'
       type: 'create_client'
       agent_name: 'qvi-agent-1'
-      description: 'Creating client for qvi-agent-1'    
+      description: 'Creating client for qvi-agent-1'
     gleif_aid:
       id: 'gleif_aid'
       type: 'create_aid'
@@ -19,7 +19,7 @@ workflow:
       id: 'qvi_aid'
       type: 'create_aid'
       aid: 'qvi-aid-1'
-      description: 'Creating AID: qvi-aid-1'   
+      description: 'Creating AID: qvi-aid-1'
     gleif_registry:
       id: 'gleif_registry'
       type: 'create_registry'
@@ -29,7 +29,7 @@ workflow:
       id: 'qvi_registry'
       type: 'create_registry'
       aid: 'qvi-aid-1'
-      description: 'Creating registry for qvi-aid-1'    
+      description: 'Creating registry for qvi-aid-1'
     qvi_cred:
       id: 'qvi_cred'
       type: 'issue_credential'
@@ -38,7 +38,7 @@ workflow:
       issuer_aid: 'gleif-aid-1'
       issuee_aid: 'qvi-aid-1'
       description: 'GLEIF issues QVI vLEI credential'
-      credential: 'gleif_to_qvi_vlei_cred'    
+      credential: 'gleif_to_qvi_vlei_cred'
     add_root_of_trust:
       id: 'add_root_of_trust'
       type: 'add_root_of_trust'

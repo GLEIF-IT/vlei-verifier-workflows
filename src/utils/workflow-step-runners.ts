@@ -197,9 +197,7 @@ export class VleiVerificationStepRunner extends StepRunner {
           const multisigMemberAidInfo = workflow_state.aidsInfo.get(
             multisigIdentifierData.identifiers[0]
           ) as SinglesigIdentifierData;
-          client = workflow_state.clients.get(
-            multisigMemberAidInfo.agent.name
-          );
+          client = workflow_state.clients.get(multisigMemberAidInfo.agent.name);
         } else {
           const singlesigIdentifierData = aidInfo as SinglesigIdentifierData;
           client = workflow_state.clients.get(
@@ -210,7 +208,12 @@ export class VleiVerificationStepRunner extends StepRunner {
         const credStatus = authorizationStatusMapping.get(
           action.expected_status
         );
-        await vleiVerification.credentialAuthorization(client, aid, aidPrefix, credStatus);
+        await vleiVerification.credentialAuthorization(
+          client,
+          aid,
+          aidPrefix,
+          credStatus
+        );
       } else if (action.type == 'aid_presentation') {
         const aidPrefix = workflow_state.aids.get(action.aid).prefix;
         const aidInfo = workflow_state.aidsInfo.get(action.aid)!;
@@ -251,9 +254,7 @@ export class VleiVerificationStepRunner extends StepRunner {
           const multisigMemberAidInfo = workflow_state.aidsInfo.get(
             multisigIdentifierData.identifiers[0]
           ) as SinglesigIdentifierData;
-          client = workflow_state.clients.get(
-            multisigMemberAidInfo.agent.name
-          );
+          client = workflow_state.clients.get(multisigMemberAidInfo.agent.name);
         } else {
           const singlesigIdentifierData = aidInfo as SinglesigIdentifierData;
           client = workflow_state.clients.get(
@@ -264,7 +265,12 @@ export class VleiVerificationStepRunner extends StepRunner {
         const aidStatus = authorizationStatusMapping.get(
           action.expected_status
         );
-        await vleiVerification.aidAuthorization(client, aid, aidPrefix, aidStatus);
+        await vleiVerification.aidAuthorization(
+          client,
+          aid,
+          aidPrefix,
+          aidStatus
+        );
       } else {
         throw new Error(`vlei_verification: Invalid action: ${action.type} `);
       }
@@ -300,7 +306,6 @@ export class AddRootOfTrustStepRunner extends StepRunner {
   }
 }
 
-
 export class SleepStepRunner extends StepRunner {
   type = 'sleep';
 
@@ -318,4 +323,3 @@ export class SleepStepRunner extends StepRunner {
     return { slept: seconds };
   }
 }
-

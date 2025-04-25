@@ -70,7 +70,6 @@
     "project-checker": "npm install && npm run formatter && npm run linter && npm run dependency-checker",
     "compatibility-checker": "./build/test/package/check-compatibility.sh",
     "package-checker": "npm pack --dry-run",
-    "prepublishOnly": "npm run test:full",
     "publish:dev": "npm version prerelease --preid=dev && npm publish --access public --tag dev && npm dist-tag add $(node -p \"require('./package.json').name + '@' + require('./package.json').version\") latest"
   },
   "dependencies": {

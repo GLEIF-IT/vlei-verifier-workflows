@@ -9,7 +9,7 @@ import {
   AID_CRYPT_VALID,
   AID_VERIFIED,
 } from './utils/test-data.js';
-import { SignifyClient } from 'signify-ts';
+import SignifyClient from 'signify-ts';
 
 export class VleiVerification {
   private env: TestEnvironment;
@@ -34,14 +34,19 @@ export class VleiVerification {
   }
 
   public async credentialAuthorization(
-    client: SignifyClient,
+    client: SignifyClient.SignifyClient,
     idAlias: string,
     aidPrefix: string,
     expectedStatus: AuthorizationStatus = CREDENTIAL_VERIFIED
   ) {
     const checkAidAuthExpectedStatus =
       expectedStatus.status == CREDENTIAL_VERIFIED.status ? 200 : 401;
-    await this.authorization(client, idAlias, aidPrefix, checkAidAuthExpectedStatus);
+    await this.authorization(
+      client,
+      idAlias,
+      aidPrefix,
+      checkAidAuthExpectedStatus
+    );
   }
 
   public async aidPresentation(
@@ -55,14 +60,19 @@ export class VleiVerification {
   }
 
   public async aidAuthorization(
-    client: SignifyClient,
+    client: SignifyClient.SignifyClient,
     idAlias: string,
     aidPrefix: string,
     expectedStatus: AuthorizationStatus = AID_VERIFIED
   ) {
     const checkAidAuthExpectedStatus =
       expectedStatus.status == AID_VERIFIED.status ? 200 : 401;
-    await this.authorization(client, idAlias, aidPrefix, checkAidAuthExpectedStatus);
+    await this.authorization(
+      client,
+      idAlias,
+      aidPrefix,
+      checkAidAuthExpectedStatus
+    );
   }
 
   private async presentation(
@@ -70,19 +80,30 @@ export class VleiVerification {
     credCesr: string,
     expected_status_code: number
   ) {
-    const verifierResponse = await this.verifierClient.presentation(said, credCesr);
+    const verifierResponse = await this.verifierClient.presentation(
+      said,
+      credCesr
+    );
     assert.equal(verifierResponse.code, expected_status_code);
   }
 
   private async authorization(
-    client: SignifyClient,
+    client: SignifyClient.SignifyClient,
     idAlias: string,
     aidPrefix: string,
     expected_status_code: number
   ) {
-    const authRequest = await this.verifierClient.buildAuthorizationRequest(aidPrefix);
-    let sreq = await client.createSignedRequest(idAlias, authRequest.url, authRequest.req);
-    const verifierResponse = await this.verifierClient.authorization(aidPrefix, sreq);
+    const authRequest =
+      await this.verifierClient.buildAuthorizationRequest(aidPrefix);
+    const sreq = await client.createSignedRequest(
+      idAlias,
+      authRequest.url,
+      authRequest.req
+    );
+    const verifierResponse = await this.verifierClient.authorization(
+      aidPrefix,
+      sreq
+    );
     assert.equal(verifierResponse.code, expected_status_code);
   }
 }

@@ -115,11 +115,11 @@ workflow:
       issuer_aid: 'le-aid-1'
       issuee_aid: 'ecr-aid-1'
       description: 'LE revokes ECR vLEI credential'
-      credential: 'ecr_cred'    
+      credential: 'ecr_cred'
     sleep:
       id: 'sleep_1'
       type: 'sleep'
-      seconds: 20     
+      seconds: 20
     credential_verification_revoked_valid_not_verified:
       id: 'credential_verification_revoked_valid_not_verified'
       type: 'vlei_verification'
