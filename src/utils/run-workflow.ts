@@ -45,7 +45,9 @@ export class WorkflowRunner {
     this.stepRunners.set(name, runner);
   }
 
-  public async runWorkflow() {
+  public async runWorkflow(
+    stepExecutionCallback?: (step: any, workflowState: WorkflowState) => void
+  ) {
     for (const [stepName, step] of Object.entries(
       this.workflow.workflow.steps
     ) as any[]) {
@@ -57,6 +59,11 @@ export class WorkflowRunner {
       }
       await runner.run(stepName, step, this.configJson);
       this.executedSteps.add(step.id);
+      // Call the stepExecutionCallback after the step is executed
+      if (stepExecutionCallback) {
+        const workflowState = WorkflowState.getInstance();
+        stepExecutionCallback(step, workflowState);
+      }
     }
     console.log(`Workflow steps execution finished successfully`);
     return true;

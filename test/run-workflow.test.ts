@@ -8,6 +8,7 @@ import {
 import { getConfig } from '../src/utils/test-data.js';
 import { WorkflowRunner } from '../src/utils/run-workflow.js';
 import { loadWorkflow } from '../src/utils/test-data.js';
+import { WorkflowState } from '../src/workflow-state.js';
 
 let env: TestEnvironment;
 
@@ -18,6 +19,11 @@ beforeAll((done) => {
   done();
   env = resolveEnvironment();
 });
+
+function stepExecutionCallback(step: any, workflowState: WorkflowState) {
+  console.log(`Step executed: ${step.description}`);
+  console.log(`Workflow state: ${JSON.stringify(workflowState)}`);
+}
 
 test.only('workflow', async function run() {
   const workflowsDir = '../src/workflows/';
@@ -31,7 +37,7 @@ test.only('workflow', async function run() {
   const configJson = await getConfig(configFilePath);
   if (workflow && configJson) {
     const wr = new WorkflowRunner(workflow, configJson);
-    const workflowRunResult = await wr.runWorkflow();
+    const workflowRunResult = await wr.runWorkflow(stepExecutionCallback);
     assert.equal(workflowRunResult, true);
   }
 }, 3600000);

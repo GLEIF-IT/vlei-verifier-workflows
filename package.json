@@ -1,6 +1,6 @@
 {
   "name": "@gleif-it/vlei-verifier-workflows",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Workflows for vLEI users and vLEI credentials for the vLEI-verifier service",
   "license": "Apache-2.0",
   "type": "module",
