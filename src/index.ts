@@ -12,5 +12,5 @@ export default {
   WorkflowRunner,
   getConfig,
   loadWorkflow,
-  StepRunner
+  StepRunner,
 };
