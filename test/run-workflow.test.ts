@@ -20,7 +20,7 @@ beforeAll((done) => {
   env = resolveEnvironment();
 });
 
-function stepExecutionCallback(step: any, workflowState: WorkflowState){
+function stepExecutionCallback(step: any, workflowState: WorkflowState) {
   console.log(`Step executed: ${step.description}`);
   console.log(`Workflow state: ${JSON.stringify(workflowState)}`);
 }
@@ -37,7 +37,7 @@ test.only('workflow', async function run() {
   const configJson = await getConfig(configFilePath);
   if (workflow && configJson) {
     const wr = new WorkflowRunner(workflow, configJson);
-    const workflowRunResult = await wr.runWorkflow();
+    const workflowRunResult = await wr.runWorkflow(stepExecutionCallback);
     assert.equal(workflowRunResult, true);
   }
 }, 3600000);

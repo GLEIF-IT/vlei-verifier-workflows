@@ -45,7 +45,9 @@ export class WorkflowRunner {
     this.stepRunners.set(name, runner);
   }
 
-  public async runWorkflow(stepExecutionCallback?: (step: any, workflowState: WorkflowState) => void) {
+  public async runWorkflow(
+    stepExecutionCallback?: (step: any, workflowState: WorkflowState) => void
+  ) {
     for (const [stepName, step] of Object.entries(
       this.workflow.workflow.steps
     ) as any[]) {
