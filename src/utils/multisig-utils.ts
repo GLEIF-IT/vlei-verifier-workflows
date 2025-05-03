@@ -304,10 +304,14 @@ export async function delegateMultisig(
       multisigAID.name
     } with anchor ${JSON.stringify(anchor)}`
   );
-
-  expect(JSON.stringify(delResult.serder.ked.a[0])).toEqual(
-    JSON.stringify(anchor)
-  );
+  if(JSON.stringify(delResult.serder.ked.a[0]) !== JSON.stringify(anchor)) {
+    console.log(
+      `Delegation anchor ${JSON.stringify(anchor)} does not match the one in the response ${JSON.stringify(delResult.serder.ked.a[0])}`
+    );  
+    throw new Error(
+      `Delegation anchor ${JSON.stringify(anchor)} does not match the one in the response ${JSON.stringify(delResult.serder.ked.a[0])}`
+    );
+  }
 
   const serder = delResult.serder;
   const sigs = delResult.sigs;
