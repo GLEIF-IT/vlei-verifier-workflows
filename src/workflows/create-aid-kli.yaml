@@ -1,0 +1,29 @@
+workflow:
+  steps:   
+    gleif_external_aid:
+      id: 'gleif_external_aid'
+      type: 'create_aid_kli'
+      aid: 'gleif-external-aid'
+      description: 'Creating AID: gleif-external-aid'
+    qvi_aid_1:
+      id: 'qvi_aid_1'
+      type: 'create_aid_kli'
+      aid: 'qvi-aid-1'
+      description: 'Creating AID: qvi-aid-1 via KLI'
+    qvi_aid_2:
+      id: 'qvi_aid_2'
+      type: 'create_aid_kli'
+      aid: 'qvi-aid-2'
+      description: 'Creating AID: qvi-aid-2 via KLI'
+    qvi_aid_3:
+      id: 'qvi_aid_3'
+      type: 'create_aid_kli'
+      aid: 'qvi-aid-3'
+      description: 'Creating AID: qvi-aid-3 via KLI'
+    qvi_aid_multisig_1:
+      id: 'qvi_aid_multisig_1'
+      type: 'create_aid_kli'
+      initiator: 'qvi-aid-1'
+      aid: 'qvi-multisig-1'
+      description: 'Creating AID: qvi-multisig-1 via KLI'
+    

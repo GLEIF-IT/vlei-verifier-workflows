@@ -18,6 +18,7 @@ export interface TestEnvironment {
   verifierBaseUrl: string;
   workflow: string;
   configuration: string;
+  keriContainerName?: string;
 }
 
 const WAN = 'BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha';
@@ -50,10 +51,11 @@ export function resolveEnvironment(
         vleiServerUrl: process.env.VLEI_SERVER || 'http://vlei-server:7723',
         verifierBaseUrl: process.env.VLEI_VERIFIER || 'http://localhost:7676',
         workflow:
-          process.env.WORKFLOW || 'revocation-test-singlesig-witness.yaml',
+          process.env.WORKFLOW || 'create-aid-kli.yaml',
         configuration:
           process.env.CONFIGURATION ||
-          'configuration-revocation-test-singlesig.json',
+          'configuration-create-aid-kli.json',
+        keriContainerName: process.env.KERI_CONTAINER_NAME || 'vlei-verifier-workflows-keria-1',
       };
       break;
     case 'local':
