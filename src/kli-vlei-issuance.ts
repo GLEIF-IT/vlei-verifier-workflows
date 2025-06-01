@@ -1,40 +1,57 @@
-import { re } from 'mathjs';
-import { getIdentifierData, IdentifierData, MultisigIdentifierData, SinglesigIdentifierData } from './utils/handle-json-config.js';
-import { confirmDelegation, incept, init, multisigIncept, MultisigInceptAttributes, resolveOobi, SinglesigInceptAttributes } from './utils/kli-utils.js';
+import {
+  getIdentifierData,
+  IdentifierData,
+  MultisigIdentifierData,
+  SinglesigIdentifierData,
+} from './utils/handle-json-config.js';
+import {
+  confirmDelegation,
+  incept,
+  init,
+  multisigIncept,
+  MultisigInceptAttributes,
+  resolveOobi,
+  SinglesigInceptAttributes,
+} from './utils/kli-utils.js';
 import { resolveEnvironment } from './utils/resolve-env.js';
 import { WorkflowState } from './workflow-state.js';
 
-
-
-
-export function createAidKLI(containerName: string, jsonConfig: any, identifierData: IdentifierData, step: any): Promise<string> {
+export function createAidKLI(
+  _containerName: string,
+  jsonConfig: any,
+  identifierData: IdentifierData,
+  step: any
+): Promise<string> {
   const workflowState = WorkflowState.getInstance();
   const env = resolveEnvironment();
   if (identifierData.type === 'singlesig') {
     const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
     const attributes: SinglesigInceptAttributes = {
-      "transferable": true,
-      "wits": env.witnessIds,
-      "data": [
+      transferable: true,
+      wits: env.witnessIds,
+      data: [
         {
-          "iurls": [
-            "http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
-            "http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller",
-            "http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller"
-          ]
-        }
+          iurls: [
+            'http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller',
+            'http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller',
+            'http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller',
+          ],
+        },
       ],
-      "toad": 2,
-      "icount": 1,
-      "ncount": 1,
-      "isith": "1",
-      "nsith": "1"
-    }
+      toad: 2,
+      icount: 1,
+      ncount: 1,
+      isith: '1',
+      nsith: '1',
+    };
 
-    const initResult = init(singlesigIdentifierData.agent.name, singlesigIdentifierData.agent.secret);
+    const initResult = init(
+      singlesigIdentifierData.agent.name,
+      singlesigIdentifierData.agent.secret
+    );
     console.log(`Init result: ${initResult}`);
 
-    let resolveOobiResults: string[] = [];
+    const resolveOobiResults: string[] = [];
     for (const witnessUrl of env.witnessUrls) {
       const resolveOobiResult = resolveOobi(
         singlesigIdentifierData.agent.name,
@@ -51,13 +68,12 @@ export function createAidKLI(containerName: string, jsonConfig: any, identifierD
     );
     workflowState.aids.set(step.aid, {
       alias: step.aid,
-      prefix: aidPrefix
+      prefix: aidPrefix,
     });
     console.log(`Incept result(AID prefix): ${aidPrefix}`);
     console.log(`Resolve Oobi results: ${resolveOobiResults}`);
     return Promise.resolve('All commands executed successfully');
-  }
-  else {
+  } else {
     const multisigIdentifierData = identifierData as MultisigIdentifierData;
     const memberAidAliases = multisigIdentifierData.identifiers;
     // Each member will create a multisig group with the same alias step.aid and add themselves to the group.
@@ -79,44 +95,47 @@ export function createAidKLI(containerName: string, jsonConfig: any, identifierD
         );
         console.log(`Resolve Oobi result: ${resolveOobiResult}`);
       }
-      const aidPrefixes = memberAidAliases.map(alias => workflowState.aids.get(alias)!.prefix);
-      let attributes: MultisigInceptAttributes = {
-        "transferable": true,
-        "wits": env.witnessIds,
-        "aids": aidPrefixes,
-        "data": [
+      const aidPrefixes = memberAidAliases.map(
+        (alias) => workflowState.aids.get(alias)!.prefix
+      );
+      const attributes: MultisigInceptAttributes = {
+        transferable: true,
+        wits: env.witnessIds,
+        aids: aidPrefixes,
+        data: [
           {
-            "iurls": [
-              "http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
-              "http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller",
-              "http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller"
-            ]
-          }
+            iurls: [
+              'http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller',
+              'http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller',
+              'http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller',
+            ],
+          },
         ],
-        "toad": 2,
-        "isith": multisigIdentifierData.isith,
-        "nsith": multisigIdentifierData.nsith
-      }
+        toad: 2,
+        isith: multisigIdentifierData.isith,
+        nsith: multisigIdentifierData.nsith,
+      };
 
       if (multisigIdentifierData.delegator) {
-        const delegatorAidPrefix = workflowState.aids.get(multisigIdentifierData.delegator)!.prefix;
-        attributes["delpre"] = delegatorAidPrefix;
-        
+        const delegatorAidPrefix = workflowState.aids.get(
+          multisigIdentifierData.delegator
+        )!.prefix;
+        attributes['delpre'] = delegatorAidPrefix;
+
         const witnessUrl = env.witnessUrls[0];
-        const resolveOobiResult = resolveOobi(
+        const _resolveOobiResult = resolveOobi(
           memberIdentifierData.agent.name,
           memberIdentifierData.agent.secret,
           `${witnessUrl}/oobi/${delegatorAidPrefix}/controller`
         );
       }
-      const multisigInceptResult = multisigIncept(
+      const _multisigInceptResult = multisigIncept(
         memberIdentifierData.agent.name,
         memberIdentifierData.agent.secret,
         memberIdentifierData.name,
         step.aid,
         attributes
       );
-
     }
 
     if (multisigIdentifierData.delegator) {
@@ -144,5 +163,4 @@ export function createAidKLI(containerName: string, jsonConfig: any, identifierD
       return Promise.resolve('All commands executed successfully');
     }
   }
-
 }

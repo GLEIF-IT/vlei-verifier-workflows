@@ -326,9 +326,9 @@ export class SleepStepRunner extends StepRunner {
 }
 
 export class KLICreateAidStepRunner extends StepRunner {
-  type = 'issue_credential';
+  type = 'kli_create_aid';
   public async run(
-    stepName: string,
+    _stepName: string,
     step: any,
     configJson: any = null
   ): Promise<any> {
@@ -343,6 +343,6 @@ export class KLICreateAidStepRunner extends StepRunner {
       identifierData,
       step
     );
-    return result
+    return result;
   }
 }

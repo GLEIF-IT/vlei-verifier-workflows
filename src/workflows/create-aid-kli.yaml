@@ -1,5 +1,5 @@
 workflow:
-  steps:   
+  steps:
     gleif_external_aid:
       id: 'gleif_external_aid'
       type: 'create_aid_kli'
@@ -26,4 +26,19 @@ workflow:
       initiator: 'qvi-aid-1'
       aid: 'qvi-multisig-1'
       description: 'Creating AID: qvi-multisig-1 via KLI'
-    
+    le_client:
+      id: 'le_client'
+      type: 'create_client'
+      agent_name: 'le-agent-1'
+      description: 'Creating client for le-agent-1'
+    le_aid:
+      id: 'le_aid'
+      type: 'create_aid'
+      aid: 'le-aid-1'
+      description: 'Creating AID: le-aid-1'
+    le_registry:
+      id: 'le_registry'
+      type: 'create_registry'
+      aid: 'le-aid-1'
+      description: 'Creating registry for le-aid-1'
+    # Issue LE credential by the QVI
