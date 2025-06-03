@@ -3,9 +3,6 @@
   "extends": "./build/configs/tsconfig.base.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "downlevelIteration": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "downlevelIteration": true
   }
 }
