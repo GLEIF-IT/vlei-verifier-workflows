@@ -11,6 +11,7 @@ import {
   CreateRegistryStepRunner,
   AddRootOfTrustStepRunner,
   SleepStepRunner,
+  KLICreateAidStepRunner,
 } from './workflow-step-runners.js';
 
 export class WorkflowRunner {
@@ -39,6 +40,7 @@ export class WorkflowRunner {
     );
     this.registerRunner('vlei_verification', new VleiVerificationStepRunner());
     this.registerRunner('sleep', new SleepStepRunner());
+    this.registerRunner('create_aid_kli', new KLICreateAidStepRunner());
   }
 
   public registerRunner(name: string, runner: StepRunner) {

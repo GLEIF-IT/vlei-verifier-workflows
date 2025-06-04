@@ -16,6 +16,7 @@ import {
 import { WorkflowState } from '../workflow-state.js';
 import { resolveEnvironment } from './resolve-env.js';
 import { getRootOfTrust } from './test-util.js';
+import { createAidKLI } from '../kli-vlei-issuance.js';
 
 export abstract class StepRunner {
   type = '';
@@ -321,5 +322,27 @@ export class SleepStepRunner extends StepRunner {
 
     console.log(`Woke up after ${seconds} second(s).`);
     return { slept: seconds };
+  }
+}
+
+export class KLICreateAidStepRunner extends StepRunner {
+  type = 'kli_create_aid';
+  public async run(
+    _stepName: string,
+    step: any,
+    configJson: any = null
+  ): Promise<any> {
+    const env = resolveEnvironment();
+    const identifierData: IdentifierData = getIdentifierData(
+      configJson,
+      step.aid
+    );
+    const result = await createAidKLI(
+      env.keriContainerName,
+      configJson,
+      identifierData,
+      step
+    );
+    return result;
   }
 }

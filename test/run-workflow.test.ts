@@ -20,9 +20,9 @@ beforeAll((done) => {
   env = resolveEnvironment();
 });
 
-function stepExecutionCallback(step: any, workflowState: WorkflowState) {
+function stepExecutionCallback(step: any, _workflowState: WorkflowState) {
   console.log(`Step executed: ${step.description}`);
-  console.log(`Workflow state: ${JSON.stringify(workflowState)}`);
+  // console.log(`Workflow state: ${JSON.stringify(workflowState)}`);
 }
 
 test.only('workflow', async function run() {

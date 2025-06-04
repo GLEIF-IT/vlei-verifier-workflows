@@ -123,7 +123,7 @@ services:
     restart: always
 
   vlei-server:
-    image: gleif/vlei
+    image: gleif/vlei:0.2.0
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8

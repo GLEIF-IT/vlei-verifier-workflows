@@ -1,0 +1,26 @@
+{
+  "transferable": true,
+  "wits": [
+    "BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha",
+    "BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM",
+    "BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX"
+  ],
+  "aids": [
+    "EKdoh-wmhREll9LtSoF0KoJqR1ib0pn5KGERCXu1aRQi",
+    "EEb2R4uhtwZxGjzKHgg8IvDIzZKqr5xYXjH9wMBHivvj",
+    "ENL9CH95F8mCxzFwYPWHfoA6M9UZbJDeTMUqtC1yveju"
+  ],
+  "data": [
+    {
+      "iurls": [
+        "http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
+        "http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller",
+        "http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller"
+      ]
+    }
+  ],
+  "toad": 2,
+  "isith": 3,
+  "nsith": 3,
+  "delpre": "ELqdJq4MWEx73Yw5k8Gk1q4slM8e4QRX9QZLpHOzNrjv"
+}
