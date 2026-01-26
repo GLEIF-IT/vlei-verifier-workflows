@@ -173,6 +173,7 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
+          presenter_aid: 'ecr-aid-1'
           credential: 'ecr_cred_from_oor_auth'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'

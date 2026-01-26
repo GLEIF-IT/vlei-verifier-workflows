@@ -78,7 +78,8 @@ configs:
 
 services:
   vlei-server:
-    image: gleif/vlei:0.2.0
+    # image: gleif/vlei:0.2.0
+    image: vlei-server-local:latest
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
@@ -133,12 +134,13 @@ services:
       - 3903:3903
 
   witness-demo:
+    # image: gleif/keri-witness-demo:1.2.7
     image: weboftrust/keri-witness-demo:1.1.0
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:5642/oobi']
+      test: ['CMD', 'wget', '--spider', 'http://witness-demo:5642/oobi']
       interval: 2s
       timeout: 3s
       retries: 5

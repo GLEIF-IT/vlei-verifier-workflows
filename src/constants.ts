@@ -5,6 +5,7 @@ export const { vleiServerUrl, witnessIds } = resolveEnvironment();
 
 export const QVI_SCHEMA_SAID = 'EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao';
 export const LE_SCHEMA_SAID = 'ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY';
+export const VRD_SCHEMA_SAID = 'EKJMmHIPttNLmH4t7t8OiaiQRhyevr6-VKyfWWPdD44r';
 export const ECR_AUTH_SCHEMA_SAID =
   'EH6ekLjSr8V32WyFbGe1zXjTzFs9PkTYmupJ9H65O14g';
 export const ECR_SCHEMA_SAID = 'EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw';
@@ -15,6 +16,7 @@ export const OOR_SCHEMA_SAID = 'EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy';
 export const vLEIServerHostUrl = `${vleiServerUrl}/oobi`;
 export const QVI_SCHEMA_URL = `${vLEIServerHostUrl}/${QVI_SCHEMA_SAID}`;
 export const LE_SCHEMA_URL = `${vLEIServerHostUrl}/${LE_SCHEMA_SAID}`;
+export const VRD_SCHEMA_URL = `${vLEIServerHostUrl}/${VRD_SCHEMA_SAID}`;
 export const ECR_AUTH_SCHEMA_URL = `${vLEIServerHostUrl}/${ECR_AUTH_SCHEMA_SAID}`;
 export const ECR_SCHEMA_URL = `${vLEIServerHostUrl}/${ECR_SCHEMA_SAID}`;
 export const OOR_AUTH_SCHEMA_URL = `${vLEIServerHostUrl}/${OOR_AUTH_SCHEMA_SAID}`;
@@ -28,6 +30,19 @@ export const LE_RULES = SignifyClient.Saider.saidify({
   issuanceDisclaimer: {
     l: 'All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework.',
   },
+})[1];
+
+export const VRD_RULES = SignifyClient.Saider.saidify({
+    d: "",
+    usageDisclaimer: {
+      l: ""
+    },
+    issuanceDisclaimer: {
+      l: ""
+    },
+    privacyDisclaimer: {
+      l: ""
+    }
 })[1];
 
 export const ECR_RULES = SignifyClient.Saider.saidify({
@@ -72,6 +87,7 @@ export const SCHEMAS = {
   ECR_SCHEMA_SAID: ECR_SCHEMA_SAID,
   OOR_AUTH_SCHEMA_SAID: OOR_AUTH_SCHEMA_SAID,
   OOR_SCHEMA_SAID: OOR_SCHEMA_SAID,
+  VRD_SCHEMA_SAID: VRD_SCHEMA_SAID,
 };
 
 export const RULES = {
@@ -80,6 +96,7 @@ export const RULES = {
   ECR_AUTH_RULES: ECR_AUTH_RULES,
   OOR_RULES: OOR_RULES,
   OOR_AUTH_RULES: OOR_AUTH_RULES,
+  VRD_RULES: VRD_RULES,
 };
 
 export const QVI_INTERNAL_NAME = 'QVI';

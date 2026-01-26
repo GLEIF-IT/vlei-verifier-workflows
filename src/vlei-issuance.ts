@@ -41,6 +41,7 @@ import {
   OOR_AUTH_SCHEMA_URL,
   OOR_SCHEMA_URL,
   CRED_RETRY_DEFAULTS,
+  VRD_SCHEMA_URL,
 } from './constants.js';
 
 import {
@@ -166,6 +167,7 @@ export const VleiIssuance = {
       ECR_SCHEMA_URL,
       OOR_AUTH_SCHEMA_URL,
       OOR_SCHEMA_URL,
+      VRD_SCHEMA_URL
     ];
     console.log('Resolving OOBIs');
     const workflow_state = WorkflowState.getInstance();
@@ -184,6 +186,7 @@ export const VleiIssuance = {
       ECR_SCHEMA_URL,
       OOR_AUTH_SCHEMA_URL,
       OOR_SCHEMA_URL,
+      VRD_SCHEMA_URL
     ];
     if (identifierData.type === 'singlesig') {
       console.log('Resolving OOBIs for client');
@@ -781,8 +784,14 @@ export const VleiIssuance = {
       credSource = VleiIssuance.buildCredSource(credType, issuerCred, credO);
     }
     if (attributes['AID'] != null) {
-      attributes.AID = workflow_state.aids.get(attributes['AID']).prefix;
+      const aid_alias = attributes['AID'];
+      attributes.AID = workflow_state.aids.get(aid_alias).prefix;
+      // We can only set DID if AID is also being set
+      if (attributes['DID'] != null) {
+        attributes.DID = `${attributes.DID}:${workflow_state.aids.get(aid_alias).prefix}`;
+      }
     }
+    
     const credData = { ...credInfo.attributes, ...attributes };
     const cred = await getOrIssueCredential(
       issuerclient!,
@@ -797,7 +806,8 @@ export const VleiIssuance = {
     );
 
     let credHolder = await getReceivedCredential(recipientclient!, cred.sad.d);
-
+    const receivedCredsList = await recipientclient.credentials().list()
+    const receivedCredsListIssuer = await issuerclient.credentials().list()
     if (!credHolder) {
       await sendGrantMessage(issuerclient!, issuerAID, recipientAID, cred);
       await sendAdmitMessage(recipientclient!, recipientAID, issuerAID);

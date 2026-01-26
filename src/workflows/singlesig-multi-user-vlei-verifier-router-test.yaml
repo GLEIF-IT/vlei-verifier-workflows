@@ -205,6 +205,7 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
+          presenter_aid: 'ecr-aid-1'
           credential: 'ecr_cred1'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
@@ -218,6 +219,7 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
+          presenter_aid: 'ecr-aid-2'
           credential: 'ecr_cred2'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
@@ -231,6 +233,7 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
+          presenter_aid: 'ecr-aid-3'
           credential: 'ecr_cred3'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
@@ -244,6 +247,7 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
+          presenter_aid: 'ecr-aid-4'
           credential: 'ecr_cred4'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
@@ -257,6 +261,7 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
+          presenter_aid: 'ecr-aid-5'
           credential: 'ecr_cred5'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'

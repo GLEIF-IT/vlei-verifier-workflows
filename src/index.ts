@@ -7,6 +7,7 @@ export { WorkflowRunner } from './utils/run-workflow.js';
 export { getConfig, loadWorkflow } from './utils/test-data.js';
 export { StepRunner } from './utils/workflow-step-runners.js';
 export { WorkflowState } from './workflow-state.js';
+export { saidify, saidifyFile } from './utils/saidify.js';
 
 export default {
   WorkflowRunner,

@@ -1,0 +1,53 @@
+workflow:
+  steps:
+    gleif_client:
+      id: 'gleif_client'
+      type: 'create_client'
+      agent_name: 'gleif-agent'
+      description: 'Creating client for gleif-agent'
+    qvi_client:
+      id: 'user_client'
+      type: 'create_client'
+      agent_name: 'qvi-agent'
+      description: 'Creating client for qvi-agent'
+    user_client_1:
+      id: 'user_client_1'
+      type: 'create_client'
+      agent_name: 'user-agent-1'
+      description: 'Creating client for user-agent-1'
+    user_client_2:
+      id: 'user_client_2'
+      type: 'create_client'
+      agent_name: 'user-agent-2'
+      description: 'Creating client for user-agent-2'
+    user_client_3:
+      id: 'user_client_3'
+      type: 'create_client'
+      agent_name: 'user-agent-3'
+      description: 'Creating client for user-agent-3'
+    gleif_aid:
+      id: 'gleif_aid'
+      type: 'create_aid'
+      aid: 'gleif-aid'
+      description: 'Creating AID: gleif-aid'
+    qvi_aid:
+      id: 'qvi_aid'
+      type: 'create_aid'
+      aid: 'qvi-aid'
+      description: 'Creating AID: qvi-aid'
+    user_aid_1:
+      id: 'user_aid_1'
+      type: 'create_aid'
+      aid: 'user-aid-1'
+      description: 'Creating AID: user-aid-1'
+    user_aid_2:
+      id: 'user_aid_2'
+      type: 'create_aid'
+      aid: 'user-aid-2'
+      description: 'Creating AID: user-aid-2'
+    user_aid_3:
+      id: 'user_aid_3'
+      type: 'create_aid'
+      aid: 'user-aid-3'
+      description: 'Creating AID: user-aid-3'
+    
