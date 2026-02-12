@@ -69,4 +69,4 @@ jobs:
         run: npm run build
 
       - name: Run workflow
-        run: WORKFLOW=create_aid_kli.yaml CONFIGURATION=configuration-create-aid-kli.json npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
+        run: WORKFLOW=create-aid-kli.yaml CONFIGURATION=configuration-create-aid-kli.json npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
