@@ -164,7 +164,7 @@ services:
       - 5644:5644
 
   vlei-verifier:
-    image: gleif/vlei-verifier:latest
+    image: gleif/vlei-verifier:0.1.4
     container_name: vlei-verifier
     hostname: vlei-verifier
     environment:
