@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  test-single-aid-singlesig:
+  qvi-integration-test-kli:
     name: Run QVI Integration test using KLI:${{ matrix.keria-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
