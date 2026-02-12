@@ -1,0 +1,50 @@
+{
+  "secrets": {
+    "gleif-client": "D_PbQb01zuzQgK-testq1",
+    "qvi-client": "D_PbQb01zuzQgK-testq2",
+    "user-client-1": "D_PbQb01zuzQgK-testq3",
+    "user-client-2": "D_PbQb01zuzQgK-testq4",
+    "user-client-3": "D_PbQb01zuzQgK-testq5"
+  },
+  "credentials": {},
+  "agents": {
+    "gleif-agent": {
+      "secret": "gleif-client"
+    },
+    "qvi-agent": {
+      "secret": "qvi-client"
+    },
+    "user-agent-1": {
+      "secret": "user-client-1"
+    },
+    "user-agent-2": {
+      "secret": "user-client-2"
+    },
+    "user-agent-3": {
+      "secret": "user-client-3"
+    }
+  },
+  "identifiers": {
+    "gleif-aid": {
+      "agent": "gleif-agent",
+      "name": "gleif-aid"
+    },
+    "qvi-aid": {
+      "delegator": "gleif-aid",
+      "agent": "qvi-agent",
+      "name": "qvi-aid"
+    },
+    "user-aid-1": {
+      "agent": "user-agent-1",
+      "name": "user-aid-1"
+    },
+    "user-aid-2": {
+      "agent": "user-agent-2",
+      "name": "user-aid-2"
+    },
+    "user-aid-3": {
+      "agent": "user-agent-3",
+      "name": "user-aid-3"
+    }
+  }
+}

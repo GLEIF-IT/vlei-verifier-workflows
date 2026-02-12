@@ -1,10 +1,10 @@
 workflow:
   steps:
     gleif_external_aid:
-      id: 'gleif_external_aid'
+      id: 'gleif_external_aid-1'
       type: 'create_aid_kli'
-      aid: 'gleif-external-aid'
-      description: 'Creating AID: gleif-external-aid'
+      aid: 'gleif-external-aid-1'
+      description: 'Creating AID: gleif-external-aid-1 via KLI'
     qvi_aid_1:
       id: 'qvi_aid_1'
       type: 'create_aid_kli'

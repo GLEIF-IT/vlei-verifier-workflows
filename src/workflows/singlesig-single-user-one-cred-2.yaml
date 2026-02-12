@@ -8,8 +8,8 @@ workflow:
     qvi_client:
       id: 'qvi_client'
       type: 'create_client'
-      agent_name: 'qvi-agent-1'
-      description: 'Creating client for qvi-agent-1'
+      agent_name: 'qvi-agent-2'
+      description: 'Creating client for qvi-agent-2'
     gleif_aid:
       id: 'gleif_aid'
       type: 'create_aid'
@@ -18,8 +18,8 @@ workflow:
     qvi_aid:
       id: 'qvi_aid'
       type: 'create_aid'
-      aid: 'qvi-aid-1'
-      description: 'Creating AID: qvi-aid-1'
+      aid: 'qvi-aid-2'
+      description: 'Creating AID: qvi-aid-2'
     gleif_registry:
       id: 'gleif_registry'
       type: 'create_registry'
@@ -28,15 +28,15 @@ workflow:
     qvi_registry:
       id: 'qvi_registry'
       type: 'create_registry'
-      aid: 'qvi-aid-1'
-      description: 'Creating registry for qvi-aid-1'
+      aid: 'qvi-aid-2'
+      description: 'Creating registry for qvi-aid-2'
     qvi_cred:
       id: 'qvi_cred'
       type: 'issue_credential'
       attributes:
         LEI: '254900OPPU84GM83MG36'
       issuer_aid: 'gleif-aid-1'
-      issuee_aid: 'qvi-aid-1'
+      issuee_aid: 'qvi-aid-2'
       description: 'GLEIF issues QVI vLEI credential'
       credential: 'gleif_to_qvi_vlei_cred'
     add_root_of_trust:
@@ -50,11 +50,11 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
-          presenter_aid: 'qvi-aid-1'
+          presenter_aid: 'qvi-aid-2'
           credential: 'qvi_cred'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
         authorize_credential:
-          aid: 'qvi-aid-1'
+          aid: 'qvi-aid-2'
           type: 'credential_authorization'
-          expected_status: 'cred_non_delegated_qvi'
+          expected_status: 'cred_verified'

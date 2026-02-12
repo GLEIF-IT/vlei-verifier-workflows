@@ -1,5 +1,4 @@
 import { execSync, spawnSync } from 'child_process';
-import { resolveEnvironment } from './resolve-env.js';
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -7,29 +6,21 @@ export type SinglesigInceptAttributes = Record<string, any>;
 
 export type MultisigInceptAttributes = Record<string, any>;
 
-function copyFileToContainer(
-  containerName: string,
-  localFilePath: string,
-  containerFilePath: string
-): void {
+function copyFile(tmpFilePah: string, localFilePath: string): void {
   // Ensure the local file exists before copying
-  if (!localFilePath) {
-    throw new Error(`Local file path is not provided: ${localFilePath}`);
+  if (!tmpFilePah) {
+    throw new Error(`Temp file path is not provided: ${tmpFilePah}`);
   }
-  const command = `docker cp ${localFilePath} ${containerName}:${containerFilePath}`;
+  const command = `cp ${tmpFilePah} ${localFilePath}`;
   execSync(command, { encoding: 'utf-8' });
 }
 
 function executeKliCommand(command: string, promptAnswer?: string): string {
   try {
-    // Currently, only docker option is supported
-    const env = resolveEnvironment();
-    const containerName = env.keriContainerName;
     if (promptAnswer) {
       command = `sh -c "echo ${promptAnswer} | ${command}"`;
     }
-    const dockerCommand = `docker exec ${containerName} ${command}`;
-    const result = spawnSync('sh', ['-c', dockerCommand], {
+    const result = spawnSync('sh', ['-c', command], {
       encoding: 'utf-8',
       timeout: 5000,
     });
@@ -39,14 +30,14 @@ function executeKliCommand(command: string, promptAnswer?: string): string {
       (result.error as NodeJS.ErrnoException).code === 'ETIMEDOUT'
     ) {
       console.log(
-        `Command timed out but will be considered successful: ${dockerCommand}`
+        `Command timed out but will be considered successful: ${command}`
       );
       return ''; // Return an empty string or handle as needed
     }
     if (result.error) {
       throw result.error;
     }
-    console.log(`Command executed: ${dockerCommand}`);
+    console.log(`Command executed: ${command}`);
     console.log(`Command output: ${result.stdout}`);
     return result.stdout;
   } catch (error) {
@@ -69,11 +60,10 @@ export function incept(
   const tempFilePath = resolve(__dirname, 'temp-attributes.json');
   writeFileSync(tempFilePath, JSON.stringify(attributes, null, 2));
 
-  const containerFilePath = `/tmp/${alias}.json`;
-  const env = resolveEnvironment();
-  copyFileToContainer(env.keriContainerName, tempFilePath, containerFilePath);
+  const resultFilePath = `/tmp/${alias}.json`;
+  copyFile(tempFilePath, resultFilePath);
   // setTimeout(() => { }, 2000); // Wait for the file to be copied
-  const command = `kli incept --name ${name} --passcode ${passcode} --alias ${alias} --file ${containerFilePath}`;
+  const command = `kli incept --name ${name} --passcode ${passcode} --alias ${alias} --file ${resultFilePath}`;
   const result = executeKliCommand(command);
   const aidPrefixRegex = /Prefix\s+([A-Za-z0-9_-]+)/;
   const match = result.match(aidPrefixRegex);
@@ -94,12 +84,12 @@ export function multisigIncept(
   const tempFilePath = resolve(__dirname, `temp-attributes.json`);
   writeFileSync(tempFilePath, JSON.stringify(attributes, null, 2));
 
-  const containerFilePath = `/tmp/${group}.json`;
-  const env = resolveEnvironment();
-  copyFileToContainer(env.keriContainerName, tempFilePath, containerFilePath);
+  const resultFilePath = `/tmp/${group}.json`;
+  copyFile(tempFilePath, resultFilePath);
   // setTimeout(() => { }, 2000); // Wait for the file to be copied
-  const command = `kli multisig incept --name ${name} --passcode ${passcode} --alias ${alias} --group ${group} --file ${containerFilePath}`;
-  return executeKliCommand(command);
+  const command = `kli multisig incept --name ${name} --passcode ${passcode} --alias ${alias} --group ${group} --file ${resultFilePath}`;
+  const result = executeKliCommand(command);
+  return result;
 }
 
 export function resolveOobi(

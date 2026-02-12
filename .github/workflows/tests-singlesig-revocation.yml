@@ -1,11 +1,11 @@
 name: Singlesig Credential Revocation test
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - '**' # Run Validate Build on all PR branches
+  # push:
+  #   branches:
+  #     - 'main'
+  # pull_request:
+  #   branches:
+  #     - '**' # Run Validate Build on all PR branches
   workflow_dispatch:
 
 permissions:

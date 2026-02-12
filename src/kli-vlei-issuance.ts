@@ -17,13 +17,15 @@ import { resolveEnvironment } from './utils/resolve-env.js';
 import { WorkflowState } from './workflow-state.js';
 
 export function createAidKLI(
-  _containerName: string,
   jsonConfig: any,
   identifierData: IdentifierData,
   step: any
 ): Promise<string> {
   const workflowState = WorkflowState.getInstance();
   const env = resolveEnvironment();
+  const iurls = env.witnessUrls.map(
+    (witnessUrl, index) => `${witnessUrl}/oobi/${env.witnessIds[index]}/witness`
+  );
   if (identifierData.type === 'singlesig') {
     const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
     const attributes: SinglesigInceptAttributes = {
@@ -31,14 +33,10 @@ export function createAidKLI(
       wits: env.witnessIds,
       data: [
         {
-          iurls: [
-            'http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller',
-            'http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller',
-            'http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller',
-          ],
+          iurls: iurls,
         },
       ],
-      toad: 2,
+      toad: iurls.length - 1,
       icount: 1,
       ncount: 1,
       isith: '1',
@@ -104,14 +102,10 @@ export function createAidKLI(
         aids: aidPrefixes,
         data: [
           {
-            iurls: [
-              'http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller',
-              'http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller',
-              'http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller',
-            ],
+            iurls: iurls,
           },
         ],
-        toad: 2,
+        toad: iurls.length - 1,
         isith: multisigIdentifierData.isith,
         nsith: multisigIdentifierData.nsith,
       };

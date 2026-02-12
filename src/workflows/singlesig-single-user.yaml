@@ -101,6 +101,7 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
+          presenter_aid: 'ecr-aid-1'
           credential: 'ecr_cred'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
@@ -137,6 +138,7 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
+          presenter_aid: 'ecr-aid-1'
           credential: 'ecr_cred_from_ecr_auth'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
@@ -156,8 +158,8 @@ workflow:
       description: 'LE issues OOR Auth credential to QVI'
       credential: 'le_to_qvi_oor_auth_cred'
       credential_source: 'le_cred'
-    ecr_cred_from_oor_auth:
-      id: 'ecr_cred_from_oor_auth'
+    oor_cred_from_oor_auth:
+      id: 'oor_cred_from_oor_auth'
       type: 'issue_credential'
       attributes:
         personLegalName: 'John Doe'
@@ -173,7 +175,8 @@ workflow:
       description: 'Running Vlei Verification'
       actions:
         present_credential:
-          credential: 'ecr_cred_from_oor_auth'
+          presenter_aid: 'ecr-aid-1'
+          credential: 'oor_cred_from_oor_auth'
           type: 'credential_presentation'
           expected_status: 'cred_crypt_valid'
         authorize_credential:

@@ -90,22 +90,13 @@ workflow:
       description: 'LE issues ECR vLEI credential'
       credential: 'le_to_ecr_vlei_cred'
       credential_source: 'le_cred'
-    add_root_of_trust:
-      id: 'add_root_of_trust'
-      type: 'add_root_of_trust'
-      rot_aid: 'gleif-aid-1'
-      description: 'Adding Root of Trust'
-    credential_verification_valid_verified:
-      id: 'credential_verification_valid_verified'
-      type: 'vlei_verification'
-      description: 'Running Vlei Verification'
-      actions:
-        present_credential:
-          presenter_aid: 'ecr-aid-1'
-          credential: 'ecr_cred'
-          type: 'credential_presentation'
-          expected_status: 'cred_crypt_valid'
-        authorize_credential:
-          aid: 'ecr-aid-1'
-          type: 'credential_authorization'
-          expected_status: 'cred_verified'
+      generate_test_data: true
+      test_name: 'observer_test_credentials'
+    # Uncomment to revoke ECR vLEI credential
+    # ecr_cred_revoke:
+    #   id: 'ecr_cred_revoke'
+    #   type: 'revoke_credential'
+    #   issuer_aid: 'le-aid-1'
+    #   issuee_aid: 'ecr-aid-1'
+    #   description: 'LE revokes ECR vLEI credential'
+    #   credential: 'ecr_cred'

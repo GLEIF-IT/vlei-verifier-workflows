@@ -170,21 +170,21 @@ export class VleiVerificationStepRunner extends StepRunner {
             client !== undefined
               ? await client.credentials().get(cred.sad.d, true)
               : undefined;
+          const credStatus = presentationStatusMapping.get(
+            action.expected_status
+          );
+          await vleiVerification.credentialPresentation(
+            cred,
+            credCesr,
+            client,
+            presenterAid,
+            credStatus
+          );
         } else {
-          const credential: { cred: any; credCesr: string } =
-            workflow_state.credentials.get(action.credential)!;
-          cred = credential.cred;
-          credCesr = credential.credCesr;
+          throw new Error(
+            `vlei_verification: presenter_aid is required for credential_presentation action`
+          );
         }
-
-        const credStatus = presentationStatusMapping.get(
-          action.expected_status
-        );
-        await vleiVerification.credentialPresentation(
-          cred,
-          credCesr,
-          credStatus
-        );
       } else if (action.type == 'credential_authorization') {
         const aid = action.aid;
         const aidInfo = workflow_state.aidsInfo.get(aid);
@@ -241,7 +241,13 @@ export class VleiVerificationStepRunner extends StepRunner {
         const oobiResp = await fetch(oobiUrl);
         const aidCesr = await oobiResp.text();
         const aidStatus = presentationStatusMapping.get(action.expected_status);
-        await vleiVerification.aidPresentation(aidPrefix, aidCesr, aidStatus);
+        await vleiVerification.aidPresentation(
+          aidPrefix,
+          aidCesr,
+          client,
+          action.aid,
+          aidStatus
+        );
       } else if (action.type == 'aid_authorization') {
         const aid = action.aid;
         const aidInfo = workflow_state.aidsInfo.get(aid);
@@ -332,17 +338,11 @@ export class KLICreateAidStepRunner extends StepRunner {
     step: any,
     configJson: any = null
   ): Promise<any> {
-    const env = resolveEnvironment();
     const identifierData: IdentifierData = getIdentifierData(
       configJson,
       step.aid
     );
-    const result = await createAidKLI(
-      env.keriContainerName,
-      configJson,
-      identifierData,
-      step
-    );
+    const result = await createAidKLI(configJson, identifierData, step);
     return result;
   }
 }

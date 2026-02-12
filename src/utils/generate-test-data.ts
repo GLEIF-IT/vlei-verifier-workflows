@@ -18,7 +18,7 @@ export async function buildTestData(
     testName
   );
   if (!fs.existsSync(testDataDirPrefixed)) {
-    fs.mkdirSync(testDataDirPrefixed);
+    fs.mkdirSync(testDataDirPrefixed, { recursive: true });
   }
   testData.credential['issueName'] = issueName;
   const testDataJson = JSON.stringify(testData);

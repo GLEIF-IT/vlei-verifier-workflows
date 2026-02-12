@@ -22,6 +22,8 @@ export class VleiVerification {
   public async credentialPresentation(
     cred: { sad: { d: string } },
     credCesr: string,
+    client: SignifyClient.SignifyClient,
+    idAlias: string,
     expectedStatus: PresentationStatus = CREDENTIAL_CRYPT_VALID
   ) {
     const presentationExpectedStatusCode =
@@ -29,6 +31,8 @@ export class VleiVerification {
     await this.presentation(
       cred.sad.d,
       credCesr,
+      client,
+      idAlias,
       presentationExpectedStatusCode
     );
   }
@@ -52,11 +56,19 @@ export class VleiVerification {
   public async aidPresentation(
     aidPrefix: string,
     aidCesr: string,
+    client: SignifyClient.SignifyClient,
+    idAlias: string,
     expectedStatus: PresentationStatus = AID_CRYPT_VALID
   ) {
     const presentationExpectedStatusCode =
       expectedStatus.status == AID_CRYPT_VALID.status ? 202 : 400;
-    await this.presentation(aidPrefix, aidCesr, presentationExpectedStatusCode);
+    await this.presentation(
+      aidPrefix,
+      aidCesr,
+      client,
+      idAlias,
+      presentationExpectedStatusCode
+    );
   }
 
   public async aidAuthorization(
@@ -78,11 +90,21 @@ export class VleiVerification {
   private async presentation(
     said: string,
     credCesr: string,
+    client: SignifyClient.SignifyClient,
+    idAlias: string,
     expected_status_code: number
   ) {
+    const presentationRequest =
+      await this.verifierClient.buildPresentationRequest(said, credCesr);
+    const sreq = await client.createSignedRequest(
+      idAlias,
+      presentationRequest.url,
+      presentationRequest.req
+    );
     const verifierResponse = await this.verifierClient.presentation(
       said,
-      credCesr
+      credCesr,
+      sreq
     );
     assert.equal(verifierResponse.code, expected_status_code);
   }

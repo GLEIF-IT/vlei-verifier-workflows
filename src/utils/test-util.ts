@@ -552,7 +552,7 @@ export async function waitOperation<T = any>(
   if (typeof op === 'string') {
     op = await client.operations().get(op);
   }
-
+  op = await client.operations().get(op.name);
   op = await client
     .operations()
     .wait(op, { signal: signal ?? AbortSignal.timeout(60000) });
