@@ -58,7 +58,7 @@ jobs:
       - name: Install keripy dependencies
         run: |
           python -m ensurepip --upgrade
-          pip install keri==${{ env.KERI_VERSION }} --extra-index-url https://pypi.gleif.org/simple
+          pip install keri==${{ env.KERI_VERSION }}
 
       - name: Run docker
         run: |
