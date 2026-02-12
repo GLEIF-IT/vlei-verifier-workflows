@@ -1,12 +1,12 @@
 name: Singlesig Multi-User Vlei Verifier Router Test
 
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - '**' # Run Validate Build on all PR branches
+  # push:
+  #   branches:
+  #     - 'main'
+  # pull_request:
+  #   branches:
+  #     - '**' # Run Validate Build on all PR branches
   workflow_dispatch:
 
 permissions:

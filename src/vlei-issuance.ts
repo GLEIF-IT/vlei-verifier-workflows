@@ -41,7 +41,6 @@ import {
   OOR_AUTH_SCHEMA_URL,
   OOR_SCHEMA_URL,
   CRED_RETRY_DEFAULTS,
-  VRD_SCHEMA_URL,
 } from './constants.js';
 
 import {
@@ -806,8 +805,6 @@ export const VleiIssuance = {
     );
 
     let credHolder = await getReceivedCredential(recipientclient!, cred.sad.d);
-    const receivedCredsList = await recipientclient.credentials().list()
-    const receivedCredsListIssuer = await issuerclient.credentials().list()
     if (!credHolder) {
       await sendGrantMessage(issuerclient!, issuerAID, recipientAID, cred);
       await sendAdmitMessage(recipientclient!, recipientAID, issuerAID);

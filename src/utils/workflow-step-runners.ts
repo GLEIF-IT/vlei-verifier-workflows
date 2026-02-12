@@ -332,7 +332,6 @@ export class KLICreateAidStepRunner extends StepRunner {
     step: any,
     configJson: any = null
   ): Promise<any> {
-    const env = resolveEnvironment();
     const identifierData: IdentifierData = getIdentifierData(
       configJson,
       step.aid

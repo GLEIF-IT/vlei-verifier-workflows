@@ -203,9 +203,10 @@ services:
         target: /keripy/scripts/keri/cf/main/wyx.json
 
   vlei-verifier-1:
-    image: gleif/vlei-verifier:latest
+    image: gleif/vlei-verifier:0.1.4
     container_name: vlei-verifier-1
     environment:
+      - VERIFIER_MODE=test
       - VERIFIER_CONFIG_FILE=verifier-config-test.json
     depends_on:
       - vlei-server
@@ -223,6 +224,7 @@ services:
     image: gleif/vlei-verifier:latest
     container_name: vlei-verifier-2
     environment:
+      - VERIFIER_MODE=test
       - VERIFIER_CONFIG_FILE=verifier-config-test.json
     depends_on:
       - vlei-server
@@ -240,6 +242,7 @@ services:
     image: gleif/vlei-verifier:latest
     container_name: vlei-verifier-3
     environment:
+      - VERIFIER_MODE=test
       - VERIFIER_CONFIG_FILE=verifier-config-test.json
     depends_on:
       - vlei-server

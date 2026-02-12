@@ -22,8 +22,6 @@ function copyFile(
 
 function executeKliCommand(command: string, promptAnswer?: string): string {
   try {
-    // Currently, only docker option is supported
-    const env = resolveEnvironment();
     if (promptAnswer) {
       command = `sh -c "echo ${promptAnswer} | ${command}"`;
     }    

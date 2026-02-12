@@ -165,21 +165,17 @@ services:
 
   vlei-verifier:
     image: gleif/vlei-verifier:0.1.4
+    # image: verifier-local:latest
     container_name: vlei-verifier
     hostname: vlei-verifier
     environment:
-      - VERIFIER_CONFIG_FILE=verifier-config-test.json
+      - VERIFIER_MODE=test
+      - VERIFIER_CONFIG_FILE=verifier-config-docker-local.json
     depends_on:
       - vlei-server
       - witness-demo
     ports:
       - 7676:7676
-    healthcheck:
-      test: ['CMD', 'wget', '--spider', 'http://vlei-verifier:7676/health']
-      interval: 2s
-      timeout: 3s
-      retries: 5
-      start_period: 2s
 
   deps:
     image: alpine:latest
