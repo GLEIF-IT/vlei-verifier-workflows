@@ -6,21 +6,21 @@
     "BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX"
   ],
   "aids": [
-    "EKdoh-wmhREll9LtSoF0KoJqR1ib0pn5KGERCXu1aRQi",
-    "EEb2R4uhtwZxGjzKHgg8IvDIzZKqr5xYXjH9wMBHivvj",
-    "ENL9CH95F8mCxzFwYPWHfoA6M9UZbJDeTMUqtC1yveju"
+    "EPrJIp2bJUnow-OfKc9z11g6tslHZD_8C8J72dtnSWR8",
+    "EMuX3_waTXeUZQ1H9Ux1ARpLXVzbE4WrWAHG5EmZwj19",
+    "ENClYJ-NOWGUWpc7VVkb_UBqDYRWUa4ngEmsPL7aBkNx"
   ],
   "data": [
     {
       "iurls": [
-        "http://witness-demo:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller",
-        "http://witness-demo:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller",
-        "http://witness-demo:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller"
+        "http://localhost:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/witness",
+        "http://localhost:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/witness",
+        "http://localhost:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/witness"
       ]
     }
   ],
   "toad": 2,
   "isith": 3,
   "nsith": 3,
-  "delpre": "ELqdJq4MWEx73Yw5k8Gk1q4slM8e4QRX9QZLpHOzNrjv"
+  "delpre": "EHA6Lm2zLXDc4qiBliqF66WyV5fUgmTcP-2lUurJgKwk"
 }

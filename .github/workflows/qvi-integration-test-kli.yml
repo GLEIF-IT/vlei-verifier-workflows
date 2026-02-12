@@ -1,0 +1,72 @@
+name: QVI Integration Test - KLI
+
+on:
+  workflow_dispatch:
+      inputs:
+        keri_version:
+          description: "Version of KERI to test against" 
+          required: true 
+          default: "1.2.6" 
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  test-single-aid-singlesig:
+    name: Run QVI Integration test using KLI:${{ matrix.keria-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: .
+    strategy:
+      matrix:
+        keria-version: ['0.2.0-dev3']
+        node-version: ['20']
+    env:
+      KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}   
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install JS dependencies
+        run: |
+          npm cache clean --force
+          npm set registry https://registry.npmjs.org/
+          npm ci
+      
+      - name: Determine Keripy version
+        id: keripy_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "KERI_VERSION=${{ github.event.inputs.keri_version }}" >> $GITHUB_ENV
+          else
+            echo "KERI_VERSION=1.2.6" >> $GITHUB_ENV
+          fi
+      
+      - name: Install keripy dependencies
+        run: |
+          python -m ensurepip --upgrade
+          pip install keri==${{ env.KERI_VERSION }} --extra-index-url https://pypi.gleif.org/simple
+
+      - name: Run docker
+        run: |
+          docker compose down -v
+          docker compose -f docker-compose-kli-tests.yaml up deps -d --pull always
+
+      - name: Build
+        run: npm run build
+
+      - name: Run workflow
+        run: WORKFLOW=create_aid_kli.yaml CONFIGURATION=configuration-create-aid-kli.json npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit

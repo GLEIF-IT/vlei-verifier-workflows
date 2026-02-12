@@ -1,14 +1,14 @@
 {
   "secrets": {
-    "gleif-external": "D_PbQb01zuzQgKatestq1",
+    "gleif-external1": "D_PbQb01zuzQgKatestq1",
     "qvi1": "BTaqgh1eeOjXO5iQJp6m1",
     "qvi2": "BTaqgh1eeOjXO5iQJp6m2",
     "qvi3": "BTaqgh1eeOjXO5iQJp6m3"
   },
   "credentials": {},
   "agents": {
-    "gleif-external-agent": {
-      "secret": "gleif-external"
+    "gleif-external-agent-1": {
+      "secret": "gleif-external1"
     },
     "qvi-agent-1": {
       "secret": "qvi1"
@@ -21,9 +21,9 @@
     }
   },
   "identifiers": {
-    "gleif-external-aid": {
-      "agent": "gleif-external-agent",
-      "name": "gleif-external-aid"
+    "gleif-external-aid-1": {
+      "agent": "gleif-external-agent-1",
+      "name": "gleif-external-aid-1"
     },
     "qvi-aid-1": {
       "agent": "qvi-agent-1",
@@ -39,7 +39,7 @@
     },
     "qvi-multisig-1": {
       "name": "qvi-multisig-1",
-      "delegator": "gleif-external-aid",
+      "delegator": "gleif-external-aid-1",
       "identifiers": ["qvi-aid-1", "qvi-aid-2", "qvi-aid-3"],
       "isith": 3,
       "nsith": 3

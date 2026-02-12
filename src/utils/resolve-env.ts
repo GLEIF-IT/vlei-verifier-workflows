@@ -40,9 +40,9 @@ export function resolveEnvironment(
           process.env.WITNESS_URLS === ''
             ? []
             : process.env.WITNESS_URLS?.split(',') || [
-                'http://witness-demo:5642',
-                'http://witness-demo:5643',
-                'http://witness-demo:5644',
+                'http://localhost:5642',
+                'http://localhost:5643',
+                'http://localhost:5644',
               ],
         witnessIds:
           process.env.WITNESS_IDS === ''
@@ -50,12 +50,10 @@ export function resolveEnvironment(
             : process.env.WITNESS_IDS?.split(',') || [WAN, WIL, WES],
         vleiServerUrl: process.env.VLEI_SERVER || 'http://vlei-server:7723',
         verifierBaseUrl: process.env.VLEI_VERIFIER || 'http://localhost:7676',
-        workflow: process.env.WORKFLOW || 'singlesig-single-user-one-cred.yaml',
+        workflow: process.env.WORKFLOW || 'create-aid-kli.yaml',
         configuration:
           process.env.CONFIGURATION ||
-          'configuration-singlesig-single-user-one-cred.json',
-        keriContainerName:
-          process.env.KERI_CONTAINER_NAME || 'vlei-verifier-workflows-keria-1',
+          'configuration-create-aid-kli.json',
       };
       break;
     case 'local':

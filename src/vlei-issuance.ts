@@ -167,7 +167,7 @@ export const VleiIssuance = {
       ECR_SCHEMA_URL,
       OOR_AUTH_SCHEMA_URL,
       OOR_SCHEMA_URL,
-      VRD_SCHEMA_URL
+      // VRD_SCHEMA_URL
     ];
     console.log('Resolving OOBIs');
     const workflow_state = WorkflowState.getInstance();
@@ -186,7 +186,7 @@ export const VleiIssuance = {
       ECR_SCHEMA_URL,
       OOR_AUTH_SCHEMA_URL,
       OOR_SCHEMA_URL,
-      VRD_SCHEMA_URL
+      // VRD_SCHEMA_URL
     ];
     if (identifierData.type === 'singlesig') {
       console.log('Resolving OOBIs for client');

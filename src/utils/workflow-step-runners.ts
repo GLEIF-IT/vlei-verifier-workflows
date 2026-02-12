@@ -338,7 +338,6 @@ export class KLICreateAidStepRunner extends StepRunner {
       step.aid
     );
     const result = await createAidKLI(
-      env.keriContainerName,
       configJson,
       identifierData,
       step
