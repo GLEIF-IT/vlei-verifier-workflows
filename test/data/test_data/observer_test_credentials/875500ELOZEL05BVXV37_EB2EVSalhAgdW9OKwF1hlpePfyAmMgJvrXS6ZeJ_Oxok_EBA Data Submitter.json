@@ -1,806 +1,744 @@
 {
-    "aid": "EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok",
-    "lei": "875500ELOZEL05BVXV37",
-    "credential": {
-        "raw": {
-            "sad": {
-                "v": "ACDC10JSON0007fc_",
-                "d": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
-                "u": "0AAEyRq3CpNBgouwnokyznQl",
-                "i": "EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy",
-                "ri": "ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p",
-                "s": "EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw",
-                "a": {
-                    "d": "EFsIRL4MpHzL95ePBcNrA-4y9prYze5Tu1FITwYPHLiI",
-                    "i": "EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok",
-                    "u": "0ABmG3CdlVEgCiGgkc8XmJUV",
-                    "engagementContextRole": "EBA Data Submitter",
-                    "personLegalName": "John Doe",
-                    "LEI": "875500ELOZEL05BVXV37",
-                    "dt": "2025-10-27T11:12:03.040000+00:00"
-                },
-                "e": {
-                    "d": "EApA52ZlchxHPlmK299EGBp6XYW9SHGm6lgsmBk81gAq",
-                    "le": {
-                        "n": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
-                        "s": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY"
-                    }
-                },
-                "r": {
-                    "d": "EIfq_m1DI2IQ1MgHhUl9sq3IQ_PJP9WQ1LhbMscngDCB",
-                    "usageDisclaimer": {
-                        "l": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
-                    },
-                    "issuanceDisclaimer": {
-                        "l": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
-                    },
-                    "privacyDisclaimer": {
-                        "l": "It is the sole responsibility of Holders as Issuees of an ECR vLEI Credential to present that Credential in a privacy-preserving manner using the mechanisms provided in the Issuance and Presentation Exchange (IPEX) protocol specification and the Authentic Chained Data Container (ACDC) specification. https://github.com/WebOfTrust/IETF-IPEX and https://github.com/trustoverip/tswg-acdc-specification."
-                    }
-                }
-            },
-            "atc": "-IABEEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO0AAAAAAAAAAAAAAAAAAAAAAAEEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
-            "iss": {
-                "v": "KERI10JSON0000ed_",
-                "t": "iss",
-                "d": "EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu",
-                "i": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
-                "s": "0",
-                "ri": "ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p",
-                "dt": "2025-10-27T11:12:03.040000+00:00"
-            },
-            "issatc": "-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL",
-            "pre": "EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy",
-            "schema": {
-                "$id": "EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw",
-                "$schema": "http://json-schema.org/draft-07/schema#",
-                "title": "Legal Entity Engagement Context Role vLEI Credential",
-                "description": "A vLEI Role Credential issued to representatives of a Legal Entity in other than official roles but in functional or other context of engagement",
+  "aid": "EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok",
+  "lei": "875500ELOZEL05BVXV37",
+  "credential": {
+    "raw": {
+      "sad": {
+        "v": "ACDC10JSON0007fc_",
+        "d": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
+        "u": "0AAEyRq3CpNBgouwnokyznQl",
+        "i": "EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy",
+        "ri": "ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p",
+        "s": "EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw",
+        "a": {
+          "d": "EFsIRL4MpHzL95ePBcNrA-4y9prYze5Tu1FITwYPHLiI",
+          "i": "EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok",
+          "u": "0ABmG3CdlVEgCiGgkc8XmJUV",
+          "engagementContextRole": "EBA Data Submitter",
+          "personLegalName": "John Doe",
+          "LEI": "875500ELOZEL05BVXV37",
+          "dt": "2025-10-27T11:12:03.040000+00:00"
+        },
+        "e": {
+          "d": "EApA52ZlchxHPlmK299EGBp6XYW9SHGm6lgsmBk81gAq",
+          "le": {
+            "n": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
+            "s": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY"
+          }
+        },
+        "r": {
+          "d": "EIfq_m1DI2IQ1MgHhUl9sq3IQ_PJP9WQ1LhbMscngDCB",
+          "usageDisclaimer": {
+            "l": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
+          },
+          "issuanceDisclaimer": {
+            "l": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
+          },
+          "privacyDisclaimer": {
+            "l": "It is the sole responsibility of Holders as Issuees of an ECR vLEI Credential to present that Credential in a privacy-preserving manner using the mechanisms provided in the Issuance and Presentation Exchange (IPEX) protocol specification and the Authentic Chained Data Container (ACDC) specification. https://github.com/WebOfTrust/IETF-IPEX and https://github.com/trustoverip/tswg-acdc-specification."
+          }
+        }
+      },
+      "atc": "-IABEEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO0AAAAAAAAAAAAAAAAAAAAAAAEEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
+      "iss": {
+        "v": "KERI10JSON0000ed_",
+        "t": "iss",
+        "d": "EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu",
+        "i": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
+        "s": "0",
+        "ri": "ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p",
+        "dt": "2025-10-27T11:12:03.040000+00:00"
+      },
+      "issatc": "-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL",
+      "pre": "EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy",
+      "schema": {
+        "$id": "EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Legal Entity Engagement Context Role vLEI Credential",
+        "description": "A vLEI Role Credential issued to representatives of a Legal Entity in other than official roles but in functional or other context of engagement",
+        "type": "object",
+        "credentialType": "LegalEntityEngagementContextRolevLEICredential",
+        "version": "1.0.0",
+        "properties": {
+          "v": {
+            "description": "Version",
+            "type": "string"
+          },
+          "d": {
+            "description": "Credential SAID",
+            "type": "string"
+          },
+          "u": {
+            "description": "A salty nonce",
+            "type": "string"
+          },
+          "i": {
+            "description": "QVI or LE Issuer AID",
+            "type": "string"
+          },
+          "ri": {
+            "description": "Credential status registry",
+            "type": "string"
+          },
+          "s": {
+            "description": "Schema SAID",
+            "type": "string"
+          },
+          "a": {
+            "oneOf": [
+              {
+                "description": "Attributes block SAID",
+                "type": "string"
+              },
+              {
+                "$id": "EDv4wiOMHE125CXu-EuOd0YRXz-AgpLilJfjoODFqtHD",
+                "description": "Attributes block",
                 "type": "object",
-                "credentialType": "LegalEntityEngagementContextRolevLEICredential",
-                "version": "1.0.0",
                 "properties": {
-                    "v": {
-                        "description": "Version",
-                        "type": "string"
-                    },
-                    "d": {
-                        "description": "Credential SAID",
-                        "type": "string"
-                    },
-                    "u": {
-                        "description": "A salty nonce",
-                        "type": "string"
-                    },
-                    "i": {
-                        "description": "QVI or LE Issuer AID",
-                        "type": "string"
-                    },
-                    "ri": {
-                        "description": "Credential status registry",
-                        "type": "string"
-                    },
-                    "s": {
-                        "description": "Schema SAID",
-                        "type": "string"
-                    },
-                    "a": {
-                        "oneOf": [
-                            {
-                                "description": "Attributes block SAID",
-                                "type": "string"
-                            },
-                            {
-                                "$id": "EDv4wiOMHE125CXu-EuOd0YRXz-AgpLilJfjoODFqtHD",
-                                "description": "Attributes block",
-                                "type": "object",
-                                "properties": {
-                                    "d": {
-                                        "description": "Attributes block SAID",
-                                        "type": "string"
-                                    },
-                                    "u": {
-                                        "description": "A salty nonce",
-                                        "type": "string"
-                                    },
-                                    "i": {
-                                        "description": "Person Issuee AID",
-                                        "type": "string"
-                                    },
-                                    "dt": {
-                                        "description": "Issuance date time",
-                                        "type": "string",
-                                        "format": "date-time"
-                                    },
-                                    "LEI": {
-                                        "description": "LEI of the Legal Entity",
-                                        "type": "string",
-                                        "format": "ISO 17442"
-                                    },
-                                    "personLegalName": {
-                                        "description": "Recipient name as provided during identity assurance",
-                                        "type": "string"
-                                    },
-                                    "engagementContextRole": {
-                                        "description": "Role description i.e. 'Head of Standards'",
-                                        "type": "string"
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": [
-                                    "i",
-                                    "dt",
-                                    "LEI",
-                                    "personLegalName",
-                                    "engagementContextRole"
-                                ]
-                            }
-                        ]
-                    },
-                    "e": {
-                        "oneOf": [
-                            {
-                                "description": "Edges block SAID",
-                                "type": "string"
-                            },
-                            {
-                                "$id": "EEM9OvWMEmAfAY0BV2kXatSc8WM13QW1B5y33E8z4f33",
-                                "description": "Edges block",
-                                "type": "object",
-                                "properties": {
-                                    "d": {
-                                        "description": "Edges block SAID",
-                                        "type": "string"
-                                    },
-                                    "auth": {
-                                        "description": "Chain to Auth vLEI credential from legal entity",
-                                        "type": "object",
-                                        "properties": {
-                                            "n": {
-                                                "description": "SAID of the ACDC to which the edge connects",
-                                                "type": "string"
-                                            },
-                                            "s": {
-                                                "description": "SAID of required schema of the credential pointed to by this node",
-                                                "type": "string",
-                                                "const": "EH6ekLjSr8V32WyFbGe1zXjTzFs9PkTYmupJ9H65O14g"
-                                            },
-                                            "o": {
-                                                "description": "Operator indicating this node is the issuer",
-                                                "type": "string",
-                                                "const": "I2I"
-                                            }
-                                        },
-                                        "additionalProperties": false,
-                                        "required": [
-                                            "n",
-                                            "s",
-                                            "o"
-                                        ]
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": [
-                                    "d",
-                                    "auth"
-                                ]
-                            },
-                            {
-                                "$id": "EHeZGaLBhCc_-sAcyAEgFFeCkxgnqCubPOBuEvoh9jHX",
-                                "description": "Edges block for issuance from Legal Entity",
-                                "type": "object",
-                                "properties": {
-                                    "d": {
-                                        "description": "SAID of edges block",
-                                        "type": "string"
-                                    },
-                                    "le": {
-                                        "description": "Chain to legal entity vLEI credential",
-                                        "type": "object",
-                                        "properties": {
-                                            "n": {
-                                                "description": "SAID of the ACDC to which the edge connects",
-                                                "type": "string"
-                                            },
-                                            "s": {
-                                                "description": "SAID of required schema of the credential pointed to by this node",
-                                                "type": "string",
-                                                "const": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY"
-                                            }
-                                        },
-                                        "additionalProperties": false,
-                                        "required": [
-                                            "n",
-                                            "s"
-                                        ]
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": [
-                                    "d",
-                                    "le"
-                                ]
-                            }
-                        ]
-                    },
-                    "r": {
-                        "oneOf": [
-                            {
-                                "description": "Rules block SAID",
-                                "type": "string"
-                            },
-                            {
-                                "$id": "EEBm6OIpem19B8BzxWXOAuzKTtYeutGpXMLW9o3pAuRe",
-                                "description": "Rules block",
-                                "type": "object",
-                                "properties": {
-                                    "d": {
-                                        "description": "Rules block SAID",
-                                        "type": "string"
-                                    },
-                                    "usageDisclaimer": {
-                                        "description": "Usage Disclaimer",
-                                        "type": "object",
-                                        "properties": {
-                                            "l": {
-                                                "description": "Associated legal language",
-                                                "type": "string",
-                                                "const": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
-                                            }
-                                        }
-                                    },
-                                    "issuanceDisclaimer": {
-                                        "description": "Issuance Disclaimer",
-                                        "type": "object",
-                                        "properties": {
-                                            "l": {
-                                                "description": "Associated legal language",
-                                                "type": "string",
-                                                "const": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
-                                            }
-                                        }
-                                    },
-                                    "privacyDisclaimer": {
-                                        "description": "Privacy Disclaimer",
-                                        "type": "object",
-                                        "properties": {
-                                            "l": {
-                                                "description": "Associated legal language",
-                                                "type": "string",
-                                                "const": "It is the sole responsibility of Holders as Issuees of an ECR vLEI Credential to present that Credential in a privacy-preserving manner using the mechanisms provided in the Issuance and Presentation Exchange (IPEX) protocol specification and the Authentic Chained Data Container (ACDC) specification. https://github.com/WebOfTrust/IETF-IPEX and https://github.com/trustoverip/tswg-acdc-specification."
-                                            }
-                                        }
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": [
-                                    "d",
-                                    "usageDisclaimer",
-                                    "issuanceDisclaimer",
-                                    "privacyDisclaimer"
-                                ]
-                            }
-                        ]
-                    }
+                  "d": {
+                    "description": "Attributes block SAID",
+                    "type": "string"
+                  },
+                  "u": {
+                    "description": "A salty nonce",
+                    "type": "string"
+                  },
+                  "i": {
+                    "description": "Person Issuee AID",
+                    "type": "string"
+                  },
+                  "dt": {
+                    "description": "Issuance date time",
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "LEI": {
+                    "description": "LEI of the Legal Entity",
+                    "type": "string",
+                    "format": "ISO 17442"
+                  },
+                  "personLegalName": {
+                    "description": "Recipient name as provided during identity assurance",
+                    "type": "string"
+                  },
+                  "engagementContextRole": {
+                    "description": "Role description i.e. 'Head of Standards'",
+                    "type": "string"
+                  }
                 },
                 "additionalProperties": false,
                 "required": [
-                    "v",
-                    "u",
-                    "i",
-                    "ri",
-                    "s",
-                    "d",
-                    "r",
-                    "a",
-                    "e"
+                  "i",
+                  "dt",
+                  "LEI",
+                  "personLegalName",
+                  "engagementContextRole"
                 ]
+              }
+            ]
+          },
+          "e": {
+            "oneOf": [
+              {
+                "description": "Edges block SAID",
+                "type": "string"
+              },
+              {
+                "$id": "EEM9OvWMEmAfAY0BV2kXatSc8WM13QW1B5y33E8z4f33",
+                "description": "Edges block",
+                "type": "object",
+                "properties": {
+                  "d": {
+                    "description": "Edges block SAID",
+                    "type": "string"
+                  },
+                  "auth": {
+                    "description": "Chain to Auth vLEI credential from legal entity",
+                    "type": "object",
+                    "properties": {
+                      "n": {
+                        "description": "SAID of the ACDC to which the edge connects",
+                        "type": "string"
+                      },
+                      "s": {
+                        "description": "SAID of required schema of the credential pointed to by this node",
+                        "type": "string",
+                        "const": "EH6ekLjSr8V32WyFbGe1zXjTzFs9PkTYmupJ9H65O14g"
+                      },
+                      "o": {
+                        "description": "Operator indicating this node is the issuer",
+                        "type": "string",
+                        "const": "I2I"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": ["n", "s", "o"]
+                  }
+                },
+                "additionalProperties": false,
+                "required": ["d", "auth"]
+              },
+              {
+                "$id": "EHeZGaLBhCc_-sAcyAEgFFeCkxgnqCubPOBuEvoh9jHX",
+                "description": "Edges block for issuance from Legal Entity",
+                "type": "object",
+                "properties": {
+                  "d": {
+                    "description": "SAID of edges block",
+                    "type": "string"
+                  },
+                  "le": {
+                    "description": "Chain to legal entity vLEI credential",
+                    "type": "object",
+                    "properties": {
+                      "n": {
+                        "description": "SAID of the ACDC to which the edge connects",
+                        "type": "string"
+                      },
+                      "s": {
+                        "description": "SAID of required schema of the credential pointed to by this node",
+                        "type": "string",
+                        "const": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": ["n", "s"]
+                  }
+                },
+                "additionalProperties": false,
+                "required": ["d", "le"]
+              }
+            ]
+          },
+          "r": {
+            "oneOf": [
+              {
+                "description": "Rules block SAID",
+                "type": "string"
+              },
+              {
+                "$id": "EEBm6OIpem19B8BzxWXOAuzKTtYeutGpXMLW9o3pAuRe",
+                "description": "Rules block",
+                "type": "object",
+                "properties": {
+                  "d": {
+                    "description": "Rules block SAID",
+                    "type": "string"
+                  },
+                  "usageDisclaimer": {
+                    "description": "Usage Disclaimer",
+                    "type": "object",
+                    "properties": {
+                      "l": {
+                        "description": "Associated legal language",
+                        "type": "string",
+                        "const": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
+                      }
+                    }
+                  },
+                  "issuanceDisclaimer": {
+                    "description": "Issuance Disclaimer",
+                    "type": "object",
+                    "properties": {
+                      "l": {
+                        "description": "Associated legal language",
+                        "type": "string",
+                        "const": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
+                      }
+                    }
+                  },
+                  "privacyDisclaimer": {
+                    "description": "Privacy Disclaimer",
+                    "type": "object",
+                    "properties": {
+                      "l": {
+                        "description": "Associated legal language",
+                        "type": "string",
+                        "const": "It is the sole responsibility of Holders as Issuees of an ECR vLEI Credential to present that Credential in a privacy-preserving manner using the mechanisms provided in the Issuance and Presentation Exchange (IPEX) protocol specification and the Authentic Chained Data Container (ACDC) specification. https://github.com/WebOfTrust/IETF-IPEX and https://github.com/trustoverip/tswg-acdc-specification."
+                      }
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "d",
+                  "usageDisclaimer",
+                  "issuanceDisclaimer",
+                  "privacyDisclaimer"
+                ]
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "required": ["v", "u", "i", "ri", "s", "d", "r", "a", "e"]
+      },
+      "chains": [
+        {
+          "sad": {
+            "v": "ACDC10JSON0005c8_",
+            "d": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
+            "i": "EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi",
+            "ri": "EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh",
+            "s": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY",
+            "a": {
+              "d": "ELg7MSjfo3W7dzN7KZUz_6np4Dp8cslUfFsZxbgqYRVt",
+              "i": "EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy",
+              "LEI": "875500ELOZEL05BVXV37",
+              "dt": "2025-10-27T11:11:54.609000+00:00"
             },
-            "chains": [
-                {
-                    "sad": {
-                        "v": "ACDC10JSON0005c8_",
-                        "d": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
-                        "i": "EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi",
-                        "ri": "EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh",
-                        "s": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY",
-                        "a": {
-                            "d": "ELg7MSjfo3W7dzN7KZUz_6np4Dp8cslUfFsZxbgqYRVt",
-                            "i": "EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy",
-                            "LEI": "875500ELOZEL05BVXV37",
-                            "dt": "2025-10-27T11:11:54.609000+00:00"
-                        },
-                        "e": {
-                            "d": "EOB5HOW7dXn8vU2YHYrcOzi3Ca-tR1q8Yd-UMwGDJJEj",
-                            "qvi": {
-                                "n": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
-                                "s": "EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao"
-                            }
-                        },
-                        "r": {
-                            "d": "EGZ97EjPSINR-O-KHDN_uw4fdrTxeuRXrqT5ZHHQJujQ",
-                            "usageDisclaimer": {
-                                "l": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
-                            },
-                            "issuanceDisclaimer": {
-                                "l": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
-                            }
-                        }
+            "e": {
+              "d": "EOB5HOW7dXn8vU2YHYrcOzi3Ca-tR1q8Yd-UMwGDJJEj",
+              "qvi": {
+                "n": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
+                "s": "EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao"
+              }
+            },
+            "r": {
+              "d": "EGZ97EjPSINR-O-KHDN_uw4fdrTxeuRXrqT5ZHHQJujQ",
+              "usageDisclaimer": {
+                "l": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
+              },
+              "issuanceDisclaimer": {
+                "l": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
+              }
+            }
+          },
+          "atc": "-IABENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs0AAAAAAAAAAAAAAAAAAAAAAAENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
+          "iss": {
+            "v": "KERI10JSON0000ed_",
+            "t": "iss",
+            "d": "ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL",
+            "i": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
+            "s": "0",
+            "ri": "EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh",
+            "dt": "2025-10-27T11:11:54.609000+00:00"
+          },
+          "issatc": "-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5",
+          "pre": "EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi",
+          "schema": {
+            "$id": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY",
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "title": "Legal Entity vLEI Credential",
+            "description": "A vLEI Credential issued by a Qualified vLEI issuer to a Legal Entity",
+            "type": "object",
+            "credentialType": "LegalEntityvLEICredential",
+            "version": "1.0.0",
+            "properties": {
+              "v": {
+                "description": "Version",
+                "type": "string"
+              },
+              "d": {
+                "description": "Credential SAID",
+                "type": "string"
+              },
+              "u": {
+                "description": "One time use nonce",
+                "type": "string"
+              },
+              "i": {
+                "description": "QVI Issuer AID",
+                "type": "string"
+              },
+              "ri": {
+                "description": "Credential status registry",
+                "type": "string"
+              },
+              "s": {
+                "description": "Schema SAID",
+                "type": "string"
+              },
+              "a": {
+                "oneOf": [
+                  {
+                    "description": "Attributes block SAID",
+                    "type": "string"
+                  },
+                  {
+                    "$id": "EJ6bFDLrv50bHmIDg-MSummpvYWsPa9CFygPUZyHoESj",
+                    "description": "Attributes block",
+                    "type": "object",
+                    "properties": {
+                      "d": {
+                        "description": "Attributes block SAID",
+                        "type": "string"
+                      },
+                      "i": {
+                        "description": "LE Issuer AID",
+                        "type": "string"
+                      },
+                      "dt": {
+                        "description": "issuance date time",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "LEI": {
+                        "description": "LE Issuer AID",
+                        "type": "string",
+                        "format": "ISO 17442"
+                      }
                     },
-                    "atc": "-IABENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs0AAAAAAAAAAAAAAAAAAAAAAAENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
-                    "iss": {
-                        "v": "KERI10JSON0000ed_",
-                        "t": "iss",
-                        "d": "ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL",
-                        "i": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
-                        "s": "0",
-                        "ri": "EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh",
-                        "dt": "2025-10-27T11:11:54.609000+00:00"
-                    },
-                    "issatc": "-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5",
-                    "pre": "EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi",
-                    "schema": {
-                        "$id": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY",
-                        "$schema": "http://json-schema.org/draft-07/schema#",
-                        "title": "Legal Entity vLEI Credential",
-                        "description": "A vLEI Credential issued by a Qualified vLEI issuer to a Legal Entity",
+                    "additionalProperties": false,
+                    "required": ["i", "dt", "LEI"]
+                  }
+                ]
+              },
+              "e": {
+                "oneOf": [
+                  {
+                    "description": "Edges block SAID",
+                    "type": "string"
+                  },
+                  {
+                    "$id": "EDh9sp5cPk0-yo5sFMo6WJS1HMBYIOYCwJrnPvNaH1vI",
+                    "description": "Edges block",
+                    "type": "object",
+                    "properties": {
+                      "d": {
+                        "description": "Edges block SAID",
+                        "type": "string"
+                      },
+                      "qvi": {
+                        "description": "QVI node",
                         "type": "object",
-                        "credentialType": "LegalEntityvLEICredential",
-                        "version": "1.0.0",
                         "properties": {
-                            "v": {
-                                "description": "Version",
-                                "type": "string"
-                            },
-                            "d": {
-                                "description": "Credential SAID",
-                                "type": "string"
-                            },
-                            "u": {
-                                "description": "One time use nonce",
-                                "type": "string"
-                            },
-                            "i": {
-                                "description": "QVI Issuer AID",
-                                "type": "string"
-                            },
-                            "ri": {
-                                "description": "Credential status registry",
-                                "type": "string"
-                            },
-                            "s": {
-                                "description": "Schema SAID",
-                                "type": "string"
-                            },
-                            "a": {
-                                "oneOf": [
-                                    {
-                                        "description": "Attributes block SAID",
-                                        "type": "string"
-                                    },
-                                    {
-                                        "$id": "EJ6bFDLrv50bHmIDg-MSummpvYWsPa9CFygPUZyHoESj",
-                                        "description": "Attributes block",
-                                        "type": "object",
-                                        "properties": {
-                                            "d": {
-                                                "description": "Attributes block SAID",
-                                                "type": "string"
-                                            },
-                                            "i": {
-                                                "description": "LE Issuer AID",
-                                                "type": "string"
-                                            },
-                                            "dt": {
-                                                "description": "issuance date time",
-                                                "type": "string",
-                                                "format": "date-time"
-                                            },
-                                            "LEI": {
-                                                "description": "LE Issuer AID",
-                                                "type": "string",
-                                                "format": "ISO 17442"
-                                            }
-                                        },
-                                        "additionalProperties": false,
-                                        "required": [
-                                            "i",
-                                            "dt",
-                                            "LEI"
-                                        ]
-                                    }
-                                ]
-                            },
-                            "e": {
-                                "oneOf": [
-                                    {
-                                        "description": "Edges block SAID",
-                                        "type": "string"
-                                    },
-                                    {
-                                        "$id": "EDh9sp5cPk0-yo5sFMo6WJS1HMBYIOYCwJrnPvNaH1vI",
-                                        "description": "Edges block",
-                                        "type": "object",
-                                        "properties": {
-                                            "d": {
-                                                "description": "Edges block SAID",
-                                                "type": "string"
-                                            },
-                                            "qvi": {
-                                                "description": "QVI node",
-                                                "type": "object",
-                                                "properties": {
-                                                    "n": {
-                                                        "description": "Issuer credential SAID",
-                                                        "type": "string"
-                                                    },
-                                                    "s": {
-                                                        "description": "SAID of required schema of the credential pointed to by this node",
-                                                        "type": "string",
-                                                        "const": "EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao"
-                                                    }
-                                                },
-                                                "additionalProperties": false,
-                                                "required": [
-                                                    "n",
-                                                    "s"
-                                                ]
-                                            }
-                                        },
-                                        "additionalProperties": false,
-                                        "required": [
-                                            "d",
-                                            "qvi"
-                                        ]
-                                    }
-                                ]
-                            },
-                            "r": {
-                                "oneOf": [
-                                    {
-                                        "description": "Rules block SAID",
-                                        "type": "string"
-                                    },
-                                    {
-                                        "$id": "ECllqarpkZrSIWCb97XlMpEZZH3q4kc--FQ9mbkFMb_5",
-                                        "description": "Rules block",
-                                        "type": "object",
-                                        "properties": {
-                                            "d": {
-                                                "description": "Rules block SAID",
-                                                "type": "string"
-                                            },
-                                            "usageDisclaimer": {
-                                                "description": "Usage Disclaimer",
-                                                "type": "object",
-                                                "properties": {
-                                                    "l": {
-                                                        "description": "Associated legal language",
-                                                        "type": "string",
-                                                        "const": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
-                                                    }
-                                                }
-                                            },
-                                            "issuanceDisclaimer": {
-                                                "description": "Issuance Disclaimer",
-                                                "type": "object",
-                                                "properties": {
-                                                    "l": {
-                                                        "description": "Associated legal language",
-                                                        "type": "string",
-                                                        "const": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "additionalProperties": false,
-                                        "required": [
-                                            "d",
-                                            "usageDisclaimer",
-                                            "issuanceDisclaimer"
-                                        ]
-                                    }
-                                ]
+                          "n": {
+                            "description": "Issuer credential SAID",
+                            "type": "string"
+                          },
+                          "s": {
+                            "description": "SAID of required schema of the credential pointed to by this node",
+                            "type": "string",
+                            "const": "EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": ["n", "s"]
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": ["d", "qvi"]
+                  }
+                ]
+              },
+              "r": {
+                "oneOf": [
+                  {
+                    "description": "Rules block SAID",
+                    "type": "string"
+                  },
+                  {
+                    "$id": "ECllqarpkZrSIWCb97XlMpEZZH3q4kc--FQ9mbkFMb_5",
+                    "description": "Rules block",
+                    "type": "object",
+                    "properties": {
+                      "d": {
+                        "description": "Rules block SAID",
+                        "type": "string"
+                      },
+                      "usageDisclaimer": {
+                        "description": "Usage Disclaimer",
+                        "type": "object",
+                        "properties": {
+                          "l": {
+                            "description": "Associated legal language",
+                            "type": "string",
+                            "const": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
+                          }
+                        }
+                      },
+                      "issuanceDisclaimer": {
+                        "description": "Issuance Disclaimer",
+                        "type": "object",
+                        "properties": {
+                          "l": {
+                            "description": "Associated legal language",
+                            "type": "string",
+                            "const": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
+                          }
+                        }
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": ["d", "usageDisclaimer", "issuanceDisclaimer"]
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": ["i", "ri", "s", "d", "e", "r"]
+          },
+          "chains": [
+            {
+              "sad": {
+                "v": "ACDC10JSON000197_",
+                "d": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
+                "i": "EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw",
+                "ri": "ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT",
+                "s": "EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao",
+                "a": {
+                  "d": "EPxKSTLEHdzTYJJa_H-XZQQOlhOVGhss0MgkptinimMc",
+                  "i": "EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi",
+                  "LEI": "254900OPPU84GM83MG36",
+                  "dt": "2025-10-27T11:11:44.152000+00:00"
+                }
+              },
+              "atc": "-IABEGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc0AAAAAAAAAAAAAAAAAAAAAAAEGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
+              "iss": {
+                "v": "KERI10JSON0000ed_",
+                "t": "iss",
+                "d": "EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS",
+                "i": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
+                "s": "0",
+                "ri": "ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT",
+                "dt": "2025-10-27T11:11:44.152000+00:00"
+              },
+              "issatc": "-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAADEFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n",
+              "pre": "EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw",
+              "schema": {
+                "$id": "EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "title": "Qualified vLEI Issuer Credential",
+                "description": "A vLEI Credential issued by GLEIF to Qualified vLEI Issuers which allows the Qualified vLEI Issuers to issue, verify and revoke Legal Entity vLEI Credentials and Legal Entity Official Organizational Role vLEI Credentials",
+                "type": "object",
+                "credentialType": "QualifiedvLEIIssuervLEICredential",
+                "version": "1.0.0",
+                "properties": {
+                  "v": {
+                    "description": "Version",
+                    "type": "string"
+                  },
+                  "d": {
+                    "description": "Credential SAID",
+                    "type": "string"
+                  },
+                  "u": {
+                    "description": "One time use nonce",
+                    "type": "string"
+                  },
+                  "i": {
+                    "description": "GLEIF Issuee AID",
+                    "type": "string"
+                  },
+                  "ri": {
+                    "description": "Credential status registry",
+                    "type": "string"
+                  },
+                  "s": {
+                    "description": "Schema SAID",
+                    "type": "string"
+                  },
+                  "a": {
+                    "oneOf": [
+                      {
+                        "description": "Attributes block SAID",
+                        "type": "string"
+                      },
+                      {
+                        "$id": "ELGgI0fkloqKWREXgqUfgS0bJybP1LChxCO3sqPSFHCj",
+                        "description": "Attributes block",
+                        "type": "object",
+                        "properties": {
+                          "d": {
+                            "description": "Attributes block SAID",
+                            "type": "string"
+                          },
+                          "i": {
+                            "description": "QVI Issuee AID",
+                            "type": "string"
+                          },
+                          "dt": {
+                            "description": "Issuance date time",
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "LEI": {
+                            "description": "LEI of the requesting Legal Entity",
+                            "type": "string",
+                            "format": "ISO 17442"
+                          },
+                          "gracePeriod": {
+                            "description": "Allocated grace period",
+                            "type": "integer",
+                            "default": 90
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": ["i", "dt", "LEI"]
+                      }
+                    ]
+                  },
+                  "r": {
+                    "oneOf": [
+                      {
+                        "description": "Rules block SAID",
+                        "type": "string"
+                      },
+                      {
+                        "$id": "ECllqarpkZrSIWCb97XlMpEZZH3q4kc--FQ9mbkFMb_5",
+                        "description": "Rules block",
+                        "type": "object",
+                        "properties": {
+                          "d": {
+                            "description": "Rules block SAID",
+                            "type": "string"
+                          },
+                          "usageDisclaimer": {
+                            "description": "Usage Disclaimer",
+                            "type": "object",
+                            "properties": {
+                              "l": {
+                                "description": "Associated legal language",
+                                "type": "string",
+                                "const": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
+                              }
                             }
+                          },
+                          "issuanceDisclaimer": {
+                            "description": "Issuance Disclaimer",
+                            "type": "object",
+                            "properties": {
+                              "l": {
+                                "description": "Associated legal language",
+                                "type": "string",
+                                "const": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
+                              }
+                            }
+                          }
                         },
                         "additionalProperties": false,
                         "required": [
-                            "i",
-                            "ri",
-                            "s",
-                            "d",
-                            "e",
-                            "r"
+                          "d",
+                          "usageDisclaimer",
+                          "issuanceDisclaimer"
                         ]
-                    },
-                    "chains": [
-                        {
-                            "sad": {
-                                "v": "ACDC10JSON000197_",
-                                "d": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
-                                "i": "EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw",
-                                "ri": "ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT",
-                                "s": "EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao",
-                                "a": {
-                                    "d": "EPxKSTLEHdzTYJJa_H-XZQQOlhOVGhss0MgkptinimMc",
-                                    "i": "EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi",
-                                    "LEI": "254900OPPU84GM83MG36",
-                                    "dt": "2025-10-27T11:11:44.152000+00:00"
-                                }
-                            },
-                            "atc": "-IABEGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc0AAAAAAAAAAAAAAAAAAAAAAAEGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
-                            "iss": {
-                                "v": "KERI10JSON0000ed_",
-                                "t": "iss",
-                                "d": "EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS",
-                                "i": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
-                                "s": "0",
-                                "ri": "ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT",
-                                "dt": "2025-10-27T11:11:44.152000+00:00"
-                            },
-                            "issatc": "-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAADEFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n",
-                            "pre": "EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw",
-                            "schema": {
-                                "$id": "EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao",
-                                "$schema": "http://json-schema.org/draft-07/schema#",
-                                "title": "Qualified vLEI Issuer Credential",
-                                "description": "A vLEI Credential issued by GLEIF to Qualified vLEI Issuers which allows the Qualified vLEI Issuers to issue, verify and revoke Legal Entity vLEI Credentials and Legal Entity Official Organizational Role vLEI Credentials",
-                                "type": "object",
-                                "credentialType": "QualifiedvLEIIssuervLEICredential",
-                                "version": "1.0.0",
-                                "properties": {
-                                    "v": {
-                                        "description": "Version",
-                                        "type": "string"
-                                    },
-                                    "d": {
-                                        "description": "Credential SAID",
-                                        "type": "string"
-                                    },
-                                    "u": {
-                                        "description": "One time use nonce",
-                                        "type": "string"
-                                    },
-                                    "i": {
-                                        "description": "GLEIF Issuee AID",
-                                        "type": "string"
-                                    },
-                                    "ri": {
-                                        "description": "Credential status registry",
-                                        "type": "string"
-                                    },
-                                    "s": {
-                                        "description": "Schema SAID",
-                                        "type": "string"
-                                    },
-                                    "a": {
-                                        "oneOf": [
-                                            {
-                                                "description": "Attributes block SAID",
-                                                "type": "string"
-                                            },
-                                            {
-                                                "$id": "ELGgI0fkloqKWREXgqUfgS0bJybP1LChxCO3sqPSFHCj",
-                                                "description": "Attributes block",
-                                                "type": "object",
-                                                "properties": {
-                                                    "d": {
-                                                        "description": "Attributes block SAID",
-                                                        "type": "string"
-                                                    },
-                                                    "i": {
-                                                        "description": "QVI Issuee AID",
-                                                        "type": "string"
-                                                    },
-                                                    "dt": {
-                                                        "description": "Issuance date time",
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "LEI": {
-                                                        "description": "LEI of the requesting Legal Entity",
-                                                        "type": "string",
-                                                        "format": "ISO 17442"
-                                                    },
-                                                    "gracePeriod": {
-                                                        "description": "Allocated grace period",
-                                                        "type": "integer",
-                                                        "default": 90
-                                                    }
-                                                },
-                                                "additionalProperties": false,
-                                                "required": [
-                                                    "i",
-                                                    "dt",
-                                                    "LEI"
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    "r": {
-                                        "oneOf": [
-                                            {
-                                                "description": "Rules block SAID",
-                                                "type": "string"
-                                            },
-                                            {
-                                                "$id": "ECllqarpkZrSIWCb97XlMpEZZH3q4kc--FQ9mbkFMb_5",
-                                                "description": "Rules block",
-                                                "type": "object",
-                                                "properties": {
-                                                    "d": {
-                                                        "description": "Rules block SAID",
-                                                        "type": "string"
-                                                    },
-                                                    "usageDisclaimer": {
-                                                        "description": "Usage Disclaimer",
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "l": {
-                                                                "description": "Associated legal language",
-                                                                "type": "string",
-                                                                "const": "Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled."
-                                                            }
-                                                        }
-                                                    },
-                                                    "issuanceDisclaimer": {
-                                                        "description": "Issuance Disclaimer",
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "l": {
-                                                                "description": "Associated legal language",
-                                                                "type": "string",
-                                                                "const": "All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework."
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": false,
-                                                "required": [
-                                                    "d",
-                                                    "usageDisclaimer",
-                                                    "issuanceDisclaimer"
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": [
-                                    "i",
-                                    "ri",
-                                    "s",
-                                    "d"
-                                ]
-                            },
-                            "chains": [],
-                            "status": {
-                                "vn": [
-                                    1,
-                                    0
-                                ],
-                                "i": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
-                                "s": "0",
-                                "d": "EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS",
-                                "ri": "ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT",
-                                "ra": {},
-                                "a": {
-                                    "s": 3,
-                                    "d": "EFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n"
-                                },
-                                "dt": "2025-10-27T11:11:44.152000+00:00",
-                                "et": "iss"
-                            },
-                            "anchor": {
-                                "pre": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
-                                "sn": 0,
-                                "d": "EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS"
-                            },
-                            "anc": {
-                                "v": "KERI10JSON00013a_",
-                                "t": "ixn",
-                                "d": "EFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n",
-                                "i": "EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw",
-                                "s": "3",
-                                "p": "EGuXCWSuzQQaM6OcbpBzYGwALoBmWnaSupB34S54THrG",
-                                "a": [
-                                    {
-                                        "i": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
-                                        "s": "0",
-                                        "d": "EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS"
-                                    }
-                                ]
-                            },
-                            "ancatc": [
-                                "-VBq-AABAADJc2xKUiTVE5XlW6o3wqSNdBwCRUJzBAqVBDWrDcVDS0iJLiNJvhyqZwvVYd78mLYUfcRWD_sbO2Cnlp_tu2cN-BADAAAQ8DWbyrg5NJRQAHqM00Y6lkQpMOFDboRo_wxhJWUCf74mZKJZDZymx2ulNN7d63DFHs7IjwJf3JmEqbflFRUBABAu3OSv27hed6boMi1HoYGKMq91RuvHvQsNsCES4ExSXjbNXxJzbx3cEHWHARj_KPcQzT8I90MJRsNNRnfhvbENACBxdee8dKBpyp6lFj1R7bWtUPBcifKr-cJmZqirJebmBvUsFL-_PRdq5lOOPdcYKkB-q9yPWsW4uvcOia2-j94J-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c59d553275p00c00"
-                            ]
-                        }
-                    ],
-                    "status": {
-                        "vn": [
-                            1,
-                            0
-                        ],
-                        "i": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
-                        "s": "0",
-                        "d": "ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL",
-                        "ri": "EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh",
-                        "ra": {},
-                        "a": {
-                            "s": 2,
-                            "d": "EMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5"
-                        },
-                        "dt": "2025-10-27T11:11:54.609000+00:00",
-                        "et": "iss"
-                    },
-                    "anchor": {
-                        "pre": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
-                        "sn": 0,
-                        "d": "ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL"
-                    },
-                    "anc": {
-                        "v": "KERI10JSON00013a_",
-                        "t": "ixn",
-                        "d": "EMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5",
-                        "i": "EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi",
-                        "s": "2",
-                        "p": "EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph",
-                        "a": [
-                            {
-                                "i": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
-                                "s": "0",
-                                "d": "ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL"
-                            }
-                        ]
-                    },
-                    "ancatc": [
-                        "-VAn-AABAAC9DlzvgnqWLLa49IzRrmlOQkvBOjOKARH8GoMvcd3xHuGyvv9xZFY7uOoDru2lNnWDZ_lbjq7QhEmhikWBXwAO-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c59d644541p00c00"
+                      }
                     ]
-                }
-            ],
-            "status": {
-                "vn": [
-                    1,
-                    0
-                ],
-                "i": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
+                  }
+                },
+                "additionalProperties": false,
+                "required": ["i", "ri", "s", "d"]
+              },
+              "chains": [],
+              "status": {
+                "vn": [1, 0],
+                "i": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
                 "s": "0",
-                "d": "EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu",
-                "ri": "ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p",
+                "d": "EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS",
+                "ri": "ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT",
                 "ra": {},
                 "a": {
-                    "s": 2,
-                    "d": "EE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL"
+                  "s": 3,
+                  "d": "EFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n"
                 },
-                "dt": "2025-10-27T11:12:03.040000+00:00",
+                "dt": "2025-10-27T11:11:44.152000+00:00",
                 "et": "iss"
-            },
-            "anchor": {
-                "pre": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
+              },
+              "anchor": {
+                "pre": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
                 "sn": 0,
-                "d": "EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu"
-            },
-            "anc": {
+                "d": "EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS"
+              },
+              "anc": {
                 "v": "KERI10JSON00013a_",
                 "t": "ixn",
-                "d": "EE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL",
-                "i": "EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy",
-                "s": "2",
-                "p": "ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv",
+                "d": "EFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n",
+                "i": "EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw",
+                "s": "3",
+                "p": "EGuXCWSuzQQaM6OcbpBzYGwALoBmWnaSupB34S54THrG",
                 "a": [
-                    {
-                        "i": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
-                        "s": "0",
-                        "d": "EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu"
-                    }
+                  {
+                    "i": "EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc",
+                    "s": "0",
+                    "d": "EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS"
+                  }
                 ]
+              },
+              "ancatc": [
+                "-VBq-AABAADJc2xKUiTVE5XlW6o3wqSNdBwCRUJzBAqVBDWrDcVDS0iJLiNJvhyqZwvVYd78mLYUfcRWD_sbO2Cnlp_tu2cN-BADAAAQ8DWbyrg5NJRQAHqM00Y6lkQpMOFDboRo_wxhJWUCf74mZKJZDZymx2ulNN7d63DFHs7IjwJf3JmEqbflFRUBABAu3OSv27hed6boMi1HoYGKMq91RuvHvQsNsCES4ExSXjbNXxJzbx3cEHWHARj_KPcQzT8I90MJRsNNRnfhvbENACBxdee8dKBpyp6lFj1R7bWtUPBcifKr-cJmZqirJebmBvUsFL-_PRdq5lOOPdcYKkB-q9yPWsW4uvcOia2-j94J-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c59d553275p00c00"
+              ]
+            }
+          ],
+          "status": {
+            "vn": [1, 0],
+            "i": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
+            "s": "0",
+            "d": "ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL",
+            "ri": "EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh",
+            "ra": {},
+            "a": {
+              "s": 2,
+              "d": "EMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5"
             },
-            "ancatc": [
-                "-VBq-AABAAA_hIqsAfx3HoEmbP4SohjmF7wHWIbTYyXrWzES0L-_jTr3jAsS_g-Diw9htZCKZlDyFsP8PZVEJO3yUt-RJZsI-BADAAAj0C3SXcT-H49aPt32hulcDudzxb8-mTPKpXfdX1hcAS5p36tkOuKkVYbjYFEsdfawDuji9jpuv4VwIWGZJ28OABBKFatvAKS7M2EMaNeufpp2G4gAfrKybW5SSncWnqn87ZIZTVKApWwe0vkYGimObLMqOWFmDl3e2TogA2i-248IACCcgkdZQ-RcPqKKmDrlcmv4E5MYwau-wReamj3gEUo_eStnqDlYDiCoGn8P_PjXys88dappuEyGIB3VayOgMuME-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c12c03d674238p00c00"
+            "dt": "2025-10-27T11:11:54.609000+00:00",
+            "et": "iss"
+          },
+          "anchor": {
+            "pre": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
+            "sn": 0,
+            "d": "ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL"
+          },
+          "anc": {
+            "v": "KERI10JSON00013a_",
+            "t": "ixn",
+            "d": "EMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5",
+            "i": "EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi",
+            "s": "2",
+            "p": "EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph",
+            "a": [
+              {
+                "i": "ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs",
+                "s": "0",
+                "d": "ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL"
+              }
             ]
+          },
+          "ancatc": [
+            "-VAn-AABAAC9DlzvgnqWLLa49IzRrmlOQkvBOjOKARH8GoMvcd3xHuGyvv9xZFY7uOoDru2lNnWDZ_lbjq7QhEmhikWBXwAO-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c59d644541p00c00"
+          ]
+        }
+      ],
+      "status": {
+        "vn": [1, 0],
+        "i": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
+        "s": "0",
+        "d": "EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu",
+        "ri": "ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p",
+        "ra": {},
+        "a": {
+          "s": 2,
+          "d": "EE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL"
         },
-        "cesr": "{\"v\":\"KERI10JSON0001b7_\",\"t\":\"icp\",\"d\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DGdE6wXPtvFYcyz0UehDHh1w0BGeMQK_TlwtR-SXgB2o\"],\"nt\":\"1\",\"n\":[\"EEkbRC-9HGymvRXLAc6xEr6FqiRrF7VMSFR0cyoVuzi7\"],\"bt\":\"3\",\"b\":[\"BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha\",\"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM\",\"BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX\"],\"c\":[],\"a\":[]}-VBq-AABAACph6Rc3vpp9zGzzqa7tbUyvWDx5_97l0eBmPi-eiHu0sbuIuFRwaUlvWXH5m3xQ8EUwETJXBYuzd_J744tQX4L-BADAAAFz1MNDAi059Kqj8M2AxtF00Vm3wCmHp6qRuo-tExKm19L3LLsmvL73N80IbLp3wFKgkO1DP94gjjp48tKddULABDvtFO-V4XKlKQkfsgwTlgy4eMdH9Cf_ODBdSSntAfTvTnPCKiw0ZyHKZqYnpxD73jCjA7SbLZ4zzmspbP7UlwGACDUIDx7dQ6poYQroLjNgRmYPo9fFcC5ur1_jXPHVbHJttmvpTeJFcW-Gz0DvHui3ZXKGRNiZz2tr5nJU9W9l78C-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c26d242850p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EFvg6chDrvqXbAJgv4aIOywDiSR-To_RyAloZIDGV4H9\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"1\",\"p\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"a\":[{\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"0\",\"d\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\"}]}-VBq-AABAABnpKLCMeAcNiBicK-Dvr9ItizA-rwqQ_cyS9r6j7cK3FsSYigdq8KQ7pvnYKJXMzdM9JsyGYU56Uo86TxX9TcE-BADAADpaXUMV8bi_YpXSnozjxZ1kQfSZVFrNKCNARV6boaZx8ma_2DltfBS1edjFse6sn7YwacIoAjOYZwNcHcYae8OABC4X-_osFCh678wombUZkQvyDhd7qPcr2Uu7lwkepKxVjQkiwhouaDoHF4tIN2klGbkwzayz84Jwt1kvFeSXqoGACATqDHBB_ayokIQYY5OiMilkfGB4fu2uKaZrMsF05hgpz2H2llA4pHoQ1XdtPSWxWb1AOH49UsVdMHlDCeFP_0O-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c11c26d253271p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EGuXCWSuzQQaM6OcbpBzYGwALoBmWnaSupB34S54THrG\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"2\",\"p\":\"EFvg6chDrvqXbAJgv4aIOywDiSR-To_RyAloZIDGV4H9\",\"a\":[{\"i\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"s\":\"0\",\"d\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\"}]}-VBq-AABAAA4qyRNx-eLlJyHdbR8EQ8GrkmhmUQeTGOewcw2bFWdUue4uAnlpA2664xuQBa06eCWZotXgN7ZShSKavhbJP0L-BADAABgA2tkqu12vIP64vGirkWOFw0jFjoZ0QjAGRYi1zjcjw1yc1YIpQWJ19yrLlyUV9etQ4tKzwUWxlLR_3eK_yEHABCamk6FuttFlwq4G0lISXD1qkrIzJQrDn3JqNgaJJIXUt2LG9dVziWz6mTetwsMceUe4x-xmN9bS5xBjcM2DkgEACBPb4dngcCokK7FKf3rAH8hUtlvB6vbM9jlghBvhJIGEvgqrPmNMKj0FLaxW1YBJSv40MdYWSh9Pufr48u73QoL-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c10d227679p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"3\",\"p\":\"EGuXCWSuzQQaM6OcbpBzYGwALoBmWnaSupB34S54THrG\",\"a\":[{\"i\":\"EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc\",\"s\":\"0\",\"d\":\"EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS\"}]}-VBq-AABAADJc2xKUiTVE5XlW6o3wqSNdBwCRUJzBAqVBDWrDcVDS0iJLiNJvhyqZwvVYd78mLYUfcRWD_sbO2Cnlp_tu2cN-BADAAAQ8DWbyrg5NJRQAHqM00Y6lkQpMOFDboRo_wxhJWUCf74mZKJZDZymx2ulNN7d63DFHs7IjwJf3JmEqbflFRUBABAu3OSv27hed6boMi1HoYGKMq91RuvHvQsNsCES4ExSXjbNXxJzbx3cEHWHARj_KPcQzT8I90MJRsNNRnfhvbENACBxdee8dKBpyp6lFj1R7bWtUPBcifKr-cJmZqirJebmBvUsFL-_PRdq5lOOPdcYKkB-q9yPWsW4uvcOia2-j94J-EAB0AAAAAAAAAAAAAAAAAAAAAAD1AAG2025-10-27T11c12c10d247968p00c00{\"v\":\"KERI10JSON00015f_\",\"t\":\"dip\",\"d\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DPrBCHszYmfzofOUJx3r72q-j8iJVdZcZl8BxSJvL6uO\"],\"nt\":\"1\",\"n\":[\"EPJ8BZaHgyndA4ifWyLKZprEJ2ZbT0M8gw-Use2wz_CB\"],\"bt\":\"0\",\"b\":[],\"c\":[],\"a\":[],\"di\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\"}-VA5-AABAADGZ2L37alhiEWHKfkVlfBqhSZ0OII9a6ixCrpyJtOj9YVre3ZxH1lZq7JMeqmVJrGEh_l4TCPY-8JgbsR5OioG-GAB0AAAAAAAAAAAAAAAAAAAAAABEFvg6chDrvqXbAJgv4aIOywDiSR-To_RyAloZIDGV4H9-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c26d967647p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"1\",\"p\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"a\":[{\"i\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"s\":\"0\",\"d\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\"}]}-VAn-AABAADsz-9oDTB1FbsPZPjNb9dpRUqfnkkS00hzlbze3jxUScjEk8lhBb1ucXzcOXdAcwBlRqgh6QpbVqRjlo4--2MO-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c12c10d261566p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"2\",\"p\":\"EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph\",\"a\":[{\"i\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"s\":\"0\",\"d\":\"ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL\"}]}-VAn-AABAAC9DlzvgnqWLLa49IzRrmlOQkvBOjOKARH8GoMvcd3xHuGyvv9xZFY7uOoDru2lNnWDZ_lbjq7QhEmhikWBXwAO-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c10d269958p00c00{\"v\":\"KERI10JSON000113_\",\"t\":\"vcp\",\"d\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"i\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"ii\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"0\",\"c\":[\"NB\"],\"bt\":\"0\",\"b\":[],\"n\":\"ANY_uifn0c6Z9OMgwg9PwooYhaPhDC1xnlfonA1cA_oX\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEGuXCWSuzQQaM6OcbpBzYGwALoBmWnaSupB34S54THrG{\"v\":\"KERI10JSON0000ed_\",\"t\":\"iss\",\"d\":\"EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS\",\"i\":\"EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc\",\"s\":\"0\",\"ri\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"dt\":\"2025-10-27T11:11:44.152000+00:00\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAADEFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n{\"v\":\"ACDC10JSON000197_\",\"d\":\"EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"ri\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"s\":\"EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao\",\"a\":{\"d\":\"EPxKSTLEHdzTYJJa_H-XZQQOlhOVGhss0MgkptinimMc\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"LEI\":\"254900OPPU84GM83MG36\",\"dt\":\"2025-10-27T11:11:44.152000+00:00\"}}-IABEGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc0AAAAAAAAAAAAAAAAAAAAAAAEPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS{\"v\":\"KERI10JSON00015f_\",\"t\":\"dip\",\"d\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DPrBCHszYmfzofOUJx3r72q-j8iJVdZcZl8BxSJvL6uO\"],\"nt\":\"1\",\"n\":[\"EPJ8BZaHgyndA4ifWyLKZprEJ2ZbT0M8gw-Use2wz_CB\"],\"bt\":\"0\",\"b\":[],\"c\":[],\"a\":[],\"di\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\"}-VA5-AABAADGZ2L37alhiEWHKfkVlfBqhSZ0OII9a6ixCrpyJtOj9YVre3ZxH1lZq7JMeqmVJrGEh_l4TCPY-8JgbsR5OioG-GAB0AAAAAAAAAAAAAAAAAAAAAABEFvg6chDrvqXbAJgv4aIOywDiSR-To_RyAloZIDGV4H9-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c26d967647p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"1\",\"p\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"a\":[{\"i\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"s\":\"0\",\"d\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\"}]}-VAn-AABAADsz-9oDTB1FbsPZPjNb9dpRUqfnkkS00hzlbze3jxUScjEk8lhBb1ucXzcOXdAcwBlRqgh6QpbVqRjlo4--2MO-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c12c10d261566p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"2\",\"p\":\"EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph\",\"a\":[{\"i\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"s\":\"0\",\"d\":\"ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL\"}]}-VAn-AABAAC9DlzvgnqWLLa49IzRrmlOQkvBOjOKARH8GoMvcd3xHuGyvv9xZFY7uOoDru2lNnWDZ_lbjq7QhEmhikWBXwAO-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c10d269958p00c00{\"v\":\"KERI10JSON0001b7_\",\"t\":\"icp\",\"d\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DDfetqGckMDlPvmNK3mci_-fHoQwuwRfwn-7-78ET-vt\"],\"nt\":\"1\",\"n\":[\"EPV4U0a86gh0YAF779wuuSNr_UZPx58xwvJV_tOKG8jt\"],\"bt\":\"3\",\"b\":[\"BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha\",\"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM\",\"BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX\"],\"c\":[],\"a\":[]}-VBq-AABAABox36fvAutWLM-rrT2mHQy_ScYqhpbcrIg4YBh4T-qBWpgc65Xwns1XmQ3O2cZ5KoNXojCObweufQqzms2zc4D-BADAAC4i7jCJtvorQR1iMhXACmclfD3LL38JGx_pitI58JGcVHxLFAfsktrXwkfEXGEF1W-mrHWoDM-aLB9KuAsf-kEABCpq-R2niUbuSyiNX4HnDgZqYzWOgWgHbKi7OZFe2J_41teL5NV2VKXXyHuoax57r59PkJ5trpg9JSSYvwN2-gPACAJzuaItIQnp3YP5yaE0cP5LdfzGrbkpPSqYwJDFaMhhNqS_mEsxDgwRBdebo-WJMfLKeQkyoPADvlJfgAqk8wO-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c27d584973p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"1\",\"p\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"a\":[{\"i\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"s\":\"0\",\"d\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\"}]}-VBq-AABAACHHeQ-61BasO6S_KU1_V56_5351llQ-o3LlalY5FUUqWJOZFxkviVlqN_9e6o12Z183LfzJZBX7cPoR9rrTZAE-BADAADY0jMy7niqrzMTXdU2YqTfSyW4bIv_4L8fIyx8vSejLiWyvAprHfwQtYHwdmoHo7eAcn-ltGttMJ70_hGYibYNABDn4xQSyVStaVqhAZi4UqLNjGuEcd3Rc7L4RUQ4S0wzTcRKWaFXpQkm5O8DaTbOg5BEULBhkeBZ5qB4_1XHz4IEACAaGbTzfK_qIRAPEgDJUAA5m-acFcEZDbqo5TbVLsvZDzVT7_rYF7Q_nmor1Dzf5Il9Q-7cdqLY2CT91rES1IcO-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c12c09d958187p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"2\",\"p\":\"ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv\",\"a\":[{\"i\":\"EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO\",\"s\":\"0\",\"d\":\"EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu\"}]}-VBq-AABAAA_hIqsAfx3HoEmbP4SohjmF7wHWIbTYyXrWzES0L-_jTr3jAsS_g-Diw9htZCKZlDyFsP8PZVEJO3yUt-RJZsI-BADAAAj0C3SXcT-H49aPt32hulcDudzxb8-mTPKpXfdX1hcAS5p36tkOuKkVYbjYFEsdfawDuji9jpuv4VwIWGZJ28OABBKFatvAKS7M2EMaNeufpp2G4gAfrKybW5SSncWnqn87ZIZTVKApWwe0vkYGimObLMqOWFmDl3e2TogA2i-248IACCcgkdZQ-RcPqKKmDrlcmv4E5MYwau-wReamj3gEUo_eStnqDlYDiCoGn8P_PjXys88dappuEyGIB3VayOgMuME-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c09d989338p00c00{\"v\":\"KERI10JSON000113_\",\"t\":\"vcp\",\"d\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"i\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"ii\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"0\",\"c\":[\"NB\"],\"bt\":\"0\",\"b\":[],\"n\":\"AEcnuEVHKoHUiWB2mkoll5VWzxdYhrVJNZCL1x3N6ipq\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAABEEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph{\"v\":\"KERI10JSON0000ed_\",\"t\":\"iss\",\"d\":\"ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL\",\"i\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"s\":\"0\",\"ri\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"dt\":\"2025-10-27T11:11:54.609000+00:00\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5{\"v\":\"ACDC10JSON0005c8_\",\"d\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"ri\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"s\":\"ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY\",\"a\":{\"d\":\"ELg7MSjfo3W7dzN7KZUz_6np4Dp8cslUfFsZxbgqYRVt\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"LEI\":\"875500ELOZEL05BVXV37\",\"dt\":\"2025-10-27T11:11:54.609000+00:00\"},\"e\":{\"d\":\"EOB5HOW7dXn8vU2YHYrcOzi3Ca-tR1q8Yd-UMwGDJJEj\",\"qvi\":{\"n\":\"EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc\",\"s\":\"EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao\"}},\"r\":{\"d\":\"EGZ97EjPSINR-O-KHDN_uw4fdrTxeuRXrqT5ZHHQJujQ\",\"usageDisclaimer\":{\"l\":\"Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled.\"},\"issuanceDisclaimer\":{\"l\":\"All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework.\"}}}-IABENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs0AAAAAAAAAAAAAAAAAAAAAAAECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL{\"v\":\"KERI10JSON0001b7_\",\"t\":\"icp\",\"d\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DDfetqGckMDlPvmNK3mci_-fHoQwuwRfwn-7-78ET-vt\"],\"nt\":\"1\",\"n\":[\"EPV4U0a86gh0YAF779wuuSNr_UZPx58xwvJV_tOKG8jt\"],\"bt\":\"3\",\"b\":[\"BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha\",\"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM\",\"BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX\"],\"c\":[],\"a\":[]}-VBq-AABAABox36fvAutWLM-rrT2mHQy_ScYqhpbcrIg4YBh4T-qBWpgc65Xwns1XmQ3O2cZ5KoNXojCObweufQqzms2zc4D-BADAAC4i7jCJtvorQR1iMhXACmclfD3LL38JGx_pitI58JGcVHxLFAfsktrXwkfEXGEF1W-mrHWoDM-aLB9KuAsf-kEABCpq-R2niUbuSyiNX4HnDgZqYzWOgWgHbKi7OZFe2J_41teL5NV2VKXXyHuoax57r59PkJ5trpg9JSSYvwN2-gPACAJzuaItIQnp3YP5yaE0cP5LdfzGrbkpPSqYwJDFaMhhNqS_mEsxDgwRBdebo-WJMfLKeQkyoPADvlJfgAqk8wO-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c27d584973p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"1\",\"p\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"a\":[{\"i\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"s\":\"0\",\"d\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\"}]}-VBq-AABAACHHeQ-61BasO6S_KU1_V56_5351llQ-o3LlalY5FUUqWJOZFxkviVlqN_9e6o12Z183LfzJZBX7cPoR9rrTZAE-BADAADY0jMy7niqrzMTXdU2YqTfSyW4bIv_4L8fIyx8vSejLiWyvAprHfwQtYHwdmoHo7eAcn-ltGttMJ70_hGYibYNABDn4xQSyVStaVqhAZi4UqLNjGuEcd3Rc7L4RUQ4S0wzTcRKWaFXpQkm5O8DaTbOg5BEULBhkeBZ5qB4_1XHz4IEACAaGbTzfK_qIRAPEgDJUAA5m-acFcEZDbqo5TbVLsvZDzVT7_rYF7Q_nmor1Dzf5Il9Q-7cdqLY2CT91rES1IcO-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c12c09d958187p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"2\",\"p\":\"ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv\",\"a\":[{\"i\":\"EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO\",\"s\":\"0\",\"d\":\"EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu\"}]}-VBq-AABAAA_hIqsAfx3HoEmbP4SohjmF7wHWIbTYyXrWzES0L-_jTr3jAsS_g-Diw9htZCKZlDyFsP8PZVEJO3yUt-RJZsI-BADAAAj0C3SXcT-H49aPt32hulcDudzxb8-mTPKpXfdX1hcAS5p36tkOuKkVYbjYFEsdfawDuji9jpuv4VwIWGZJ28OABBKFatvAKS7M2EMaNeufpp2G4gAfrKybW5SSncWnqn87ZIZTVKApWwe0vkYGimObLMqOWFmDl3e2TogA2i-248IACCcgkdZQ-RcPqKKmDrlcmv4E5MYwau-wReamj3gEUo_eStnqDlYDiCoGn8P_PjXys88dappuEyGIB3VayOgMuME-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c09d989338p00c00{\"v\":\"KERI10JSON0001b7_\",\"t\":\"icp\",\"d\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"i\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DLiLyFx-2WhtEzbkS6CaOYO5GKPTSRXBZLqxbE3UTvqf\"],\"nt\":\"1\",\"n\":[\"EPo2jYIZb1far69gBRoUZ2HIJNP5xNodt8GOi9rhYBch\"],\"bt\":\"3\",\"b\":[\"BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha\",\"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM\",\"BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX\"],\"c\":[],\"a\":[]}-VBq-AABAADBykTh2Rzr1JUCmwTaEKFO175ZWYTmvRXuR0jEJjlDbRrKQNNTiIiQ2bLGjAoegeOy_ZT7Py5w_YTzvWbY1UIL-BADAADo55i0Avbb2O3CB7gqQqdFGd8QV-8W77FuSQFBYzYidppDs5wfmLPqD7LZuZqWvcHpIRSmEBVaY8Ph6jLCRYsMABD5uEtmK_TwoB6GbfMPGsTInK9XZIVevqRhqMqCcoVWXDEAN6fLjwj_k63hOl_3EgBjgjR9oPVUFVfqLGKRcccDACC5hPmj_8o3MRREznwFJAhgheR3Hg30DqvCaNKOXG3BbWBwQlEsr-UUa4WAeggIBnOMGI7ttz9z8blbq7XCleQH-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c23d770954p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EExa6Bu8n-EqpZWSO7ZYNTxv0gCzqIZRd_0u1bC7bXPM\",\"i\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"s\":\"1\",\"p\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"a\":[{\"i\":\"EOAM_yqJ1lPuSjJP41O-grGK7chrhRe5ycwnow87VeJD\",\"s\":\"0\",\"d\":\"EOAM_yqJ1lPuSjJP41O-grGK7chrhRe5ycwnow87VeJD\"}]}-VBq-AABAABtlNtAce65ZChIR8g03BwvN4ucbTFugVZbDw-kCBvWBPeWTfoUzarLjrI_4FPn_FxVGQDeCwKRvgqrFNlSg2MO-BADAAC-PZJbQ5HyL9mkh1p9CyA5KcmWlJ7pO_nBYLmbR4kpW5l9w8susDdI542NfRRTLbdnMCGAkuOQlKIGg7Zdkv0HABAQu2oM_nNrOofNFXfA-_oDtrALt9tiFuBdwncrCZwO_za84kRftExEY-OPBrqTLi7fYJYbpNlNeIL63oKD6lAOACA8bre9h2cxMaafmqn_rs9whVg7NYa74iSTXxYGDMqhfToCIx3tcyWJnZJIhkXBQOt35om97VLLLZVlAE0GORIB-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c11c42d381700p00c00{\"v\":\"KERI10JSON000113_\",\"t\":\"vcp\",\"d\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"i\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"ii\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"0\",\"c\":[\"NB\"],\"bt\":\"0\",\"b\":[],\"n\":\"AKI0NWAOBQu_IRU65b9hJt5hGJTKm8cXMnR4oll8_wqM\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAABENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv{\"v\":\"KERI10JSON0000ed_\",\"t\":\"iss\",\"d\":\"EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu\",\"i\":\"EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO\",\"s\":\"0\",\"ri\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"dt\":\"2025-10-27T11:12:03.040000+00:00\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL{\"v\":\"ACDC10JSON0007fc_\",\"d\":\"EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO\",\"u\":\"0AAEyRq3CpNBgouwnokyznQl\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"ri\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"s\":\"EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw\",\"a\":{\"d\":\"EFsIRL4MpHzL95ePBcNrA-4y9prYze5Tu1FITwYPHLiI\",\"i\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"u\":\"0ABmG3CdlVEgCiGgkc8XmJUV\",\"engagementContextRole\":\"EBA Data Submitter\",\"personLegalName\":\"John Doe\",\"LEI\":\"875500ELOZEL05BVXV37\",\"dt\":\"2025-10-27T11:12:03.040000+00:00\"},\"e\":{\"d\":\"EApA52ZlchxHPlmK299EGBp6XYW9SHGm6lgsmBk81gAq\",\"le\":{\"n\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"s\":\"ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY\"}},\"r\":{\"d\":\"EIfq_m1DI2IQ1MgHhUl9sq3IQ_PJP9WQ1LhbMscngDCB\",\"usageDisclaimer\":{\"l\":\"Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled.\"},\"issuanceDisclaimer\":{\"l\":\"All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework.\"},\"privacyDisclaimer\":{\"l\":\"It is the sole responsibility of Holders as Issuees of an ECR vLEI Credential to present that Credential in a privacy-preserving manner using the mechanisms provided in the Issuance and Presentation Exchange (IPEX) protocol specification and the Authentic Chained Data Container (ACDC) specification. https://github.com/WebOfTrust/IETF-IPEX and https://github.com/trustoverip/tswg-acdc-specification.\"}}}-IABEEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO0AAAAAAAAAAAAAAAAAAAAAAAEELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu",
-        "issueName": "ecr-aid-1"
+        "dt": "2025-10-27T11:12:03.040000+00:00",
+        "et": "iss"
+      },
+      "anchor": {
+        "pre": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
+        "sn": 0,
+        "d": "EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu"
+      },
+      "anc": {
+        "v": "KERI10JSON00013a_",
+        "t": "ixn",
+        "d": "EE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL",
+        "i": "EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy",
+        "s": "2",
+        "p": "ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv",
+        "a": [
+          {
+            "i": "EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO",
+            "s": "0",
+            "d": "EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu"
+          }
+        ]
+      },
+      "ancatc": [
+        "-VBq-AABAAA_hIqsAfx3HoEmbP4SohjmF7wHWIbTYyXrWzES0L-_jTr3jAsS_g-Diw9htZCKZlDyFsP8PZVEJO3yUt-RJZsI-BADAAAj0C3SXcT-H49aPt32hulcDudzxb8-mTPKpXfdX1hcAS5p36tkOuKkVYbjYFEsdfawDuji9jpuv4VwIWGZJ28OABBKFatvAKS7M2EMaNeufpp2G4gAfrKybW5SSncWnqn87ZIZTVKApWwe0vkYGimObLMqOWFmDl3e2TogA2i-248IACCcgkdZQ-RcPqKKmDrlcmv4E5MYwau-wReamj3gEUo_eStnqDlYDiCoGn8P_PjXys88dappuEyGIB3VayOgMuME-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c12c03d674238p00c00"
+      ]
     },
-    "engagementContextRole": "EBA Data Submitter"
+    "cesr": "{\"v\":\"KERI10JSON0001b7_\",\"t\":\"icp\",\"d\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DGdE6wXPtvFYcyz0UehDHh1w0BGeMQK_TlwtR-SXgB2o\"],\"nt\":\"1\",\"n\":[\"EEkbRC-9HGymvRXLAc6xEr6FqiRrF7VMSFR0cyoVuzi7\"],\"bt\":\"3\",\"b\":[\"BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha\",\"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM\",\"BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX\"],\"c\":[],\"a\":[]}-VBq-AABAACph6Rc3vpp9zGzzqa7tbUyvWDx5_97l0eBmPi-eiHu0sbuIuFRwaUlvWXH5m3xQ8EUwETJXBYuzd_J744tQX4L-BADAAAFz1MNDAi059Kqj8M2AxtF00Vm3wCmHp6qRuo-tExKm19L3LLsmvL73N80IbLp3wFKgkO1DP94gjjp48tKddULABDvtFO-V4XKlKQkfsgwTlgy4eMdH9Cf_ODBdSSntAfTvTnPCKiw0ZyHKZqYnpxD73jCjA7SbLZ4zzmspbP7UlwGACDUIDx7dQ6poYQroLjNgRmYPo9fFcC5ur1_jXPHVbHJttmvpTeJFcW-Gz0DvHui3ZXKGRNiZz2tr5nJU9W9l78C-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c26d242850p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EFvg6chDrvqXbAJgv4aIOywDiSR-To_RyAloZIDGV4H9\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"1\",\"p\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"a\":[{\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"0\",\"d\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\"}]}-VBq-AABAABnpKLCMeAcNiBicK-Dvr9ItizA-rwqQ_cyS9r6j7cK3FsSYigdq8KQ7pvnYKJXMzdM9JsyGYU56Uo86TxX9TcE-BADAADpaXUMV8bi_YpXSnozjxZ1kQfSZVFrNKCNARV6boaZx8ma_2DltfBS1edjFse6sn7YwacIoAjOYZwNcHcYae8OABC4X-_osFCh678wombUZkQvyDhd7qPcr2Uu7lwkepKxVjQkiwhouaDoHF4tIN2klGbkwzayz84Jwt1kvFeSXqoGACATqDHBB_ayokIQYY5OiMilkfGB4fu2uKaZrMsF05hgpz2H2llA4pHoQ1XdtPSWxWb1AOH49UsVdMHlDCeFP_0O-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c11c26d253271p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EGuXCWSuzQQaM6OcbpBzYGwALoBmWnaSupB34S54THrG\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"2\",\"p\":\"EFvg6chDrvqXbAJgv4aIOywDiSR-To_RyAloZIDGV4H9\",\"a\":[{\"i\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"s\":\"0\",\"d\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\"}]}-VBq-AABAAA4qyRNx-eLlJyHdbR8EQ8GrkmhmUQeTGOewcw2bFWdUue4uAnlpA2664xuQBa06eCWZotXgN7ZShSKavhbJP0L-BADAABgA2tkqu12vIP64vGirkWOFw0jFjoZ0QjAGRYi1zjcjw1yc1YIpQWJ19yrLlyUV9etQ4tKzwUWxlLR_3eK_yEHABCamk6FuttFlwq4G0lISXD1qkrIzJQrDn3JqNgaJJIXUt2LG9dVziWz6mTetwsMceUe4x-xmN9bS5xBjcM2DkgEACBPb4dngcCokK7FKf3rAH8hUtlvB6vbM9jlghBvhJIGEvgqrPmNMKj0FLaxW1YBJSv40MdYWSh9Pufr48u73QoL-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c10d227679p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"3\",\"p\":\"EGuXCWSuzQQaM6OcbpBzYGwALoBmWnaSupB34S54THrG\",\"a\":[{\"i\":\"EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc\",\"s\":\"0\",\"d\":\"EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS\"}]}-VBq-AABAADJc2xKUiTVE5XlW6o3wqSNdBwCRUJzBAqVBDWrDcVDS0iJLiNJvhyqZwvVYd78mLYUfcRWD_sbO2Cnlp_tu2cN-BADAAAQ8DWbyrg5NJRQAHqM00Y6lkQpMOFDboRo_wxhJWUCf74mZKJZDZymx2ulNN7d63DFHs7IjwJf3JmEqbflFRUBABAu3OSv27hed6boMi1HoYGKMq91RuvHvQsNsCES4ExSXjbNXxJzbx3cEHWHARj_KPcQzT8I90MJRsNNRnfhvbENACBxdee8dKBpyp6lFj1R7bWtUPBcifKr-cJmZqirJebmBvUsFL-_PRdq5lOOPdcYKkB-q9yPWsW4uvcOia2-j94J-EAB0AAAAAAAAAAAAAAAAAAAAAAD1AAG2025-10-27T11c12c10d247968p00c00{\"v\":\"KERI10JSON00015f_\",\"t\":\"dip\",\"d\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DPrBCHszYmfzofOUJx3r72q-j8iJVdZcZl8BxSJvL6uO\"],\"nt\":\"1\",\"n\":[\"EPJ8BZaHgyndA4ifWyLKZprEJ2ZbT0M8gw-Use2wz_CB\"],\"bt\":\"0\",\"b\":[],\"c\":[],\"a\":[],\"di\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\"}-VA5-AABAADGZ2L37alhiEWHKfkVlfBqhSZ0OII9a6ixCrpyJtOj9YVre3ZxH1lZq7JMeqmVJrGEh_l4TCPY-8JgbsR5OioG-GAB0AAAAAAAAAAAAAAAAAAAAAABEFvg6chDrvqXbAJgv4aIOywDiSR-To_RyAloZIDGV4H9-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c26d967647p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"1\",\"p\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"a\":[{\"i\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"s\":\"0\",\"d\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\"}]}-VAn-AABAADsz-9oDTB1FbsPZPjNb9dpRUqfnkkS00hzlbze3jxUScjEk8lhBb1ucXzcOXdAcwBlRqgh6QpbVqRjlo4--2MO-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c12c10d261566p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"2\",\"p\":\"EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph\",\"a\":[{\"i\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"s\":\"0\",\"d\":\"ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL\"}]}-VAn-AABAAC9DlzvgnqWLLa49IzRrmlOQkvBOjOKARH8GoMvcd3xHuGyvv9xZFY7uOoDru2lNnWDZ_lbjq7QhEmhikWBXwAO-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c10d269958p00c00{\"v\":\"KERI10JSON000113_\",\"t\":\"vcp\",\"d\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"i\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"ii\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"s\":\"0\",\"c\":[\"NB\"],\"bt\":\"0\",\"b\":[],\"n\":\"ANY_uifn0c6Z9OMgwg9PwooYhaPhDC1xnlfonA1cA_oX\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEGuXCWSuzQQaM6OcbpBzYGwALoBmWnaSupB34S54THrG{\"v\":\"KERI10JSON0000ed_\",\"t\":\"iss\",\"d\":\"EPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS\",\"i\":\"EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc\",\"s\":\"0\",\"ri\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"dt\":\"2025-10-27T11:11:44.152000+00:00\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAADEFYAWqT4qCJXAhnhvwzpij_CJ18m_zG6ptu0n9pJGP0n{\"v\":\"ACDC10JSON000197_\",\"d\":\"EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc\",\"i\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\",\"ri\":\"ECpOAhY89LT1J185g1u8cFUlE61mUalbqLuWMHtULrlT\",\"s\":\"EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao\",\"a\":{\"d\":\"EPxKSTLEHdzTYJJa_H-XZQQOlhOVGhss0MgkptinimMc\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"LEI\":\"254900OPPU84GM83MG36\",\"dt\":\"2025-10-27T11:11:44.152000+00:00\"}}-IABEGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc0AAAAAAAAAAAAAAAAAAAAAAAEPebiDHQt5lrjIpvhqgBpXYYSPYMSLtkHF64VPc1BxxS{\"v\":\"KERI10JSON00015f_\",\"t\":\"dip\",\"d\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DPrBCHszYmfzofOUJx3r72q-j8iJVdZcZl8BxSJvL6uO\"],\"nt\":\"1\",\"n\":[\"EPJ8BZaHgyndA4ifWyLKZprEJ2ZbT0M8gw-Use2wz_CB\"],\"bt\":\"0\",\"b\":[],\"c\":[],\"a\":[],\"di\":\"EP5sm_QK6tGH1-0oIggJdzfI5MpXNA4GbkKGJ9g5v_sw\"}-VA5-AABAADGZ2L37alhiEWHKfkVlfBqhSZ0OII9a6ixCrpyJtOj9YVre3ZxH1lZq7JMeqmVJrGEh_l4TCPY-8JgbsR5OioG-GAB0AAAAAAAAAAAAAAAAAAAAAABEFvg6chDrvqXbAJgv4aIOywDiSR-To_RyAloZIDGV4H9-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c26d967647p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"1\",\"p\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"a\":[{\"i\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"s\":\"0\",\"d\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\"}]}-VAn-AABAADsz-9oDTB1FbsPZPjNb9dpRUqfnkkS00hzlbze3jxUScjEk8lhBb1ucXzcOXdAcwBlRqgh6QpbVqRjlo4--2MO-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c12c10d261566p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"2\",\"p\":\"EEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph\",\"a\":[{\"i\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"s\":\"0\",\"d\":\"ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL\"}]}-VAn-AABAAC9DlzvgnqWLLa49IzRrmlOQkvBOjOKARH8GoMvcd3xHuGyvv9xZFY7uOoDru2lNnWDZ_lbjq7QhEmhikWBXwAO-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c10d269958p00c00{\"v\":\"KERI10JSON0001b7_\",\"t\":\"icp\",\"d\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DDfetqGckMDlPvmNK3mci_-fHoQwuwRfwn-7-78ET-vt\"],\"nt\":\"1\",\"n\":[\"EPV4U0a86gh0YAF779wuuSNr_UZPx58xwvJV_tOKG8jt\"],\"bt\":\"3\",\"b\":[\"BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha\",\"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM\",\"BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX\"],\"c\":[],\"a\":[]}-VBq-AABAABox36fvAutWLM-rrT2mHQy_ScYqhpbcrIg4YBh4T-qBWpgc65Xwns1XmQ3O2cZ5KoNXojCObweufQqzms2zc4D-BADAAC4i7jCJtvorQR1iMhXACmclfD3LL38JGx_pitI58JGcVHxLFAfsktrXwkfEXGEF1W-mrHWoDM-aLB9KuAsf-kEABCpq-R2niUbuSyiNX4HnDgZqYzWOgWgHbKi7OZFe2J_41teL5NV2VKXXyHuoax57r59PkJ5trpg9JSSYvwN2-gPACAJzuaItIQnp3YP5yaE0cP5LdfzGrbkpPSqYwJDFaMhhNqS_mEsxDgwRBdebo-WJMfLKeQkyoPADvlJfgAqk8wO-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c27d584973p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"1\",\"p\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"a\":[{\"i\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"s\":\"0\",\"d\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\"}]}-VBq-AABAACHHeQ-61BasO6S_KU1_V56_5351llQ-o3LlalY5FUUqWJOZFxkviVlqN_9e6o12Z183LfzJZBX7cPoR9rrTZAE-BADAADY0jMy7niqrzMTXdU2YqTfSyW4bIv_4L8fIyx8vSejLiWyvAprHfwQtYHwdmoHo7eAcn-ltGttMJ70_hGYibYNABDn4xQSyVStaVqhAZi4UqLNjGuEcd3Rc7L4RUQ4S0wzTcRKWaFXpQkm5O8DaTbOg5BEULBhkeBZ5qB4_1XHz4IEACAaGbTzfK_qIRAPEgDJUAA5m-acFcEZDbqo5TbVLsvZDzVT7_rYF7Q_nmor1Dzf5Il9Q-7cdqLY2CT91rES1IcO-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c12c09d958187p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"2\",\"p\":\"ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv\",\"a\":[{\"i\":\"EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO\",\"s\":\"0\",\"d\":\"EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu\"}]}-VBq-AABAAA_hIqsAfx3HoEmbP4SohjmF7wHWIbTYyXrWzES0L-_jTr3jAsS_g-Diw9htZCKZlDyFsP8PZVEJO3yUt-RJZsI-BADAAAj0C3SXcT-H49aPt32hulcDudzxb8-mTPKpXfdX1hcAS5p36tkOuKkVYbjYFEsdfawDuji9jpuv4VwIWGZJ28OABBKFatvAKS7M2EMaNeufpp2G4gAfrKybW5SSncWnqn87ZIZTVKApWwe0vkYGimObLMqOWFmDl3e2TogA2i-248IACCcgkdZQ-RcPqKKmDrlcmv4E5MYwau-wReamj3gEUo_eStnqDlYDiCoGn8P_PjXys88dappuEyGIB3VayOgMuME-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c09d989338p00c00{\"v\":\"KERI10JSON000113_\",\"t\":\"vcp\",\"d\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"i\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"ii\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"s\":\"0\",\"c\":[\"NB\"],\"bt\":\"0\",\"b\":[],\"n\":\"AEcnuEVHKoHUiWB2mkoll5VWzxdYhrVJNZCL1x3N6ipq\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAABEEsLkqw-RyZKtJ2JgKidV_hBzYPgmeJTSbkIpXWuCsph{\"v\":\"KERI10JSON0000ed_\",\"t\":\"iss\",\"d\":\"ECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL\",\"i\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"s\":\"0\",\"ri\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"dt\":\"2025-10-27T11:11:54.609000+00:00\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEMyn5t6fXxomVACl4YRsTPsNnjCuzypi6LsLQclv3WJ5{\"v\":\"ACDC10JSON0005c8_\",\"d\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"i\":\"EN9-cCsBBvOlqhOPbdDDazL-bGyjFNpljiQaoQIs0DRi\",\"ri\":\"EMtJXI5LW7hV53Ztxsn4ogjEE2WYA8rBTATIBMhFz-uh\",\"s\":\"ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY\",\"a\":{\"d\":\"ELg7MSjfo3W7dzN7KZUz_6np4Dp8cslUfFsZxbgqYRVt\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"LEI\":\"875500ELOZEL05BVXV37\",\"dt\":\"2025-10-27T11:11:54.609000+00:00\"},\"e\":{\"d\":\"EOB5HOW7dXn8vU2YHYrcOzi3Ca-tR1q8Yd-UMwGDJJEj\",\"qvi\":{\"n\":\"EGcuH-9ZwBEwIZw8mlCsZXIZHX_obizz45uifDXlXsLc\",\"s\":\"EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao\"}},\"r\":{\"d\":\"EGZ97EjPSINR-O-KHDN_uw4fdrTxeuRXrqT5ZHHQJujQ\",\"usageDisclaimer\":{\"l\":\"Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled.\"},\"issuanceDisclaimer\":{\"l\":\"All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework.\"}}}-IABENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs0AAAAAAAAAAAAAAAAAAAAAAAECBt-S4IruwFwJATq5KZX-bt_kUbLzSHMjbYNrpaJFWL{\"v\":\"KERI10JSON0001b7_\",\"t\":\"icp\",\"d\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DDfetqGckMDlPvmNK3mci_-fHoQwuwRfwn-7-78ET-vt\"],\"nt\":\"1\",\"n\":[\"EPV4U0a86gh0YAF779wuuSNr_UZPx58xwvJV_tOKG8jt\"],\"bt\":\"3\",\"b\":[\"BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha\",\"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM\",\"BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX\"],\"c\":[],\"a\":[]}-VBq-AABAABox36fvAutWLM-rrT2mHQy_ScYqhpbcrIg4YBh4T-qBWpgc65Xwns1XmQ3O2cZ5KoNXojCObweufQqzms2zc4D-BADAAC4i7jCJtvorQR1iMhXACmclfD3LL38JGx_pitI58JGcVHxLFAfsktrXwkfEXGEF1W-mrHWoDM-aLB9KuAsf-kEABCpq-R2niUbuSyiNX4HnDgZqYzWOgWgHbKi7OZFe2J_41teL5NV2VKXXyHuoax57r59PkJ5trpg9JSSYvwN2-gPACAJzuaItIQnp3YP5yaE0cP5LdfzGrbkpPSqYwJDFaMhhNqS_mEsxDgwRBdebo-WJMfLKeQkyoPADvlJfgAqk8wO-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c27d584973p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"1\",\"p\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"a\":[{\"i\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"s\":\"0\",\"d\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\"}]}-VBq-AABAACHHeQ-61BasO6S_KU1_V56_5351llQ-o3LlalY5FUUqWJOZFxkviVlqN_9e6o12Z183LfzJZBX7cPoR9rrTZAE-BADAADY0jMy7niqrzMTXdU2YqTfSyW4bIv_4L8fIyx8vSejLiWyvAprHfwQtYHwdmoHo7eAcn-ltGttMJ70_hGYibYNABDn4xQSyVStaVqhAZi4UqLNjGuEcd3Rc7L4RUQ4S0wzTcRKWaFXpQkm5O8DaTbOg5BEULBhkeBZ5qB4_1XHz4IEACAaGbTzfK_qIRAPEgDJUAA5m-acFcEZDbqo5TbVLsvZDzVT7_rYF7Q_nmor1Dzf5Il9Q-7cdqLY2CT91rES1IcO-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c12c09d958187p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"2\",\"p\":\"ENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv\",\"a\":[{\"i\":\"EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO\",\"s\":\"0\",\"d\":\"EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu\"}]}-VBq-AABAAA_hIqsAfx3HoEmbP4SohjmF7wHWIbTYyXrWzES0L-_jTr3jAsS_g-Diw9htZCKZlDyFsP8PZVEJO3yUt-RJZsI-BADAAAj0C3SXcT-H49aPt32hulcDudzxb8-mTPKpXfdX1hcAS5p36tkOuKkVYbjYFEsdfawDuji9jpuv4VwIWGZJ28OABBKFatvAKS7M2EMaNeufpp2G4gAfrKybW5SSncWnqn87ZIZTVKApWwe0vkYGimObLMqOWFmDl3e2TogA2i-248IACCcgkdZQ-RcPqKKmDrlcmv4E5MYwau-wReamj3gEUo_eStnqDlYDiCoGn8P_PjXys88dappuEyGIB3VayOgMuME-EAB0AAAAAAAAAAAAAAAAAAAAAAC1AAG2025-10-27T11c12c09d989338p00c00{\"v\":\"KERI10JSON0001b7_\",\"t\":\"icp\",\"d\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"i\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"s\":\"0\",\"kt\":\"1\",\"k\":[\"DLiLyFx-2WhtEzbkS6CaOYO5GKPTSRXBZLqxbE3UTvqf\"],\"nt\":\"1\",\"n\":[\"EPo2jYIZb1far69gBRoUZ2HIJNP5xNodt8GOi9rhYBch\"],\"bt\":\"3\",\"b\":[\"BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha\",\"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM\",\"BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX\"],\"c\":[],\"a\":[]}-VBq-AABAADBykTh2Rzr1JUCmwTaEKFO175ZWYTmvRXuR0jEJjlDbRrKQNNTiIiQ2bLGjAoegeOy_ZT7Py5w_YTzvWbY1UIL-BADAADo55i0Avbb2O3CB7gqQqdFGd8QV-8W77FuSQFBYzYidppDs5wfmLPqD7LZuZqWvcHpIRSmEBVaY8Ph6jLCRYsMABD5uEtmK_TwoB6GbfMPGsTInK9XZIVevqRhqMqCcoVWXDEAN6fLjwj_k63hOl_3EgBjgjR9oPVUFVfqLGKRcccDACC5hPmj_8o3MRREznwFJAhgheR3Hg30DqvCaNKOXG3BbWBwQlEsr-UUa4WAeggIBnOMGI7ttz9z8blbq7XCleQH-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-10-27T11c11c23d770954p00c00{\"v\":\"KERI10JSON00013a_\",\"t\":\"ixn\",\"d\":\"EExa6Bu8n-EqpZWSO7ZYNTxv0gCzqIZRd_0u1bC7bXPM\",\"i\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"s\":\"1\",\"p\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"a\":[{\"i\":\"EOAM_yqJ1lPuSjJP41O-grGK7chrhRe5ycwnow87VeJD\",\"s\":\"0\",\"d\":\"EOAM_yqJ1lPuSjJP41O-grGK7chrhRe5ycwnow87VeJD\"}]}-VBq-AABAABtlNtAce65ZChIR8g03BwvN4ucbTFugVZbDw-kCBvWBPeWTfoUzarLjrI_4FPn_FxVGQDeCwKRvgqrFNlSg2MO-BADAAC-PZJbQ5HyL9mkh1p9CyA5KcmWlJ7pO_nBYLmbR4kpW5l9w8susDdI542NfRRTLbdnMCGAkuOQlKIGg7Zdkv0HABAQu2oM_nNrOofNFXfA-_oDtrALt9tiFuBdwncrCZwO_za84kRftExEY-OPBrqTLi7fYJYbpNlNeIL63oKD6lAOACA8bre9h2cxMaafmqn_rs9whVg7NYa74iSTXxYGDMqhfToCIx3tcyWJnZJIhkXBQOt35om97VLLLZVlAE0GORIB-EAB0AAAAAAAAAAAAAAAAAAAAAAB1AAG2025-10-27T11c11c42d381700p00c00{\"v\":\"KERI10JSON000113_\",\"t\":\"vcp\",\"d\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"i\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"ii\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"s\":\"0\",\"c\":[\"NB\"],\"bt\":\"0\",\"b\":[],\"n\":\"AKI0NWAOBQu_IRU65b9hJt5hGJTKm8cXMnR4oll8_wqM\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAABENlGdvpVupkQQCixI1yCXqVx36X0Z-ONI5odIG_ZpyMv{\"v\":\"KERI10JSON0000ed_\",\"t\":\"iss\",\"d\":\"EELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu\",\"i\":\"EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO\",\"s\":\"0\",\"ri\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"dt\":\"2025-10-27T11:12:03.040000+00:00\"}-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEE_qK7p7yfz2ATpG76MlL5nF6Bzr4m_nCvZsqbxiEgoL{\"v\":\"ACDC10JSON0007fc_\",\"d\":\"EEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO\",\"u\":\"0AAEyRq3CpNBgouwnokyznQl\",\"i\":\"EPYQg_hlUvV94MIOEitqg0ITrDTccdFAva89RXoKc8fy\",\"ri\":\"ED12EN_AIcmzsMw1nJ46naBbnw4qLoGpUXecqfPda60p\",\"s\":\"EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw\",\"a\":{\"d\":\"EFsIRL4MpHzL95ePBcNrA-4y9prYze5Tu1FITwYPHLiI\",\"i\":\"EB2EVSalhAgdW9OKwF1hlpePfyAmMgJvrXS6ZeJ_Oxok\",\"u\":\"0ABmG3CdlVEgCiGgkc8XmJUV\",\"engagementContextRole\":\"EBA Data Submitter\",\"personLegalName\":\"John Doe\",\"LEI\":\"875500ELOZEL05BVXV37\",\"dt\":\"2025-10-27T11:12:03.040000+00:00\"},\"e\":{\"d\":\"EApA52ZlchxHPlmK299EGBp6XYW9SHGm6lgsmBk81gAq\",\"le\":{\"n\":\"ENOu5UBmu4i2ljMq55R0389oYzy-zKWmaYFqvQbUi8gs\",\"s\":\"ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY\"}},\"r\":{\"d\":\"EIfq_m1DI2IQ1MgHhUl9sq3IQ_PJP9WQ1LhbMscngDCB\",\"usageDisclaimer\":{\"l\":\"Usage of a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, does not assert that the Legal Entity is trustworthy, honest, reputable in its business dealings, safe to do business with, or compliant with any laws or that an implied or expressly intended purpose will be fulfilled.\"},\"issuanceDisclaimer\":{\"l\":\"All information in a valid, unexpired, and non-revoked vLEI Credential, as defined in the associated Ecosystem Governance Framework, is accurate as of the date the validation process was complete. The vLEI Credential has been issued to the legal entity or person named in the vLEI Credential as the subject; and the qualified vLEI Issuer exercised reasonable care to perform the validation process set forth in the vLEI Ecosystem Governance Framework.\"},\"privacyDisclaimer\":{\"l\":\"It is the sole responsibility of Holders as Issuees of an ECR vLEI Credential to present that Credential in a privacy-preserving manner using the mechanisms provided in the Issuance and Presentation Exchange (IPEX) protocol specification and the Authentic Chained Data Container (ACDC) specification. https://github.com/WebOfTrust/IETF-IPEX and https://github.com/trustoverip/tswg-acdc-specification.\"}}}-IABEEoxma9uCTFN56hu05BSy8M4McJZ-UYCJ9x1XbZiUFNO0AAAAAAAAAAAAAAAAAAAAAAAEELRvxaoScmD-yqU09iJ42vn5gewq5_o-g2guClxaVyu",
+    "issueName": "ecr-aid-1"
+  },
+  "engagementContextRole": "EBA Data Submitter"
 }

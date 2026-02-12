@@ -33,16 +33,16 @@ export const LE_RULES = SignifyClient.Saider.saidify({
 })[1];
 
 export const VRD_RULES = SignifyClient.Saider.saidify({
-    d: "",
-    usageDisclaimer: {
-      l: ""
-    },
-    issuanceDisclaimer: {
-      l: ""
-    },
-    privacyDisclaimer: {
-      l: ""
-    }
+  d: '',
+  usageDisclaimer: {
+    l: '',
+  },
+  issuanceDisclaimer: {
+    l: '',
+  },
+  privacyDisclaimer: {
+    l: '',
+  },
 })[1];
 
 export const ECR_RULES = SignifyClient.Saider.saidify({

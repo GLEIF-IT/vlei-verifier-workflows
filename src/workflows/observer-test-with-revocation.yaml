@@ -99,4 +99,4 @@ workflow:
     #   issuer_aid: 'le-aid-1'
     #   issuee_aid: 'ecr-aid-1'
     #   description: 'LE revokes ECR vLEI credential'
-    #   credential: 'ecr_cred'    
+    #   credential: 'ecr_cred'

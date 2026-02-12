@@ -181,10 +181,10 @@ export class VleiVerificationStepRunner extends StepRunner {
             credStatus
           );
         } else {
-          throw new Error(`vlei_verification: presenter_aid is required for credential_presentation action`);
+          throw new Error(
+            `vlei_verification: presenter_aid is required for credential_presentation action`
+          );
         }
-
-        
       } else if (action.type == 'credential_authorization') {
         const aid = action.aid;
         const aidInfo = workflow_state.aidsInfo.get(aid);
@@ -241,7 +241,13 @@ export class VleiVerificationStepRunner extends StepRunner {
         const oobiResp = await fetch(oobiUrl);
         const aidCesr = await oobiResp.text();
         const aidStatus = presentationStatusMapping.get(action.expected_status);
-        await vleiVerification.aidPresentation(aidPrefix, aidCesr, client, action.aid, aidStatus);
+        await vleiVerification.aidPresentation(
+          aidPrefix,
+          aidCesr,
+          client,
+          action.aid,
+          aidStatus
+        );
       } else if (action.type == 'aid_authorization') {
         const aid = action.aid;
         const aidInfo = workflow_state.aidsInfo.get(aid);
@@ -336,11 +342,7 @@ export class KLICreateAidStepRunner extends StepRunner {
       configJson,
       step.aid
     );
-    const result = await createAidKLI(
-      configJson,
-      identifierData,
-      step
-    );
+    const result = await createAidKLI(configJson, identifierData, step);
     return result;
   }
 }

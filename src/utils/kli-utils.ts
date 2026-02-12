@@ -6,11 +6,7 @@ export type SinglesigInceptAttributes = Record<string, any>;
 
 export type MultisigInceptAttributes = Record<string, any>;
 
-
-function copyFile(
-  tmpFilePah: string,
-  localFilePath: string
-): void {
+function copyFile(tmpFilePah: string, localFilePath: string): void {
   // Ensure the local file exists before copying
   if (!tmpFilePah) {
     throw new Error(`Temp file path is not provided: ${tmpFilePah}`);
@@ -23,7 +19,7 @@ function executeKliCommand(command: string, promptAnswer?: string): string {
   try {
     if (promptAnswer) {
       command = `sh -c "echo ${promptAnswer} | ${command}"`;
-    }    
+    }
     const result = spawnSync('sh', ['-c', command], {
       encoding: 'utf-8',
       timeout: 5000,

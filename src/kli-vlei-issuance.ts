@@ -24,11 +24,10 @@ export function createAidKLI(
   const workflowState = WorkflowState.getInstance();
   const env = resolveEnvironment();
   const iurls = env.witnessUrls.map(
-      (witnessUrl, index) =>
-        `${witnessUrl}/oobi/${env.witnessIds[index]}/witness`
-    );
+    (witnessUrl, index) => `${witnessUrl}/oobi/${env.witnessIds[index]}/witness`
+  );
   if (identifierData.type === 'singlesig') {
-    const singlesigIdentifierData = identifierData as SinglesigIdentifierData;    
+    const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
     const attributes: SinglesigInceptAttributes = {
       transferable: true,
       wits: env.witnessIds,

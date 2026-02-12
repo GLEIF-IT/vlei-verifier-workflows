@@ -173,4 +173,3 @@ services:
         condition: service_healthy
       witness-demo:
         condition: service_healthy
- 

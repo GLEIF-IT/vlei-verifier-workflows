@@ -62,7 +62,13 @@ export class VleiVerification {
   ) {
     const presentationExpectedStatusCode =
       expectedStatus.status == AID_CRYPT_VALID.status ? 202 : 400;
-    await this.presentation(aidPrefix, aidCesr, client, idAlias, presentationExpectedStatusCode);
+    await this.presentation(
+      aidPrefix,
+      aidCesr,
+      client,
+      idAlias,
+      presentationExpectedStatusCode
+    );
   }
 
   public async aidAuthorization(

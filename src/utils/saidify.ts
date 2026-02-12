@@ -119,4 +119,3 @@ Examples:
 if (process.argv[1]?.includes('saidify')) {
   main();
 }
-

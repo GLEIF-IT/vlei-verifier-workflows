@@ -790,7 +790,7 @@ export const VleiIssuance = {
         attributes.DID = `${attributes.DID}:${workflow_state.aids.get(aid_alias).prefix}`;
       }
     }
-    
+
     const credData = { ...credInfo.attributes, ...attributes };
     const cred = await getOrIssueCredential(
       issuerclient!,

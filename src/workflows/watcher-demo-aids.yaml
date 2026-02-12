@@ -50,4 +50,3 @@ workflow:
       type: 'create_aid'
       aid: 'user-aid-3'
       description: 'Creating AID: user-aid-3'
-    

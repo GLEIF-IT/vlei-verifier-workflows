@@ -20,10 +20,9 @@
     "user-agent-2": {
       "secret": "user-client-2"
     },
-    "user-agent-3": { 
+    "user-agent-3": {
       "secret": "user-client-3"
     }
-
   },
   "identifiers": {
     "gleif-aid": {

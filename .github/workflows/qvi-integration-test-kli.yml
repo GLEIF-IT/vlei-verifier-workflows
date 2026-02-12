@@ -2,11 +2,11 @@ name: QVI Integration Test - KLI
 
 on:
   workflow_dispatch:
-      inputs:
-        keri_version:
-          description: "Version of KERI to test against" 
-          required: true 
-          default: "1.2.6" 
+    inputs:
+      keri_version:
+        description: 'Version of KERI to test against'
+        required: true
+        default: '1.2.6'
 
 permissions:
   actions: read
@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}   
+          node-version: ${{ matrix.node-version }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -45,7 +45,7 @@ jobs:
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
           npm ci
-      
+
       - name: Determine Keripy version
         id: keripy_version
         run: |
@@ -54,7 +54,7 @@ jobs:
           else
             echo "KERI_VERSION=1.2.6" >> $GITHUB_ENV
           fi
-      
+
       - name: Install keripy dependencies
         run: |
           python -m ensurepip --upgrade
