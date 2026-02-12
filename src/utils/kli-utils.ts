@@ -1,5 +1,4 @@
 import { execSync, spawnSync } from 'child_process';
-import { resolveEnvironment } from './resolve-env.js';
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 
