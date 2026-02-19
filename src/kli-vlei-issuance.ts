@@ -16,7 +16,6 @@ import {
 import { resolveEnvironment } from './utils/resolve-env.js';
 import { WorkflowState } from './workflow-state.js';
 
-
 export async function resolveAidOobiKLI(
   identifierData: IdentifierData,
   aidAlias: string
@@ -29,7 +28,6 @@ export async function resolveAidOobiKLI(
   const oobiUrl = `${resolveEnvironment().witnessUrls[0]}/oobi/${aidPrefix}/controller`;
   return resolveOobi(agentName, agentSecret, oobiUrl);
 }
-
 
 export function createAidKLI(
   jsonConfig: any,
@@ -137,7 +135,9 @@ export function createAidKLI(
           memberIdentifierData.agent.secret,
           `${witnessUrl}/oobi/${delegatorAidPrefix}/controller`
         );
-        console.log(`Resolve Oobi result for delegator(${delegatorAidPrefix}): ${_resolveOobiResult}`);
+        console.log(
+          `Resolve Oobi result for delegator(${delegatorAidPrefix}): ${_resolveOobiResult}`
+        );
       }
       const _multisigInceptResult = multisigIncept(
         memberIdentifierData.agent.name,

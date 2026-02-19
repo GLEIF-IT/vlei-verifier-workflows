@@ -52,8 +52,7 @@ export function resolveEnvironment(
         verifierBaseUrl: process.env.VLEI_VERIFIER || 'http://localhost:7676',
         workflow: process.env.WORKFLOW || 'create-aid-kli.yaml',
         configuration:
-          process.env.CONFIGURATION ||
-          'configuration-create-aid-kli.json',
+          process.env.CONFIGURATION || 'configuration-create-aid-kli.json',
       };
       break;
     case 'local':

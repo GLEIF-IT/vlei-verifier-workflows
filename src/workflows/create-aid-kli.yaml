@@ -29,4 +29,3 @@ workflow:
       initiator: 'qvi-aid-1'
       aid: 'qvi-multisig-1'
       description: 'Creating AID: qvi-multisig-1 via KLI'
-
