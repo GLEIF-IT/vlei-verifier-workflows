@@ -1,6 +1,8 @@
 name: QVI Integration Test - KLI
 
 on:
+  schedule:
+    - cron: "0 14 * * *"
   workflow_dispatch:
     inputs:
       keri_version:
@@ -26,6 +28,7 @@ jobs:
         node-version: ['20']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
+      KERI_VERSION: ${{ github.event.inputs.keri_version || '1.2.6' }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -45,15 +48,6 @@ jobs:
           npm cache clean --force
           npm set registry https://registry.npmjs.org/
           npm ci
-
-      - name: Determine Keripy version
-        id: keripy_version
-        run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "KERI_VERSION=${{ github.event.inputs.keri_version }}" >> $GITHUB_ENV
-          else
-            echo "KERI_VERSION=1.2.6" >> $GITHUB_ENV
-          fi
 
       - name: Install keripy dependencies
         run: |

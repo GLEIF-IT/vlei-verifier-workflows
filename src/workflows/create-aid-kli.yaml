@@ -10,16 +10,36 @@ workflow:
       type: 'create_aid_kli'
       aid: 'qvi-aid-1'
       description: 'Creating AID: qvi-aid-1 via KLI'
+    # qvi_aid_1_resolves_gleif_external_aid_oobi:
+    #   id: 'qvi_aid_1_resolves_gleif_external_aid_oobi'
+    #   type: 'resolve_aid_oobi_kli'
+    #   aid: 'qvi_aid_1'
+    #   target_aid: 'gleif_external_aid-1'
+    #   description: 'Resolving OOBI of AID: gleif-external-aid-1 via KLI from AID: qvi-aid-1'
     qvi_aid_2:
       id: 'qvi_aid_2'
       type: 'create_aid_kli'
       aid: 'qvi-aid-2'
       description: 'Creating AID: qvi-aid-2 via KLI'
+    # qvi_aid_2_resolves_gleif_external_aid_oobi:
+    #   id: 'qvi_aid_2_resolves_gleif_external_aid_oobi'
+    #   type: 'resolve_aid_oobi_kli'
+    #   aid: 'qvi_aid_2'
+    #   target_aid: 'gleif_external_aid-1'
+    #   description: 'Resolving OOBI of AID: gleif-external-aid-1 via KLI from AID: qvi-aid-2'
     qvi_aid_3:
       id: 'qvi_aid_3'
       type: 'create_aid_kli'
       aid: 'qvi-aid-3'
       description: 'Creating AID: qvi-aid-3 via KLI'
+    
+    # qvi_aid_3_resolves_gleif_external_aid_oobi:
+    #   id: 'qvi_aid_3_resolves_gleif_external_aid_oobi'
+    #   type: 'resolve_aid_oobi_kli'
+    #   aid: 'qvi_aid_3'
+    #   target_aid: 'gleif_external_aid-1'
+    #   description: 'Resolving OOBI of AID: gleif-external-aid-1 via KLI from AID: qvi-aid-3'
+
     qvi_aid_multisig_1:
       id: 'qvi_aid_multisig_1'
       type: 'create_aid_kli'

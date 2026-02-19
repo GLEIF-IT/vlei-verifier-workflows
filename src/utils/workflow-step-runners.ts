@@ -16,7 +16,7 @@ import {
 import { WorkflowState } from '../workflow-state.js';
 import { resolveEnvironment } from './resolve-env.js';
 import { getRootOfTrust } from './test-util.js';
-import { createAidKLI } from '../kli-vlei-issuance.js';
+import { createAidKLI, resolveAidOobiKLI } from '../kli-vlei-issuance.js';
 
 export abstract class StepRunner {
   type = '';
@@ -343,6 +343,22 @@ export class KLICreateAidStepRunner extends StepRunner {
       step.aid
     );
     const result = await createAidKLI(configJson, identifierData, step);
+    return result;
+  }
+}
+
+export class KLIResolveAidOobiStepRunner extends StepRunner {
+  type = 'kli_resolve_aid_oobi';
+  public async run(
+    _stepName: string,
+    step: any,
+    configJson: any = null
+  ): Promise<any> {
+    const identifierData: IdentifierData = getIdentifierData(
+      configJson,
+      step.aid
+    );
+    const result = await resolveAidOobiKLI(identifierData, step.target_aid);
     return result;
   }
 }
