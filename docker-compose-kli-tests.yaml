@@ -32,7 +32,7 @@ services:
   vlei-server:
     image: gleif/vlei:0.2.0
     # image: vlei-server-local:latest
-    network_mode: host
+    # network_mode: host
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
@@ -50,7 +50,7 @@ services:
           'CMD',
           'curl',
           '-f',
-          'http://localhost:7723/oobi/EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao',
+          'http://vlei-server:7723/oobi/EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao',
         ]
       interval: 2s
       timeout: 3s
@@ -61,12 +61,12 @@ services:
 
   witness-demo:
     image: gleif/keri-witness-demo:1.2.7
-    network_mode: host
+    # network_mode: host
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8
     healthcheck:
-      test: ['CMD', 'wget', '--spider', 'http://localhost:5642/oobi']
+      test: ['CMD', 'wget', '--spider', 'http://witness-demo:5642/oobi']
       interval: 2s
       timeout: 3s
       retries: 2
