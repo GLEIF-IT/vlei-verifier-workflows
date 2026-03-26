@@ -48,11 +48,11 @@ export function resolveEnvironment(
           process.env.WITNESS_IDS === ''
             ? []
             : process.env.WITNESS_IDS?.split(',') || [WAN, WIL, WES],
-        vleiServerUrl: process.env.VLEI_SERVER || 'http://vlei-server:7723',
+        vleiServerUrl: process.env.VLEI_SERVER || 'http://localhost:7723',
         verifierBaseUrl: process.env.VLEI_VERIFIER || 'http://localhost:7676',
-        workflow: process.env.WORKFLOW || 'create-aid-kli.yaml',
+        workflow: process.env.WORKFLOW || 'singlesig-single-user-light.yaml',
         configuration:
-          process.env.CONFIGURATION || 'configuration-create-aid-kli.json',
+          process.env.CONFIGURATION || 'configuration-singlesig-single-user-light.json',
       };
       break;
     case 'local':

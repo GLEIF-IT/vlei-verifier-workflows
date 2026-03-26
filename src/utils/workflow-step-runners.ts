@@ -16,7 +16,7 @@ import {
 import { WorkflowState } from '../workflow-state.js';
 import { resolveEnvironment } from './resolve-env.js';
 import { getRootOfTrust } from './test-util.js';
-import { createAidKLI, resolveAidOobiKLI } from '../kli-vlei-issuance.js';
+import { confirmDelegationKLI, createAidKLI, IssueCredentialKLI, resolveAidOobiKLI } from '../kli-vlei-issuance.js';
 
 export abstract class StepRunner {
   type = '';
@@ -52,7 +52,7 @@ export class CreateAidStepRunner extends StepRunner {
       configJson,
       step.aid
     );
-    const result = await VleiIssuance.createAid(identifierData);
+    const result = await VleiIssuance.createAid(identifierData, step.autoconfirm_delegation);
     return result;
   }
 }
@@ -123,6 +123,25 @@ export class NotifyCredentialIssueeStepRunner extends StepRunner {
       step.credential,
       step.issuer_aid,
       step.issuee_aid
+    );
+    return result;
+  }
+}
+
+export class ResolveAidOobiStepRunner extends StepRunner {
+  type = 'resolve_aid_oobi';
+  public async run(
+    _stepName: string,
+    step: any,
+    configJson: any = null
+  ): Promise<any> {
+    const identifierData: IdentifierData = getIdentifierData(
+      configJson,
+      step.aid
+    );
+    const result = await VleiIssuance.resolveAidOobi(
+      identifierData,
+      step.target_aid
     );
     return result;
   }
@@ -332,7 +351,7 @@ export class SleepStepRunner extends StepRunner {
 }
 
 export class KLICreateAidStepRunner extends StepRunner {
-  type = 'kli_create_aid';
+  type = 'create_aid_kli';
   public async run(
     _stepName: string,
     step: any,
@@ -347,18 +366,38 @@ export class KLICreateAidStepRunner extends StepRunner {
   }
 }
 
-export class KLIResolveAidOobiStepRunner extends StepRunner {
-  type = 'kli_resolve_aid_oobi';
+export class KLIConfirmDelegationStepRunner extends StepRunner {
+  type = 'confirm_delegation_kli';
   public async run(
     _stepName: string,
     step: any,
     configJson: any = null
   ): Promise<any> {
-    const identifierData: IdentifierData = getIdentifierData(
+    const delegatorIdentifierData: SinglesigIdentifierData = getIdentifierData(
       configJson,
-      step.aid
-    );
-    const result = await resolveAidOobiKLI(identifierData, step.target_aid);
+      step.delegator_aid
+    ) as SinglesigIdentifierData;
+    const result = await confirmDelegationKLI(delegatorIdentifierData, step);
+    return result;
+  }
+}
+
+export class KLIIssueCredentialStepRunner extends StepRunner {
+  type = 'issue_credential_kli';
+  public async run(
+    _stepName: string,
+    step: any,
+    configJson: any = null
+  ): Promise<any> {
+    const issuerIdentifierData: SinglesigIdentifierData = getIdentifierData(
+      configJson,
+      step.issuer_aid
+    ) as SinglesigIdentifierData;
+    const issueeIdentifierData: SinglesigIdentifierData = getIdentifierData(
+      configJson,
+      step.issuee_aid
+    ) as SinglesigIdentifierData;
+    const result = await IssueCredentialKLI(issuerIdentifierData, issueeIdentifierData, step, step.credential);
     return result;
   }
 }
