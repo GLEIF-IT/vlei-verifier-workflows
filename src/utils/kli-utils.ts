@@ -6,6 +6,11 @@ export type SinglesigInceptAttributes = Record<string, any>;
 
 export type MultisigInceptAttributes = Record<string, any>;
 
+export type IssueCredentialAttributes = Record<string, any>;
+
+export type Edges = Record<string, any>;
+export type Rules = Record<string, any>;
+
 function copyFile(tmpFilePah: string, localFilePath: string): void {
   // Ensure the local file exists before copying
   if (!tmpFilePah) {
@@ -22,7 +27,7 @@ function executeKliCommand(command: string, promptAnswer?: string): string {
     }
     const result = spawnSync('sh', ['-c', command], {
       encoding: 'utf-8',
-      timeout: 5000,
+      timeout: 10000,
     });
 
     if (
@@ -106,6 +111,72 @@ export function confirmDelegation(
   passcode: string,
   alias: string
 ): string {
-  const command = `kli delegate confirm --name ${name} --passcode ${passcode} --alias ${alias}`;
-  return executeKliCommand(command, 'Y'); // Provide "Yes" as the answer to the prompt
+  const command = `kli delegate confirm --name ${name} --passcode ${passcode} --alias ${alias} --auto --interact`;
+  return executeKliCommand(command);
+}
+
+export function createRegistry(
+  name: string,
+  passcode: string,
+  alias: string,
+  registryName: string
+): string {
+  const command = `kli vc registry incept --name ${name} --passcode ${passcode} --alias ${alias} --registry-name ${registryName}`;
+  const result = executeKliCommand(command);
+  const registryPrefixRegex = /Registry\(([A-Za-z0-9_-]+)\)/;
+  const match = result.match(registryPrefixRegex);
+  if (!match) {
+    throw new Error('Failed to extract registry prefix from the command output.');
+  }
+  const registryPrefix = match[1];
+  return registryPrefix;
+}
+
+export function issueCredential(
+  name: string,
+  passcode: string,
+  alias: string,
+  recipientAidPrefix: string,
+  registryName: string,
+  schemaSaid: string,
+  rules: Rules,
+  edges: Edges,
+  attributes: IssueCredentialAttributes
+): string {
+  const tempFilePath = resolve(__dirname, `temp-data.json`);
+  writeFileSync(tempFilePath, JSON.stringify(attributes, null, 2));
+  const dataFilePath = `/tmp/${recipientAidPrefix}-data.json`;
+  copyFile(tempFilePath, dataFilePath);
+
+  if (rules != undefined) {
+    const tempRulesFilePath = resolve(__dirname, `temp-rules.json`);
+    writeFileSync(tempRulesFilePath, JSON.stringify(rules, null, 2));
+    const rulesFilePath = `/tmp/${recipientAidPrefix}-rules.json`;
+    copyFile(tempRulesFilePath, rulesFilePath);
+  }
+
+  if (edges != undefined) {
+    const tempEdgesFilePath = resolve(__dirname, `temp-edges.json`);
+    writeFileSync(tempEdgesFilePath, JSON.stringify(edges, null, 2));
+    const edgesFilePath = `/tmp/${recipientAidPrefix}-edges.json`;
+    copyFile(tempEdgesFilePath, edgesFilePath);
+  }
+  let command = `kli vc create --name ${name} --passcode ${passcode} --alias ${alias} --recipient ${recipientAidPrefix} --registry-name ${registryName} --schema ${schemaSaid}`;
+  if (rules != undefined) {
+    const tempRulesFilePath = resolve(__dirname, `temp-rules.json`);
+    writeFileSync(tempRulesFilePath, JSON.stringify(rules, null, 2));
+    const rulesFilePath = `/tmp/${recipientAidPrefix}-rules.json`;
+    copyFile(tempRulesFilePath, rulesFilePath);
+    command += ` --rules @${rulesFilePath}`;
+  }
+  if (edges != undefined) {
+    const tempEdgesFilePath = resolve(__dirname, `temp-edges.json`);
+    writeFileSync(tempEdgesFilePath, JSON.stringify(edges, null, 2));
+    const edgesFilePath = `/tmp/${recipientAidPrefix}-edges.json`;
+    copyFile(tempEdgesFilePath, edgesFilePath);
+    command += ` --edges @${edgesFilePath}`;
+  }
+  command += ` --data @${dataFilePath} `;
+  const result = executeKliCommand(command);
+  return result;
 }

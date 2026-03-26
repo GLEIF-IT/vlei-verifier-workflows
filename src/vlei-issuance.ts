@@ -52,6 +52,8 @@ import {
 import { buildTestData, EcrTestData } from './utils/generate-test-data.js';
 import { VleiUser } from './utils/test-data.js';
 import { WorkflowState } from './workflow-state.js';
+import { resolveOobi as resolveOobiKli } from './utils/kli-utils.js';
+import { resolveEnvironment } from './index.js';
 
 export const VleiIssuance = {
   // Create client for given AID
@@ -65,21 +67,21 @@ export const VleiIssuance = {
   },
 
   // Create AID
-  createAid: async (identifierData: IdentifierData) => {
+  createAid: async (identifierData: IdentifierData, autoconfirmDelegation: boolean = false) => {
     console.log('Creating AID');
     const workflow_state = WorkflowState.getInstance();
     let aid: any;
     if (identifierData.type == 'singlesig') {
       workflow_state.aidsInfo.set(identifierData.name, identifierData);
-      aid = await VleiIssuance.createAidSinglesig(identifierData);
+      aid = await VleiIssuance.createAidSinglesig(identifierData, autoconfirmDelegation);
       await VleiIssuance.fetchOobi(identifierData);
       await VleiIssuance.createContacts(identifierData);
-      await VleiIssuance.resolveOobi(identifierData);
+      await VleiIssuance.resolveSchemaOobis(identifierData);
       workflow_state.aids.set(identifierData.name, aid);
     } else {
       workflow_state.aidsInfo.set(identifierData.name, identifierData);
-      aid = await VleiIssuance.createAidMultisig(identifierData);
-      await VleiIssuance.fetchOobi(identifierData);
+      aid = await VleiIssuance.createAidMultisig(identifierData, autoconfirmDelegation);
+      // await VleiIssuance.fetchOobi(identifierData);
       workflow_state.aids.set(identifierData.name, aid);
     }
   },
@@ -148,36 +150,52 @@ export const VleiIssuance = {
       const clientB = workflow_state.clients.get(
         singlesigIdentifierDataB.agent.name
       );
-      const oobiA = workflow_state.oobis.get(singlesigIdentifierDataA.name)?.[0]
-        .oobis[0];
-      const oobiB = workflow_state.oobis.get(singlesigIdentifierDataB.name)?.[0]
-        .oobis[0];
-      await getOrCreateContact(clientA!, singlesigIdentifierDataB.name, oobiB);
-      await getOrCreateContact(clientB!, singlesigIdentifierDataA.name, oobiA);
+      const oobisA = workflow_state.oobis.get(singlesigIdentifierDataA.name)?.[0]
+        .oobis;
+      const roleA = workflow_state.oobis.get(singlesigIdentifierDataA.name)?.[0]
+        .role;
+      const oobisB = workflow_state.oobis.get(singlesigIdentifierDataB.name)?.[0]
+        .oobis;
+      const roleB = workflow_state.oobis.get(singlesigIdentifierDataB.name)?.[0]
+        .role;
+      if (roleA === 'kli-agent') {
+        for (const oobi of oobisB) {
+          await resolveOobiKli(singlesigIdentifierDataA.agent.name, singlesigIdentifierDataA.agent.secret, oobi);
+        }
+      } else {
+        for (const oobi of oobisB) {
+          await getOrCreateContact(clientA!, singlesigIdentifierDataB.name, oobi);
+        }
+      }
+      if (roleB === 'kli-agent') {
+        for (const oobi of oobisA) {
+          await resolveOobiKli(singlesigIdentifierDataB.agent.name, singlesigIdentifierDataB.agent.secret, oobi);
+        }
+      } else {
+        for (const oobi of oobisA) {
+          await getOrCreateContact(clientB!, singlesigIdentifierDataA.name, oobi);
+        }
+      }
     }
   },
 
-  // Resolve OOBIs for each client! and schema
-  resolveOobis: () => {
-    const schemaUrls = [
-      QVI_SCHEMA_URL,
-      LE_SCHEMA_URL,
-      ECR_AUTH_SCHEMA_URL,
-      ECR_SCHEMA_URL,
-      OOR_AUTH_SCHEMA_URL,
-      OOR_SCHEMA_URL,
-      // VRD_SCHEMA_URL
-    ];
-    console.log('Resolving OOBIs');
-    const workflow_state = WorkflowState.getInstance();
-    for (const [, client] of workflow_state.clients) {
-      schemaUrls.forEach(async (schemaUrl) => {
-        await resolveOobi(client!, schemaUrl);
-      });
+  resolveAidOobi: async (identifierData: IdentifierData, oobiAidAlias: string) => {
+    let client!: any;
+    let oobi: any;
+    const workflowState = WorkflowState.getInstance();
+    if (identifierData.type === 'singlesig') {
+      const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
+      client = workflowState.clients.get(singlesigIdentifierData.agent.name);
+      const aidPrefix = workflowState.aids.get(oobiAidAlias)!.prefix;
+      const oobiUrl = `${resolveEnvironment().witnessUrls[0]}/oobi/${aidPrefix}/controller`;
+      await resolveOobi(client, oobiUrl);
+    }
+    else {
+      console.log('Can\'t resolve Oobi for multisig identifier');
     }
   },
 
-  resolveOobi: (identifierData: IdentifierData) => {
+  resolveSchemaOobis: (identifierData: IdentifierData) => {
     const schemaUrls = [
       QVI_SCHEMA_URL,
       LE_SCHEMA_URL,
@@ -221,7 +239,7 @@ export const VleiIssuance = {
     workflow_state.registries.set(identifierData.name, registry);
   },
 
-  createAidSinglesig: async (identifierData: IdentifierData) => {
+  createAidSinglesig: async (identifierData: IdentifierData, autoconfirmDelegation: boolean = false) => {
     const workflow_state = WorkflowState.getInstance();
     const delegator = identifierData.delegator;
     const kargsSinglesigAID: SignifyClient.CreateIdentiferArgs = {
@@ -308,7 +326,7 @@ export const VleiIssuance = {
     }
   },
 
-  createAidMultisig: async (identifierData: IdentifierData) => {
+  createAidMultisig: async (identifierData: IdentifierData, autoconfirmDelegation: boolean = false) => {
     const workflow_state = WorkflowState.getInstance();
     const multisigIdentifierData = identifierData as MultisigIdentifierData;
     let multisigAids: SignifyClient.HabState[] = [];
@@ -376,7 +394,7 @@ export const VleiIssuance = {
 
         multisigOps.push([client!, op]);
       }
-      if (multisigIdentifierData.delegator) {
+      if (multisigIdentifierData.delegator && autoconfirmDelegation) {
         // Approve delegation
         const delegatoridentifierData = workflow_state.aidsInfo.get(
           multisigIdentifierData.delegator
@@ -461,12 +479,11 @@ export const VleiIssuance = {
             .query(delegatorMultisigAid.prefix, '1');
           await waitOperation(delegateeclient!, ksteetor1);
         }
-      }
-
-      // Wait for all multisig operations to complete
-      for (const [client, op] of multisigOps) {
-        await waitOperation(client!, op);
-      }
+          // Wait for all multisig operations to complete
+        for (const [client, op] of multisigOps) {
+          await waitOperation(client!, op);
+        }
+      }      
 
       // Wait for multisig inception notifications for all clients
       const tmpAidData = workflow_state.aidsInfo.get(
@@ -541,12 +558,12 @@ export const VleiIssuance = {
         // Wait for role resolution notifications for all clients
         // await waitAndMarkNotification(workflow_state.clients.get(workflow_state.aidsInfo.get(issuerAids[0].name).agent.name), "/multisig/rpy");
         await Promise.all(
-          issuerAids.map((aid) => {
+          issuerAids.map(async (aid) => {
             const tmpAidData = workflow_state.aidsInfo.get(
               aid.name
             ) as SinglesigIdentifierData;
             const client = workflow_state.clients.get(tmpAidData.agent.name);
-            return waitAndMarkNotification(client!, '/multisig/rpy');
+            return await waitAndMarkNotification(client!, '/multisig/rpy');
           })
         );
 
@@ -569,12 +586,12 @@ export const VleiIssuance = {
       const oobi = oobis[0].oobis[0].split('/agent/')[0];
       const clients = Array.from(workflow_state.clients.values()).flat();
 
-      await Promise.all(
-        clients.map(
-          async (client) =>
-            await getOrCreateContact(client!, multisigAid.name, oobi)
-        )
-      );
+      // await Promise.all(
+      //   clients.map(
+      //     async (client) =>
+      //       await getOrCreateContact(client!, multisigAid.name, oobi)
+      //   )
+      // );
       console.log(`${identifierData.name} AID: ${multisigAid.prefix}`);
       return multisigAid;
     }

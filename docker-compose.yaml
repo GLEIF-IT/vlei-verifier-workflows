@@ -169,7 +169,7 @@ services:
     hostname: vlei-verifier
     environment:
       - VERIFIER_MODE=test
-      - VERIFIER_CONFIG_FILE=verifier-config-docker-local.json
+      - VERIFIER_CONFIG_FILE=verifier-config-public.json
     depends_on:
       - vlei-server
       - witness-demo

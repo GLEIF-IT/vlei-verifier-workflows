@@ -12,6 +12,9 @@ import {
   AddRootOfTrustStepRunner,
   SleepStepRunner,
   KLICreateAidStepRunner,
+  KLIIssueCredentialStepRunner,
+  KLIConfirmDelegationStepRunner,
+  ResolveAidOobiStepRunner,
 } from './workflow-step-runners.js';
 
 export class WorkflowRunner {
@@ -30,6 +33,7 @@ export class WorkflowRunner {
   private registerPredefinedRunners() {
     this.registerRunner('create_client', new CreateClientStepRunner());
     this.registerRunner('create_aid', new CreateAidStepRunner());
+    this.registerRunner('resolve_aid_oobi', new ResolveAidOobiStepRunner());
     this.registerRunner('create_registry', new CreateRegistryStepRunner());
     this.registerRunner('issue_credential', new IssueCredentialStepRunner());
     this.registerRunner('revoke_credential', new RevokeCredentialStepRunner());
@@ -41,6 +45,8 @@ export class WorkflowRunner {
     this.registerRunner('vlei_verification', new VleiVerificationStepRunner());
     this.registerRunner('sleep', new SleepStepRunner());
     this.registerRunner('create_aid_kli', new KLICreateAidStepRunner());
+    this.registerRunner('issue_credential_kli', new KLIIssueCredentialStepRunner());
+    this.registerRunner('confirm_delegation_kli', new KLIConfirmDelegationStepRunner());
   }
 
   public registerRunner(name: string, runner: StepRunner) {

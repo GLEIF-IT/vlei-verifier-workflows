@@ -90,6 +90,8 @@ workflow:
       description: 'LE issues ECR vLEI credential'
       credential: 'le_to_ecr_vlei_cred'
       credential_source: 'le_cred'
+      generate_test_data: true
+      test_name: 'ecr_presentation_test'
     add_root_of_trust:
       id: 'add_root_of_trust'
       type: 'add_root_of_trust'

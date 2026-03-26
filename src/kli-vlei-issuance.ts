@@ -6,14 +6,20 @@ import {
 } from './utils/handle-json-config.js';
 import {
   confirmDelegation,
+  createRegistry,
+  Edges,
   incept,
   init,
+  issueCredential,
+  IssueCredentialAttributes,
   multisigIncept,
   MultisigInceptAttributes,
   resolveOobi,
+  Rules,
   SinglesigInceptAttributes,
 } from './utils/kli-utils.js';
 import { resolveEnvironment } from './utils/resolve-env.js';
+import { VleiIssuance } from './vlei-issuance.js';
 import { WorkflowState } from './workflow-state.js';
 
 export async function resolveAidOobiKLI(
@@ -40,6 +46,7 @@ export function createAidKLI(
     (witnessUrl, index) => `${witnessUrl}/oobi/${env.witnessIds[index]}/witness`
   );
   if (identifierData.type === 'singlesig') {
+    workflowState.aidsInfo.set(identifierData.name, identifierData);
     const singlesigIdentifierData = identifierData as SinglesigIdentifierData;
     const attributes: SinglesigInceptAttributes = {
       transferable: true,
@@ -81,6 +88,15 @@ export function createAidKLI(
       alias: step.aid,
       prefix: aidPrefix,
     });
+    // Fetch OOBIs for the AID manually
+    const witnessUrls = env.witnessUrls;
+    const oobis = witnessUrls.map(witnessUrl => `${witnessUrl}/oobi/${aidPrefix}/controller`);
+    const oobi = {
+      oobis: oobis,
+      role: 'kli-agent',
+    };
+    workflowState.oobis.set(singlesigIdentifierData.name, [oobi]);
+
     console.log(`Incept result(AID prefix): ${aidPrefix}`);
     console.log(`Resolve Oobi results: ${resolveOobiResults}`);
     return Promise.resolve('All commands executed successfully');
@@ -164,13 +180,58 @@ export function createAidKLI(
         );
         console.log(`Resolve Oobi result: ${resolveOobiResult}`);
       }
-      const confirmDelegationResult = confirmDelegation(
-        delegatorIdentifierData.agent.name,
-        delegatorIdentifierData.agent.secret,
-        step.aid
-      );
-      console.log(`Confirm Delegation result: ${confirmDelegationResult}`);
       return Promise.resolve('All commands executed successfully');
     }
   }
+}
+
+export function confirmDelegationKLI(
+  delegatorIdentifierData: SinglesigIdentifierData,
+  step: any
+): Promise<string> {
+  const workflowState = WorkflowState.getInstance();
+  const delegatorAgentName = delegatorIdentifierData.agent.name;
+  const delegatorSecret = delegatorIdentifierData.agent.secret;
+  const confirmDelegationResult = confirmDelegation(delegatorAgentName, delegatorSecret, step.delegate_aid);
+  console.log(`Confirm Delegation result: ${confirmDelegationResult}`);
+  return Promise.resolve('All commands executed successfully');
+}
+
+export function IssueCredentialKLI(
+  issuerIdentifierData: SinglesigIdentifierData,
+  issueeIdentifierData: SinglesigIdentifierData,
+  step: any,
+  credential: string
+): Promise<string> {
+  const workflowState = WorkflowState.getInstance();
+  const env = resolveEnvironment();
+  const issuerName = issuerIdentifierData.name;
+  const issuerAgentName = issuerIdentifierData.agent.name;
+  const issuerSecret = issuerIdentifierData.agent.secret;
+  const issueeName = issueeIdentifierData.name;
+  const registryName = `${issuerName}Registry`;
+  const registryPrefix = createRegistry(issuerAgentName, issuerSecret, step.issuer_aid, registryName);
+  const issueeAidPrefix = workflowState.aids.get(step.issuee_aid)!.prefix;
+  const credentialInfo = workflowState.credentialsInfo.get(credential);
+  const schema = workflowState.schemas[credentialInfo.schema];
+  const rules = workflowState.rules[credentialInfo.rules!];
+  let credSource = null;
+  if (step.credential_source != null) {
+    const credType = credentialInfo.credSource['type'];
+    const credential: { cred: any; credCesr: string } =
+      workflowState.credentials.get(step.credential_source)!;
+    const issuerCred = credential!.cred;
+    const credO = credentialInfo.credSource['o'] || null;
+    credSource = VleiIssuance.buildCredSource(credType, issuerCred, credO);
+  }
+  const attributes: IssueCredentialAttributes = {
+    i: issueeAidPrefix,    
+    ...step.attributes,
+    ...credentialInfo!.attributes,
+  };
+  const oobiUrl = `${resolveEnvironment().vleiServerUrl}/oobi/${schema}`;
+  resolveOobi(issuerAgentName, issuerSecret, oobiUrl);
+  const issueCredentialResult = issueCredential(issuerAgentName, issuerSecret, step.issuer_aid, issueeAidPrefix, registryName, schema, rules, credSource, attributes);
+  console.log(`Issue Credential result: ${issueCredentialResult}`);
+  return Promise.resolve('All commands executed successfully');
 }

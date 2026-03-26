@@ -1,0 +1,69 @@
+{
+  "secrets": {
+    "qvi1": "D_PbQb01zuzQgKatestq1",
+    "le1": "BTaqgh1eeOjXO5iQJp6m1",
+    "le2": "BTaqgh1eeOjXO5iQJp6m2",
+    "le3": "BTaqgh1eeOjXO5iQJp6m3"
+  },
+  "credentials": {
+    "qvi_vlei_cred": {
+      "type": "direct",
+      "schema": "QVI_SCHEMA_SAID",
+      "privacy": false,
+      "attributes": {}
+    },
+    "qvi_to_le_vlei_cred": {
+      "credSource": {
+        "type": "qvi"
+      },
+      "type": "direct",
+      "schema": "LE_SCHEMA_SAID",
+      "rules": "LE_RULES",
+      "privacy": false,
+      "attributes": {}
+    }
+  },
+  "agents": {
+    "qvi-agent-1": {
+      "secret": "qvi1"
+    },
+    "le-agent-1": {
+      "secret": "le1"
+    },
+    "le-agent-2": {
+      "secret": "le2"
+    },
+    "le-agent-3": {
+      "secret": "le3"
+    }
+  },
+  "identifiers": {
+    "qvi-aid-1": {
+      "agent": "qvi-agent-1",
+      "name": "qvi-aid-1"
+    },
+    "le-aid-1": {
+      "agent": "le-agent-1",
+      "name": "le-aid-1"
+    },
+    "le-aid-2": {
+      "agent": "le-agent-2",
+      "name": "le-aid-2"
+    },
+    "le-aid-3": {
+      "agent": "le-agent-3",
+      "name": "le-aid-3"
+    },
+    "le-multisig-1": {
+      "name": "le-multisig-1",
+      "delegator": "qvi-aid-1",
+      "identifiers": [
+        "le-aid-1",
+        "le-aid-2",
+        "le-aid-3"
+      ],
+      "isith": 3,
+      "nsith": 3
+    }
+  }
+}

@@ -1,0 +1,79 @@
+workflow:
+  steps:
+    # gleif_external_aid:
+    #   id: 'gleif_external_aid'
+    #   type: 'create_aid_kli'
+    #   aid: 'gleif-external-aid-1'
+    #   description: 'Creating AID: gleif-external-aid-1 via KLI'
+    qvi_client_1:
+      id: 'qvi_client_1'
+      type: 'create_client'
+      agent_name: 'qvi-agent-1'
+      description: 'Creating client for qvi-agent-1'
+    qvi_client_2:
+      id: 'qvi_client_2'
+      type: 'create_client'
+      agent_name: 'qvi-agent-2'
+      description: 'Creating client for qvi-agent-2'
+    qvi_client_3:
+      id: 'qvi_client_3'
+      type: 'create_client'
+      agent_name: 'qvi-agent-3'
+      description: 'Creating client for qvi-agent-3'
+    qvi_aid_1:
+      id: 'qvi_aid_1'
+      type: 'create_aid'
+      aid: 'qvi-aid-1'
+      description: 'Creating AID: qvi-aid-1 via KLI'
+    qvi_aid_2:
+      id: 'qvi_aid_2'
+      type: 'create_aid'
+      aid: 'qvi-aid-2'
+      description: 'Creating AID: qvi-aid-2 via KLI'
+    qvi_aid_3:
+      id: 'qvi_aid_3'
+      type: 'create_aid'
+      aid: 'qvi-aid-3'
+      description: 'Creating AID: qvi-aid-3 via KLI'
+    qvi_aid_multisig_1:
+      id: 'qvi_aid_multisig_1'
+      type: 'create_aid'
+      initiator: 'qvi-aid-1'
+      aid: 'qvi-multisig-1'
+      autoconfirm_delegation: false
+      description: 'Creating AID: qvi-multisig-1 via KLI'
+    confirm_delegation_kli_gleif_external_to_qvi_multisig_1:
+      id: 'confirm_delegation_kli_gleif_external_to_qvi_multisig_1'
+      type: 'confirm_delegation_kli'
+      delegator_aid: 'gleif-external-aid-1'
+      delegate_aid: 'qvi-multisig-1'
+      description: 'Confirming delegation of QVI multisig 1 by GLEIF External via KLI'
+    # After delegation confirmation - resolve gleif-external-aid-1 oobi from qvi-1, qvi-2 and qvi-3
+    resolve_aid_oobi_1:
+      id: 'resolve_aid_oobi_1'
+      type: 'resolve_aid_oobi'
+      aid: 'qvi-aid-1'
+      target_aid: 'gleif-external-aid-1'
+      description: 'Resolving Oobi for GLEIF External AID via KLI'
+    resolve_aid_oobi_2:
+      id: 'resolve_aid_oobi_2'
+      type: 'resolve_aid_oobi'
+      aid: 'qvi-aid-2'
+      target_aid: 'gleif-external-aid-1'
+      description: 'Resolving Oobi for GLEIF External AID via KLI'
+    resolve_aid_oobi_3:
+      id: 'resolve_aid_oobi_3'
+      type: 'resolve_aid_oobi'
+      aid: 'qvi-aid-3'
+      target_aid: 'gleif-external-aid-1'
+      description: 'Resolving Oobi for GLEIF External AID via KLI'
+    qvi_cred:
+      id: 'qvi_cred'
+      type: 'issue_credential_kli'
+      attributes:
+        LEI: '254900OPPU84GM83MG36'
+      issuer_aid: 'gleif-external-aid-1'
+      issuee_aid: 'qvi-multisig-1'
+      description: 'GLEIF External issues QVI vLEI credential'
+      credential: 'qvi_vlei_cred'
+   
