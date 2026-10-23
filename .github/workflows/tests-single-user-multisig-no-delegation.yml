@@ -2,7 +2,7 @@ name: Multisig Single-User, Non-Delegated AIDs Test
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
   pull_request:
     branches:
       - '**' # Run Validate Build on all PR branches

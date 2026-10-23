@@ -2,7 +2,7 @@ name: Singlesig Credential Revocation test
 on:
   # push:
   #   branches:
-  #     - 'main'
+  #     - 'master'
   # pull_request:
   #   branches:
   #     - '**' # Run Validate Build on all PR branches

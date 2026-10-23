@@ -2,7 +2,7 @@ name: Workflow Steps Integration Tests
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
   pull_request:
     branches:
       - '**' # Run Validate Build on all PR branches
