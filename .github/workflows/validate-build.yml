@@ -23,7 +23,7 @@ jobs:
         working-directory: .
     strategy:
       matrix:
-        node-version: ['20']
+        node-version: ['22']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

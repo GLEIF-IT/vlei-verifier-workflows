@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         keria-version: ['0.2.0-dev3']
-        node-version: ['20']
+        node-version: ['22']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
       KERI_VERSION: ${{ github.event.inputs.keri_version || '1.2.6' }}
