@@ -30,11 +30,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
       - name: Install dependencies
-        run: |
-          npm cache clean --force
-          npm set registry https://registry.npmjs.org/
-          npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run docker
         run: |
@@ -42,9 +48,9 @@ jobs:
           docker compose up verify -d --pull always
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Run workflow
-        run: npx jest -- --runInBand --watchAll=false --runTestsByPath ./test/integration/workflow-steps.test.ts
-        # run: npx jest ./test/run-workflow-bank.test.ts -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
-        # run: npx jest ./test/run-workflow-bank.test.ts --testNamePattern api-verifier-bank-test-workflow -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
+        run: pnpm exec jest --runInBand --watchAll=false --runTestsByPath ./test/integration/workflow-steps.test.ts
+        # run: pnpm exec jest ./test/run-workflow-bank.test.ts -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
+        # run: pnpm exec jest ./test/run-workflow-bank.test.ts --testNamePattern api-verifier-bank-test-workflow -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"

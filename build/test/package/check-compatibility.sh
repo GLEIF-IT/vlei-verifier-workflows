@@ -10,7 +10,7 @@ runNodeTest() {
     
     cd "$BASE_DIR/node" || { echo "Directory not found"; exit 1; }
     rm -rf node_modules
-    npm run node-test || { echo "Node test failed"; exit 1; }
+    pnpm_config_verify_deps_before_run=false pnpm run node-test || { echo "Node test failed"; exit 1; }
 }
 
 # Ensure we always start from the base directory

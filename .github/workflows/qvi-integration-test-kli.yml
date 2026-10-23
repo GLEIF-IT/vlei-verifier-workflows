@@ -33,10 +33,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -44,10 +48,7 @@ jobs:
           python-version: '3.13'
 
       - name: Install JS dependencies
-        run: |
-          npm cache clean --force
-          npm set registry https://registry.npmjs.org/
-          npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install keripy dependencies
         run: |
@@ -60,7 +61,7 @@ jobs:
           docker compose -f docker-compose-kli-tests.yaml up deps -d --pull always
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Run workflow
-        run: WORKFLOW=create-aid-kli.yaml CONFIGURATION=configuration-create-aid-kli.json npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
+        run: WORKFLOW=create-aid-kli.yaml CONFIGURATION=configuration-create-aid-kli.json pnpm exec jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit

@@ -1,12 +1,14 @@
 FROM node:20-alpine
 
-WORKDIR /app
-COPY package.json package-lock.json ./
+RUN corepack enable
 
-RUN npm install
-RUN npm run build
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-CMD [ "npm", "run", "test" ]
+RUN pnpm run build
 
+CMD [ "pnpm", "run", "test" ]

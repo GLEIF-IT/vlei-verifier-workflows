@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "script.js",
   "scripts": {
-    "node-test": "npm run linker && node ./esm/script.js && node ./cjs/script.js && npm run unlinker",
-    "linker": "npx link \"$(npm prefix)/../../../../\"",
-    "unlinker": "npx link -u \"$(npm prefix)/../../../../\""
+    "node-test": "pnpm run linker && node ./esm/script.js && node ./cjs/script.js && pnpm run unlinker",
+    "linker": "pnpm dlx link ../../../../",
+    "unlinker": "pnpm dlx link -u ../../../../"
   },
   "author": "",
   "license": "",
