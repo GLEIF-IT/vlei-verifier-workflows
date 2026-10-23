@@ -70,7 +70,7 @@
     "project-checker": "pnpm install && pnpm run formatter && pnpm run linter && pnpm run dependency-checker",
     "compatibility-checker": "./build/test/package/check-compatibility.sh",
     "package-checker": "pnpm pack --dry-run",
-    "publish:dev": "pnpm version prerelease --preid=dev && pnpm publish --access public --tag dev && pnpm dist-tag add $(node -p \"require('./package.json').name + '@' + require('./package.json').version\") latest"
+    "publish:dev": "pnpm version prerelease --preid=dev && pnpm publish --access public --tag dev --no-git-checks && pnpm dist-tag add $(node -p \"require('./package.json').name + '@' + require('./package.json').version\") latest"
   },
   "dependencies": {
     "buffer": "^6.0.3",
