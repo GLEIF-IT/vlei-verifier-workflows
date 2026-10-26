@@ -61,7 +61,7 @@ while [[ $# -gt 0 ]]; do
             shift # past argument
             ;;
         --run-workflow)
-            pnpm exec jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
+            NODE_OPTIONS=--experimental-vm-modules pnpm exec jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
             shift # past argument
             ;;        
         *)

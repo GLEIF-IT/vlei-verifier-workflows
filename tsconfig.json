@@ -2,6 +2,7 @@
 {
   "extends": "./build/configs/tsconfig.base.json",
   "compilerOptions": {
+    "module": "NodeNext",
     "esModuleInterop": true,
     "downlevelIteration": true
   }

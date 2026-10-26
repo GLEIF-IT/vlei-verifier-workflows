@@ -22,7 +22,7 @@ jobs:
         working-directory: .
     strategy:
       matrix:
-        keria-version: ['0.2.0-dev3']
+        keria-version: ['0.4.4']
         node-version: ['22']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
@@ -51,4 +51,4 @@ jobs:
         run: pnpm run build
 
       - name: Run workflow
-        run: WORKFLOW=revocation-test-singlesig.yaml CONFIGURATION=configuration-revocation-test-singlesig.json pnpm exec jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
+        run: WORKFLOW=revocation-test-singlesig.yaml CONFIGURATION=configuration-revocation-test-singlesig.json NODE_OPTIONS=--experimental-vm-modules pnpm exec jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit

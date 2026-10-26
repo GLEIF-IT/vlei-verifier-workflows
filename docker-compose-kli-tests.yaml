@@ -60,7 +60,8 @@ services:
       - 7723:7723
 
   witness-demo:
-    image: gleif/keri-witness-demo:1.2.7
+    image: gleif/keri:1.2.17
+    entrypoint: ['kli', 'witness', 'demo']
     # network_mode: host
     environment:
       - PYTHONUNBUFFERED=1

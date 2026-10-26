@@ -263,9 +263,9 @@ export async function getOrCreateContact(
       return contact.id;
     }
   }
-  let op = await client.oobis().resolve(oobi, name);
-  op = await waitOperation(client, op);
-  return op.response.i;
+  const op = await client.oobis().resolve(oobi, name);
+  const completedOp = await waitOperation(client, op);
+  return completedOp.response.i;
 }
 
 /**
@@ -357,7 +357,7 @@ export async function getOrIssueCredential(
   });
 
   await waitOperation(issuerClient, issResult.op);
-  const credential = await issuerClient.credentials().get(issResult.acdc.ked.d);
+  const credential = await issuerClient.credentials().get(issResult.acdc.sad.d);
 
   return credential;
 }
@@ -425,11 +425,11 @@ export async function warnNotifications(
   assert(count > 0);
 }
 
-export async function deleteOperations<T = any>(
+export async function deleteOperations(
   client: SignifyClient.SignifyClient,
-  op: SignifyClient.Operation<T>
+  op: SignifyClient.Operation
 ) {
-  if (op.metadata?.depends) {
+  if (op.metadata && 'depends' in op.metadata && op.metadata.depends) {
     await deleteOperations(client, op.metadata.depends);
   }
 
@@ -503,11 +503,16 @@ export async function waitForCredential(
   throw Error('Credential SAID: ' + credSAID + ' has not been received');
 }
 
+export interface NotificationOptions extends RetryOptions {
+  minCount?: number;
+}
+
 export async function waitAndMarkNotification(
   client: SignifyClient.SignifyClient,
-  route: string
+  route: string,
+  options: NotificationOptions = {}
 ) {
-  const notes = await waitForNotifications(client, route);
+  const notes = await waitForNotifications(client, route, options);
 
   await Promise.all(
     notes.map((note) => {
@@ -521,7 +526,7 @@ export async function waitAndMarkNotification(
 export async function waitForNotifications(
   client: SignifyClient.SignifyClient,
   route: string,
-  options: RetryOptions = {}
+  options: NotificationOptions = {}
 ): Promise<Notification[]> {
   return retry(async () => {
     const response: { notes: Notification[] } = await client
@@ -532,8 +537,11 @@ export async function waitForNotifications(
       (note) => note.a.r === route && note.r === false
     );
 
-    if (!notes.length) {
-      throw new Error(`No notifications with route ${route}`);
+    const minCount = options.minCount ?? 1;
+    if (notes.length < minCount) {
+      throw new Error(
+        `No notifications with route ${route}; expected at least ${minCount}, got ${notes.length}`
+      );
     }
 
     return notes;
@@ -544,21 +552,31 @@ export async function waitForNotifications(
  * Poll for operation to become completed.
  * Removes completed operation
  */
-export async function waitOperation<T = any>(
+export async function waitOperation(
   client: SignifyClient.SignifyClient,
-  op: SignifyClient.Operation<T> | string,
+  op: SignifyClient.OOBIOperation,
   signal?: AbortSignal
-): Promise<SignifyClient.Operation<T>> {
+): Promise<SignifyClient.CompletedOOBIOperation>;
+export async function waitOperation(
+  client: SignifyClient.SignifyClient,
+  op: SignifyClient.Operation | string,
+  signal?: AbortSignal
+): Promise<SignifyClient.CompletedOperation>;
+export async function waitOperation(
+  client: SignifyClient.SignifyClient,
+  op: SignifyClient.Operation | string,
+  signal?: AbortSignal
+): Promise<SignifyClient.CompletedOperation> {
   if (typeof op === 'string') {
     op = await client.operations().get(op);
   }
   op = await client.operations().get(op.name);
-  op = await client
+  const completedOp = await client
     .operations()
     .wait(op, { signal: signal ?? AbortSignal.timeout(60000) });
-  await deleteOperations(client, op as SignifyClient.Operation<T>);
+  await deleteOperations(client, completedOp);
 
-  return op;
+  return completedOp;
 }
 
 export async function getOrCreateRegistry(

@@ -22,7 +22,7 @@ jobs:
         working-directory: .
     strategy:
       matrix:
-        keria-version: ['0.2.0-dev3']
+        keria-version: ['0.4.4']
         node-version: ['22']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
@@ -51,6 +51,6 @@ jobs:
         run: pnpm run build
 
       - name: Run workflow
-        run: pnpm exec jest --runInBand --watchAll=false --runTestsByPath ./test/integration/workflow-steps.test.ts
+        run: NODE_OPTIONS=--experimental-vm-modules pnpm exec jest --runInBand --watchAll=false --runTestsByPath ./test/integration/workflow-steps.test.ts
         # run: pnpm exec jest ./test/run-workflow-bank.test.ts -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
         # run: pnpm exec jest ./test/run-workflow-bank.test.ts --testNamePattern api-verifier-bank-test-workflow -- --bank-num "1" --max-report-size "0" --clean "false" --keria-start-port "3900"
