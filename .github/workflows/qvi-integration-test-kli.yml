@@ -53,7 +53,7 @@ jobs:
       - name: Install keripy dependencies
         run: |
           python -m ensurepip --upgrade
-          pip install git+https://github.com/GLEIF-IT/keripy.git@${{ env.KERI_VERSION }}
+          pip install git+https://github.com/GLEIF-IT/keripy.git@v${{ env.KERI_VERSION }}
 
       - name: Run docker
         run: |
