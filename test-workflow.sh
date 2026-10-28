@@ -57,11 +57,11 @@ while [[ $# -gt 0 ]]; do
             shift # past argument
             ;;
         --build)
-            npm run build
+            pnpm run build
             shift # past argument
             ;;
         --run-workflow)
-            npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
+            pnpm exec jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
             shift # past argument
             ;;        
         *)

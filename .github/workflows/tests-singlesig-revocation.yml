@@ -2,7 +2,7 @@ name: Singlesig Credential Revocation test
 on:
   # push:
   #   branches:
-  #     - 'main'
+  #     - 'master'
   # pull_request:
   #   branches:
   #     - '**' # Run Validate Build on all PR branches
@@ -23,30 +23,32 @@ jobs:
     strategy:
       matrix:
         keria-version: ['0.2.0-dev3']
-        node-version: ['20']
+        node-version: ['22']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
 
       - name: Install dependencies
-        run: |
-          npm cache clean --force
-          npm set registry https://registry.npmjs.org/
-          npm ci
+        run: pnpm install --frozen-lockfile
+
       - name: Run docker
         run: |
           docker compose down -v
           docker compose up verify -d --pull always
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Run workflow
-        run: WORKFLOW=revocation-test-singlesig.yaml CONFIGURATION=configuration-revocation-test-singlesig.json npx jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
+        run: WORKFLOW=revocation-test-singlesig.yaml CONFIGURATION=configuration-revocation-test-singlesig.json pnpm exec jest ./run-workflow.test.ts --runInBand --detectOpenHandles --forceExit
