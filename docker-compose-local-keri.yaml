@@ -107,7 +107,7 @@ services:
     depends_on:
       vlei-server:
         condition: service_healthy
-    image: ${KERIA_IMAGE:-gleif/keria}:${KERIA_IMAGE_TAG:-0.4.4}
+    image: ${KERIA_IMAGE:-gleif/keria}:${KERIA_IMAGE_TAG:-0.4.6}
     platform: linux/x86_64
     network_mode: 'host'
     environment:

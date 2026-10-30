@@ -8,7 +8,7 @@ on:
       keri_version:
         description: 'Version of KERI to test against'
         required: true
-        default: '1.2.17'
+        default: '1.2.18'
 
 permissions:
   actions: read
@@ -24,11 +24,11 @@ jobs:
         working-directory: .
     strategy:
       matrix:
-        keria-version: ['0.4.4']
+        keria-version: ['0.4.6']
         node-version: ['22']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
-      KERI_VERSION: ${{ github.event.inputs.keri_version || '1.2.17' }}
+      KERI_VERSION: ${{ github.event.inputs.keri_version || '1.2.18' }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

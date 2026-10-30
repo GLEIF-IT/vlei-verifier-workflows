@@ -60,7 +60,7 @@ services:
       - 7723:7723
 
   witness-demo:
-    image: gleif/keri:1.2.17
+    image: gleif/keri:1.2.18
     entrypoint: ['kli', 'witness', 'demo']
     # network_mode: host
     environment:

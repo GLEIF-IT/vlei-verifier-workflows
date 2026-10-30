@@ -23,7 +23,7 @@ jobs:
         working-directory: .
     strategy:
       matrix:
-        keria-version: ['0.4.4']
+        keria-version: ['0.4.6']
         node-version: ['22']
     env:
       KERIA_IMAGE_TAG: ${{ matrix.keria-version }}
