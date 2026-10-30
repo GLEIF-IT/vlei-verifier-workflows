@@ -1,6 +1,9 @@
 import { execSync, spawnSync } from 'child_process';
 import { writeFileSync } from 'fs';
-import { resolve } from 'path';
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export type SinglesigInceptAttributes = Record<string, any>;
 

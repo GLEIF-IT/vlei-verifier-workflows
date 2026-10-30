@@ -110,7 +110,7 @@ services:
         condition: service_healthy
       witness-demo:
         condition: service_healthy
-    image: ${KERIA_IMAGE:-weboftrust/keria}:${KERIA_IMAGE_TAG:-0.2.0-dev4}
+    image: ${KERIA_IMAGE:-gleif/keria}:${KERIA_IMAGE_TAG:-0.4.6}
     platform: linux/x86_64
     environment:
       - KERI_AGENT_CORS=1
@@ -120,7 +120,7 @@ services:
     configs:
       - source: keria.json
         target: /usr/local/var/keri/cf/keria.json
-    entrypoint: ['keria', 'start', '--config-file', 'keria', '--name', 'agent']
+    entrypoint: ['keria', 'start', '--config-file', 'keria', '--name', 'keria']
     healthcheck:
       test: ['CMD', 'wget', '--spider', 'http://keria:3902/spec.yaml']
       interval: 2s
@@ -134,8 +134,8 @@ services:
       - 3903:3903
 
   witness-demo:
-    # image: gleif/keri-witness-demo:1.2.7
-    image: weboftrust/keri-witness-demo:1.1.0
+    image: gleif/keri:1.2.18
+    entrypoint: ['kli', 'witness', 'demo']
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONIOENCODING=UTF-8

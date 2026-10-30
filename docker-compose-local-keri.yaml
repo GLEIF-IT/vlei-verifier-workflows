@@ -107,7 +107,7 @@ services:
     depends_on:
       vlei-server:
         condition: service_healthy
-    image: ${KERIA_IMAGE:-weboftrust/keria}:${KERIA_IMAGE_TAG:-0.2.0-dev4}
+    image: ${KERIA_IMAGE:-gleif/keria}:${KERIA_IMAGE_TAG:-0.4.6}
     platform: linux/x86_64
     network_mode: 'host'
     environment:
@@ -118,7 +118,7 @@ services:
     configs:
       - source: keria.json
         target: /usr/local/var/keri/cf/keria.json
-    entrypoint: ['keria', 'start', '--config-file', 'keria', '--name', 'agent']
+    entrypoint: ['keria', 'start', '--config-file', 'keria', '--name', 'keria']
     healthcheck:
       test: ['CMD', 'wget', '--spider', 'http://localhost:3902/spec.yaml']
       interval: 2s

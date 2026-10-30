@@ -1,6 +1,10 @@
 import SignifyClient from 'signify-ts';
 
-import { getStates, waitForNotifications } from './test-util.js';
+import {
+  getStates,
+  NotificationOptions,
+  waitForNotifications,
+} from './test-util.js';
 
 export interface AcceptMultisigInceptArgs {
   groupName: string;
@@ -26,10 +30,10 @@ export async function acceptMultisigIncept(
   const memberHab = await client2.identifiers().get(localMemberName);
 
   const res = await client2.groups().getRequest(msgSaid);
-  const exn = res[0].exn;
+  const exn = SignifyClient.assertMultisigIcp(res[0]).exn;
   const icp = exn.e.icp;
   const smids = exn.a.smids;
-  const rmids = exn.a.rmids;
+  const rmids = exn.a.rmids ?? smids;
   const states = await getStates(client2, smids);
   const rstates = await getStates(client2, rmids);
 
@@ -42,7 +46,7 @@ export async function acceptMultisigIncept(
     wits: icp.b,
     states: states,
     rstates: rstates,
-    delpre: icp.di,
+    delpre: 'di' in icp ? icp.di : undefined,
   });
   const op2 = await icpResult2.op();
   const serder = icpResult2.serder;
@@ -83,11 +87,15 @@ export async function addEndRoleMultisig(
   timestamp: string,
   isInitiator = false
 ) {
-  if (!isInitiator) await waitAndMarkNotification(client, '/multisig/rpy');
-
   const opList: any[] = [];
   const members = await client.identifiers().members(multisigAID.name);
   const signings = members['signing'];
+  // the initiator sends one /multisig/rpy per signing member, wait for all of them
+  if (!isInitiator) {
+    await waitAndMarkNotification(client, '/multisig/rpy', {
+      minCount: signings.length,
+    });
+  }
 
   for (const signing of signings) {
     const eid = Object.keys(signing.ends.agent)[0];
@@ -141,9 +149,12 @@ export async function admitMultisig(
   otherMembersAIDs: SignifyClient.HabState[],
   multisigAID: SignifyClient.HabState,
   recipientAID: SignifyClient.HabState,
-  timestamp: string
+  timestamp: string,
+  isInitiator = false
   // numGrantMsgs: number
 ) {
+  if (!isInitiator) await waitAndMarkNotification(client, '/multisig/exn');
+
   const grantMsgSaid = await waitAndMarkNotification(client, '/exn/ipex/grant');
 
   const [admit, sigs, end] = await client.ipex().admit({
@@ -210,7 +221,9 @@ export async function createAIDMultisig(
   const embeds = {
     icp: [serder, atc],
   };
-  const smids = kargs.states?.map((state: SignifyClient.State) => state['i']);
+  const smids = kargs.states?.map(
+    (state: SignifyClient.KeyState) => state['i']
+  );
   const recp = otherMembersAIDs.map((aid) => aid.prefix);
 
   await client
@@ -289,9 +302,9 @@ export async function delegateMultisig(
       `${aid.name}(${aid.prefix}) received exchange message to join the interaction event`
     );
     const res = await client.groups().getRequest(msgSaid);
-    const exn = res[0].exn;
+    const exn = SignifyClient.assertMultisigIxn(res[0]).exn;
     const ixn = exn.e.ixn;
-    anchor = ixn.a[0];
+    anchor = (ixn.a as { i: string; s: string; d: string }[])[0];
   }
 
   // const {delResult, delOp} = await retry(async () => {
@@ -304,12 +317,15 @@ export async function delegateMultisig(
       multisigAID.name
     } with anchor ${JSON.stringify(anchor)}`
   );
-  if (JSON.stringify(delResult.serder.ked.a[0]) !== JSON.stringify(anchor)) {
+  const delAnchor = Array.isArray(delResult.serder.sad.a)
+    ? delResult.serder.sad.a[0]
+    : delResult.serder.sad.a;
+  if (JSON.stringify(delAnchor) !== JSON.stringify(anchor)) {
     console.log(
-      `Delegation anchor ${JSON.stringify(anchor)} does not match the one in the response ${JSON.stringify(delResult.serder.ked.a[0])}`
+      `Delegation anchor ${JSON.stringify(anchor)} does not match the one in the response ${JSON.stringify(delAnchor)}`
     );
     throw new Error(
-      `Delegation anchor ${JSON.stringify(anchor)} does not match the one in the response ${JSON.stringify(delResult.serder.ked.a[0])}`
+      `Delegation anchor ${JSON.stringify(anchor)} does not match the one in the response ${JSON.stringify(delAnchor)}`
     );
   }
 
@@ -520,7 +536,7 @@ export async function startMultisigIncept(
   };
 
   const smids = participantStates.map(
-    (state: SignifyClient.State) => state['i']
+    (state: SignifyClient.KeyState) => state['i']
   );
 
   await client
@@ -539,9 +555,10 @@ export async function startMultisigIncept(
 
 export async function waitAndMarkNotification(
   client: SignifyClient.SignifyClient,
-  route: string
+  route: string,
+  options: NotificationOptions = {}
 ) {
-  const notes = await waitForNotifications(client, route);
+  const notes = await waitForNotifications(client, route, options);
 
   await Promise.all(
     notes.map((note) => {
