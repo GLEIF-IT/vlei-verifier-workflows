@@ -1,4 +1,5 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { strict as assert } from 'assert';
 
 import {
@@ -9,6 +10,8 @@ import { getConfig } from '../src/utils/test-data.js';
 import { WorkflowRunner } from '../src/utils/run-workflow.js';
 import { loadWorkflow } from '../src/utils/test-data.js';
 import { WorkflowState } from '../src/workflow-state.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let env: TestEnvironment;
 

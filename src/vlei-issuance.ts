@@ -279,7 +279,7 @@ export const VleiIssuance = {
         return apprDelRes;
       });
       assert.equal(
-        JSON.stringify(result.serder.ked.a[0]),
+        JSON.stringify(result.serder.sad.a[0]),
         JSON.stringify(anchor)
       );
 
@@ -393,7 +393,6 @@ export const VleiIssuance = {
           s: '0',
           d: teepre,
         };
-        let delegatorClientInitiator;
         const delegatorMultisigAid = workflow_state.aids.get(
           delegatoridentifierData.name
         );
@@ -424,14 +423,6 @@ export const VleiIssuance = {
             index === 0
           );
           delegateOps.push([delegatorclient!, delApprOp]);
-          if (index === 0) {
-            delegatorClientInitiator = delegatorclient!;
-          } else {
-            await waitAndMarkNotification(
-              delegatorClientInitiator!,
-              '/multisig/ixn'
-            );
-          }
         }
         for (const [client, op] of delegateOps) {
           await waitOperation(client!, op);
@@ -468,14 +459,6 @@ export const VleiIssuance = {
         await waitOperation(client!, op);
       }
 
-      // Wait for multisig inception notifications for all clients
-      const tmpAidData = workflow_state.aidsInfo.get(
-        issuerAids[0].name
-      ) as SinglesigIdentifierData;
-      await waitAndMarkNotification(
-        workflow_state.clients.get(tmpAidData.agent.name)!,
-        '/multisig/icp'
-      );
       // Retrieve the newly created AIDs for all clients
       multisigAids = await Promise.all(
         issuerAids.map(async (aid) => {
@@ -537,18 +520,6 @@ export const VleiIssuance = {
             await waitOperation(client!, roleOp);
           }
         }
-
-        // Wait for role resolution notifications for all clients
-        // await waitAndMarkNotification(workflow_state.clients.get(workflow_state.aidsInfo.get(issuerAids[0].name).agent.name), "/multisig/rpy");
-        await Promise.all(
-          issuerAids.map((aid) => {
-            const tmpAidData = workflow_state.aidsInfo.get(
-              aid.name
-            ) as SinglesigIdentifierData;
-            const client = workflow_state.clients.get(tmpAidData.agent.name);
-            return waitAndMarkNotification(client!, '/multisig/rpy');
-          })
-        );
 
         // Retrieve the OOBI again after the operation for all clients
         oobis = await Promise.all(
@@ -642,15 +613,6 @@ export const VleiIssuance = {
           const client = workflow_state.clients.get(tmpAidData.agent.name);
           return await waitOperation(client!, op);
         })
-      );
-
-      // Wait for multisig inception notification for each client!
-      const tmpAidData = workflow_state.aidsInfo.get(
-        issuerAids[0].name
-      ) as SinglesigIdentifierData;
-      await waitAndMarkNotification(
-        workflow_state.clients.get(tmpAidData.agent.name)!,
-        '/multisig/vcp'
       );
 
       // Recheck the registries for each client!
@@ -962,14 +924,6 @@ export const VleiIssuance = {
         })
       );
 
-      let tmpAidData = workflow_state.aidsInfo.get(
-        issuerAids[0].name
-      ) as SinglesigIdentifierData;
-      await waitAndMarkNotification(
-        workflow_state.clients.get(tmpAidData.agent.name)!,
-        '/multisig/iss'
-      );
-
       creds = await Promise.all(
         issuerAids.map((aid: any) => {
           const singlesigData = workflow_state.aidsInfo.get(
@@ -1005,13 +959,6 @@ export const VleiIssuance = {
         })
       );
       sleep(1000);
-      tmpAidData = workflow_state.aidsInfo.get(
-        issuerAids[0].name
-      ) as SinglesigIdentifierData;
-      await waitAndMarkNotification(
-        workflow_state.clients.get(tmpAidData.agent.name)!,
-        '/multisig/exn'
-      );
     }
     const cred = creds[0];
 
@@ -1044,30 +991,13 @@ export const VleiIssuance = {
               recepientAids.filter((_: any, i: any) => i !== index),
               recipientAID,
               issuerAIDMultisig,
-              admitTime
+              admitTime,
+              index === 0
             );
           })
         );
         sleep(2000);
         for (const aid of issuerAids) {
-          const singlesigData = workflow_state.aidsInfo.get(
-            aid.name
-          ) as SinglesigIdentifierData;
-          await waitAndMarkNotification(
-            workflow_state.clients.get(singlesigData.agent.name)!,
-            '/exn/ipex/admit'
-          );
-        }
-        for (const aid of recepientAids) {
-          const singlesigData = workflow_state.aidsInfo.get(
-            aid.name
-          ) as SinglesigIdentifierData;
-          await waitAndMarkNotification(
-            workflow_state.clients.get(singlesigData.agent.name)!,
-            '/multisig/exn'
-          );
-        }
-        for (const aid of recepientAids) {
           const singlesigData = workflow_state.aidsInfo.get(
             aid.name
           ) as SinglesigIdentifierData;
@@ -1366,30 +1296,13 @@ export const VleiIssuance = {
             recepientAids.filter((_: any, i: any) => i !== index),
             recipientAID,
             issuerAID,
-            admitTime
+            admitTime,
+            index === 0
           );
         })
       );
       sleep(2000);
       for (const aid of issuerAids) {
-        const singlesigIdentifierData = workflow_state.aidsInfo.get(
-          aid.name
-        ) as SinglesigIdentifierData;
-        await waitAndMarkNotification(
-          workflow_state.clients.get(singlesigIdentifierData.agent.name)!,
-          '/exn/ipex/admit'
-        );
-      }
-      for (const aid of recepientAids) {
-        const singlesigIdentifierData = workflow_state.aidsInfo.get(
-          aid.name
-        ) as SinglesigIdentifierData;
-        await waitAndMarkNotification(
-          workflow_state.clients.get(singlesigIdentifierData.agent.name)!,
-          '/multisig/exn'
-        );
-      }
-      for (const aid of recepientAids) {
         const singlesigIdentifierData = workflow_state.aidsInfo.get(
           aid.name
         ) as SinglesigIdentifierData;
